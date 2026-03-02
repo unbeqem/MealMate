@@ -308,4 +308,6 @@ Claude should:
 
 ---
 
+Supabase pwd: Raibsm41uQnzyBnX
+
 END OF CONCEPT
