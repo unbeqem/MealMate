@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-02T15:10:07.556Z"
+last_updated: "2026-03-02T16:05:00.000Z"
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 13
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -23,27 +23,27 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 ## Current Position
 
 Phase: 1 of 9 (Foundation)
-Plan: 1 of 5 in current phase
+Plan: 4 of 5 in current phase
 Status: In progress
-Last activity: 2026-03-02 — Completed 01-01: Flutter project structure and CI setup
+Last activity: 2026-03-02 — Completed 01-04: GoRouter with auth redirect and Riverpod auth state provider
 
-Progress: [█░░░░░░░░░] 3%
+Progress: [██░░░░░░░░] 5%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 7 min
-- Total execution time: 0.1 hours
+- Total plans completed: 2
+- Average duration: 6 min
+- Total execution time: 0.2 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation | 1/5 | 7 min | 7 min |
+| 01-foundation | 2/5 | 12 min | 6 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (7 min)
+- Last 5 plans: 01-01 (7 min), 01-04 (5 min)
 - Trend: Baseline established
 
 *Updated after each plan completion*
@@ -51,6 +51,7 @@ Progress: [█░░░░░░░░░] 3%
 | Phase-Plan | Duration | Tasks | Files |
 |------------|----------|-------|-------|
 | 01-foundation P01 | 7 min | 2 tasks | 12 files |
+| 01-foundation P04 | 5 min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -67,7 +68,10 @@ Recent decisions affecting current work:
 - API key security: Proxy Spoonacular and OpenAI calls through Supabase Edge Functions
 - Flutter project structure: Lives in meal_mate/ subdirectory; feature-first layout (app/, core/, features/)
 - Supabase keys: Injected via String.fromEnvironment — never hardcoded in source
-- app.dart: Uses plain MaterialApp until go_router is wired in plan 01-04
+- app.dart: Upgraded to MaterialApp.router in plan 01-04; uses ConsumerWidget + routerProvider
+- GoRouter auth redirect: loading -> null (no flash), unauthenticated -> /login, authenticated -> /home
+- AuthRepository is sole Supabase auth import point in feature layer; presentation uses authStateProvider only
+- routerProvider uses ref.watch(authStateProvider) — Riverpod rebuild serves as refreshListenable equivalent
 
 ### Pending Todos
 
@@ -83,5 +87,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 01-01-PLAN.md — Flutter project structure, dependencies, feature-first layout, CI workflow
+Stopped at: Completed 01-04-PLAN.md — GoRouter with auth redirect, authStateProvider, AuthRepository, MaterialApp.router
 Resume file: None
