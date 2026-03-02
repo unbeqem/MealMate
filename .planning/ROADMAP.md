@@ -34,14 +34,14 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Supabase project has RLS enabled on all user tables, verified with two separate test JWT tokens
   4. go_router redirects unauthenticated users to login screen and authenticated users past it
   5. Supabase Edge Functions scaffold exists and proxies a test call without exposing API keys in the Flutter bundle
-**Plans**: TBD
+**Plans:** 5 plans
 
 Plans:
-- [ ] 01-01: Flutter project setup — feature-first structure, dependencies (Riverpod, Drift, go_router, freezed, flutter_secure_storage), CI baseline
-- [ ] 01-02: Drift schema — all domain tables with UUID PKs, sync_status and updated_at columns, type-safe migrations
-- [ ] 01-03: Supabase project — PostgreSQL schema mirroring Drift, RLS policies on all user tables, GDPR deletion endpoint scaffold
-- [ ] 01-04: go_router + auth guard — route structure, auth state listener, redirect logic, deep linking scaffold
-- [ ] 01-05: Edge Functions scaffold — API key proxy for Spoonacular and OpenAI, environment variable configuration
+- [ ] 01-01-PLAN.md — Flutter project setup: feature-first structure, all dependencies, CI workflow (Wave 1)
+- [ ] 01-02-PLAN.md — Drift schema: 4 domain tables with UUID PKs, sync metadata, AppDatabase, code gen (Wave 2)
+- [ ] 01-03-PLAN.md — Supabase project: PostgreSQL schema mirroring Drift, RLS policies, GDPR deletion scaffold (Wave 3)
+- [ ] 01-04-PLAN.md — go_router + auth guard: auth state provider, redirect logic, placeholder screens (Wave 2)
+- [ ] 01-05-PLAN.md — Edge Functions: Spoonacular and OpenAI API key proxies, Flutter EdgeFunctionClient (Wave 4)
 
 ### Phase 2: Authentication & Onboarding
 **Goal**: Users can create accounts, stay logged in across sessions, recover forgotten passwords, and complete an onboarding flow that captures their household and dietary context — before any feature of the app is accessible.
