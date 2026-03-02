@@ -122,12 +122,12 @@ Plans:
   3. Ingredients measured in different but compatible units are normalized and summed correctly (e.g., "500g + 0.5kg flour" shows as "1kg flour")
   4. User can add a free-text item to the shopping list that is not derived from any recipe
   5. User can remove any item, adjust its quantity, and check it off as purchased — and all changes persist across app restarts
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 06-01: Unit normalization pipeline — 5-stage normalization service (lexical → unit family → intra-family conversion → cross-family conflict → ingredient density), exhaustive unit tests
-- [ ] 06-02: Shopping list generation — ShoppingListRepository, aggregate-from-meal-plan logic, deduplication, SHOP-01/02/03
-- [ ] 06-03: Shopping list UI — list view with check-off, quantity editor, manual add item, remove item, Riverpod state, SHOP-04/05/06/07
+- [ ] 06-01-PLAN.md — Unit normalization pipeline: 5-stage TDD service (lexical, unit family, intra-family conversion, cross-family conflict, display formatting), exhaustive unit tests (Wave 1)
+- [ ] 06-02-PLAN.md — Shopping list data layer: Drift migration (isManual column), ShoppingListDao, ShoppingListRepository with meal-plan aggregation and deduplication (Wave 2)
+- [ ] 06-03-PLAN.md — Shopping list UI: reactive ListView with check-off, quantity editor, manual add bottom sheet, remove, route registration, human verification (Wave 3)
 
 ### Phase 7: AI Recipe Generation
 **Goal**: When Spoonacular returns no usable recipes for a user's ingredient selection, an AI-generated recipe appears seamlessly — validated, coherent, and indistinguishable in quality from an API recipe.
