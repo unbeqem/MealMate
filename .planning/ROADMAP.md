@@ -86,12 +86,12 @@ Plans:
   3. User can change the serving size on a recipe detail screen and see all ingredient quantities update proportionally
   4. User can tap "Find recipes using my ingredients" and see only recipes that use ingredients from their selected list
   5. Previously fetched recipes are available to view offline (cached to Drift on first load)
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 04-01: Spoonacular API integration — Dio client routed through Edge Function proxy, response mapping to freezed Recipe model, Drift cache layer
-- [ ] 04-02: Recipe browsing screen — search bar, filter chips (cuisine, cook time), recipe cards with thumbnail, Riverpod pagination
-- [ ] 04-03: Recipe detail screen — ingredient list, instructions, servings scaler, cook time, offline-available indicator
+- [ ] 04-01-PLAN.md — Spoonacular data layer: Freezed models, Edge Function proxy, Drift cache, RecipeRepository (Wave 1)
+- [ ] 04-02-PLAN.md — Recipe browse screen: search, filter chips, pagination, ingredient-based discovery (Wave 2)
+- [ ] 04-03-PLAN.md — Recipe detail screen: ingredients, instructions, serving scaler, route wiring (Wave 2)
 
 ### Phase 5: Weekly Meal Planner
 **Goal**: Users can build a complete week of meals by assigning recipes to breakfast, lunch, and dinner slots, reorder meals freely, save their best weeks as templates, and receive suggestions that minimize leftover ingredients.
