@@ -37,7 +37,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans:** 5 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Flutter project setup: feature-first structure, all dependencies, CI workflow (Wave 1)
+- [x] 01-01-PLAN.md — Flutter project setup: feature-first structure, all dependencies, CI workflow (Wave 1)
 - [ ] 01-02-PLAN.md — Drift schema: 4 domain tables with UUID PKs, sync metadata, AppDatabase, code gen (Wave 2)
 - [ ] 01-03-PLAN.md — Supabase project: PostgreSQL schema mirroring Drift, RLS policies, GDPR deletion scaffold (Wave 3)
 - [ ] 01-04-PLAN.md — go_router + auth guard: auth state provider, redirect logic, placeholder screens (Wave 2)
@@ -186,7 +186,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/5 | Not started | - |
+| 1. Foundation | 1/5 | In progress | - |
 | 2. Authentication & Onboarding | 0/2 | Not started | - |
 | 3. Ingredient Selection | 0/3 | Not started | - |
 | 4. Recipe Discovery | 0/3 | Not started | - |
