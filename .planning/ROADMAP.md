@@ -53,11 +53,11 @@ Plans:
   3. User can log out from any screen and is returned to the login screen
   4. User who forgot password receives a reset email and can set a new password
   5. New user completes a 2-3 screen onboarding flow that captures household size and dietary preferences, and this data is persisted to Supabase
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: Auth screens — sign up, login, forgot password UI with Supabase auth integration and flutter_secure_storage token persistence
-- [ ] 02-02: Onboarding flow — household size and dietary preference screens, Riverpod state, Supabase profile table upsert
+- [ ] 02-01-PLAN.md — Auth data layer (SecureLocalStorage, AuthRepository, auth state provider) + auth screens (login, signup, forgot password, reset password) + deep link config
+- [ ] 02-02-PLAN.md — Onboarding flow (household size, dietary preferences, Supabase profile upsert) + three-state go_router redirect (auth + onboarding routing)
 
 ### Phase 3: Ingredient Selection
 **Goal**: Users can find any ingredient they want to cook with — by searching, browsing categories, or filtering by dietary restriction — and build a personal favorites list for quick reuse.
