@@ -69,12 +69,12 @@ Plans:
   3. User can mark any ingredient as a favorite and find it in a dedicated favorites list on relaunch
   4. User can filter the ingredient list to show only items matching their dietary restrictions (vegetarian, vegan, gluten-free, dairy-free)
   5. User can select ingredients from their favorites or search results to indicate "I have these today" for recipe discovery
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: Ingredient data layer — OpenFoodFacts integration via Dio, Drift caching of fetched ingredients, IngredientRepository
-- [ ] 03-02: Ingredient selection UI — search with autocomplete, category browser, dietary filter chips, Riverpod state
-- [ ] 03-03: Favorites and "I have these" — favorite toggle persisted to Drift and Supabase, selected-today state management
+- [ ] 03-01-PLAN.md — Ingredient data layer: domain models, OFf SDK integration, Drift schema extension (v2), IngredientRepository with pull-through cache
+- [ ] 03-02-PLAN.md — Ingredient selection UI: debounced autocomplete search, category browser, dietary filter chips, Riverpod 3 providers, route registration
+- [ ] 03-03-PLAN.md — Favorites and "I have these": favorite toggle with optimistic write, selected-today keepAlive provider backed by Drift, favorites screen, selected-today bar
 
 ### Phase 4: Recipe Discovery
 **Goal**: Users can browse a large library of real recipes filtered by the ingredients they have, view complete recipe details, and adjust serving sizes — giving them enough information to decide what to cook before touching the meal planner.
