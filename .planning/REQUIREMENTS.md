@@ -104,13 +104,47 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| *(populated during roadmap creation)* | | |
+| AUTH-01 | Phase 2 | Pending |
+| AUTH-02 | Phase 2 | Pending |
+| AUTH-03 | Phase 2 | Pending |
+| AUTH-04 | Phase 2 | Pending |
+| AUTH-05 | Phase 2 | Pending |
+| INGR-01 | Phase 3 | Pending |
+| INGR-02 | Phase 3 | Pending |
+| INGR-03 | Phase 3 | Pending |
+| INGR-04 | Phase 3 | Pending |
+| INGR-05 | Phase 3 | Pending |
+| RECP-01 | Phase 4 | Pending |
+| RECP-02 | Phase 4 | Pending |
+| RECP-03 | Phase 4 | Pending |
+| RECP-04 | Phase 4 | Pending |
+| RECP-05 | Phase 7 | Pending |
+| RECP-06 | Phase 7 | Pending |
+| PLAN-01 | Phase 5 | Pending |
+| PLAN-02 | Phase 5 | Pending |
+| PLAN-03 | Phase 5 | Pending |
+| PLAN-04 | Phase 5 | Pending |
+| PLAN-05 | Phase 5 | Pending |
+| PLAN-06 | Phase 5 | Pending |
+| PLAN-07 | Phase 5 | Pending |
+| SHOP-01 | Phase 6 | Pending |
+| SHOP-02 | Phase 6 | Pending |
+| SHOP-03 | Phase 6 | Pending |
+| SHOP-04 | Phase 6 | Pending |
+| SHOP-05 | Phase 6 | Pending |
+| SHOP-06 | Phase 6 | Pending |
+| SHOP-07 | Phase 6 | Pending |
+| SYNC-01 | Phase 8 | Pending |
+| SYNC-02 | Phase 8 | Pending |
+| SYNC-03 | Phase 8 | Pending |
+| SYNC-04 | Phase 8 | Pending |
+| SYNC-05 | Phase 8 | Pending |
 
 **Coverage:**
-- v1 requirements: 30 total
-- Mapped to phases: 0
-- Unmapped: 30 ⚠️
+- v1 requirements: 35 total
+- Mapped to phases: 35
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-02*
-*Last updated: 2026-03-02 after initial definition*
+*Last updated: 2026-03-02 after roadmap creation — traceability complete*
