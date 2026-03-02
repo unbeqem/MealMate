@@ -103,14 +103,14 @@ Plans:
   3. User can drag a meal card from one slot to another slot and the change persists on reload
   4. User can save the current week's plan as a named template and later load that template into any future week
   5. When browsing recipes to fill a slot, the planner highlights recipes that reuse ingredients already in the current week's plan
-**Plans**: TBD
+**Plans:** 5 plans
 
 Plans:
-- [ ] 05-01: Meal plan data layer — MealPlanRepository, Drift meal_plan_slots table, CRUD operations, Riverpod notifier
-- [ ] 05-02: Planner grid UI — 7-day x 3-slot grid, tap-to-assign recipe picker, slot meal card with edit/remove
-- [ ] 05-03: Drag-and-drop rescheduling — flutter drag-and-drop between slots, optimistic update, persist to Drift
-- [ ] 05-04: Templates — save current week, template list screen, load template into future week, Drift templates table
-- [ ] 05-05: Ingredient reuse suggestions — compute ingredient overlap between candidate recipe and current week's plan, surface in recipe picker
+- [ ] 05-01-PLAN.md — Meal plan data layer: Drift schema extension (weekStart column), MealSlot/WeekPlan domain models, MealPlanRepository CRUD, Riverpod stream notifier (Wave 1)
+- [ ] 05-02-PLAN.md — Planner grid UI: 7-day x 3-slot grid, week navigation, tap-to-assign recipe picker, slot card with edit/replace/remove (Wave 2)
+- [ ] 05-03-PLAN.md — Drag-and-drop rescheduling: LongPressDraggable + DragTarget, scroll conflict mitigation, atomic swap persistence (Wave 3)
+- [ ] 05-04-PLAN.md — Templates: MealPlanTemplates + MealPlanTemplateSlots tables, TemplateRepository save/load, TemplateListScreen (Wave 2)
+- [ ] 05-05-PLAN.md — Ingredient reuse suggestions: weekIngredientNames provider, overlap computation via Set.intersection, badge in recipe picker (Wave 3)
 
 ### Phase 6: Shopping List
 **Goal**: The meal plan automatically produces a single, clean shopping list that a user can walk into a store with — no duplicates, sensible units, and the ability to check off items and make manual adjustments.
