@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-02T16:05:00.000Z"
+last_updated: "2026-03-02T15:13:45Z"
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 13
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -25,26 +25,26 @@ See: .planning/PROJECT.md (updated 2026-03-02)
 Phase: 1 of 9 (Foundation)
 Plan: 4 of 5 in current phase
 Status: In progress
-Last activity: 2026-03-02 — Completed 01-04: GoRouter with auth redirect and Riverpod auth state provider
+Last activity: 2026-03-02 — Completed 01-02: Drift schema with UUID v4 PKs, sync metadata, AppDatabase, smoke tests
 
-Progress: [██░░░░░░░░] 5%
+Progress: [███░░░░░░░] 8%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 6 min
+- Total plans completed: 3
+- Average duration: 5 min
 - Total execution time: 0.2 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-foundation | 2/5 | 12 min | 6 min |
+| 01-foundation | 3/5 | 14 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (7 min), 01-04 (5 min)
-- Trend: Baseline established
+- Last 5 plans: 01-01 (7 min), 01-04 (5 min), 01-02 (2 min)
+- Trend: Stable
 
 *Updated after each plan completion*
 
@@ -52,6 +52,7 @@ Progress: [██░░░░░░░░] 5%
 |------------|----------|-------|-------|
 | 01-foundation P01 | 7 min | 2 tasks | 12 files |
 | 01-foundation P04 | 5 min | 2 tasks | 7 files |
+| 01-foundation P02 | 2 min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,9 @@ Recent decisions affecting current work:
 - GoRouter auth redirect: loading -> null (no flash), unauthenticated -> /login, authenticated -> /home
 - AuthRepository is sole Supabase auth import point in feature layer; presentation uses authStateProvider only
 - routerProvider uses ref.watch(authStateProvider) — Riverpod rebuild serves as refreshListenable equivalent
+- Drift schema: UUID v4 text PKs on all 4 domain tables (never integer autoIncrement) — offline-first sync safety
+- Drift schema: syncStatus defaults to 'pending'; updatedAt uses currentDateAndTime — PowerSync reads these columns
+- AppDatabase optional QueryExecutor constructor — Phase 8 injects SqliteAsyncDriftConnection without changing this file
 
 ### Pending Todos
 
@@ -87,5 +91,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 01-04-PLAN.md — GoRouter with auth redirect, authStateProvider, AuthRepository, MaterialApp.router
+Stopped at: Completed 01-02-PLAN.md — Drift schema: 4 domain tables with UUID v4 PKs, AppDatabase with WAL mode, smoke tests
 Resume file: None

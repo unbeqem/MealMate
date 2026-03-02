@@ -34,7 +34,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Supabase project has RLS enabled on all user tables, verified with two separate test JWT tokens
   4. go_router redirects unauthenticated users to login screen and authenticated users past it
   5. Supabase Edge Functions scaffold exists and proxies a test call without exposing API keys in the Flutter bundle
-**Plans:** 2/5 plans executed
+**Plans:** 3/5 plans executed
 
 Plans:
 - [x] 01-01-PLAN.md — Flutter project setup: feature-first structure, all dependencies, CI workflow (Wave 1)
@@ -186,7 +186,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 2/5 | In Progress|  |
+| 1. Foundation | 3/5 | In Progress|  |
 | 2. Authentication & Onboarding | 0/2 | Not started | - |
 | 3. Ingredient Selection | 0/3 | Not started | - |
 | 4. Recipe Discovery | 0/3 | Not started | - |
