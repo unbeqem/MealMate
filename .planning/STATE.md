@@ -2,6 +2,19 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
+status: unknown
+last_updated: "2026-03-03T11:19:49.539Z"
+progress:
+  total_phases: 6
+  completed_phases: 2
+  total_plans: 21
+  completed_plans: 7
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
 status: in-progress
 last_updated: "2026-03-03T11:13:47Z"
 progress:
@@ -55,6 +68,7 @@ Progress: [███░░░░░░░] 12%
 | 01-foundation P04 | 5 min | 2 tasks | 7 files |
 | 01-foundation P02 | 2 min | 2 tasks | 7 files |
 | 02-authentication-onboarding P01 | 3 min | 2 tasks | 12 files |
+| Phase 02 P02 | 3 | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -81,6 +95,8 @@ Recent decisions affecting current work:
 - [Phase 02-01]: authStateProvider alias maintained for backward compat with router.dart; points to authStateChangesProvider
 - [Phase 02-01]: auth_notifier.g.dart hand-crafted (build_runner unavailable); must regenerate on CI with dart run build_runner build
 - [Phase 02-01]: Supabase Dashboard Redirect URL io.mealmate.app://reset-password requires manual setup
+- [Phase 02-02]: onboarding_data.freezed.dart and onboarding_notifier.g.dart hand-crafted (build_runner unavailable); must regenerate on CI
+- [Phase 02-02]: onboardingCompletedProvider is AsyncFutureProvider<bool>; router guards on isLoading to prevent flash-of-wrong-route
 
 ### Pending Todos
 
