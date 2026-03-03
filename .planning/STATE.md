@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: unknown
-last_updated: "2026-03-02T15:13:45Z"
+status: in-progress
+last_updated: "2026-03-03T11:13:47Z"
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 13
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -18,22 +18,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-02)
 
 **Core value:** Users can go from selecting ingredients to a complete weekly meal plan with an accurate shopping list in minutes — reducing food waste and unnecessary spending.
-**Current focus:** Phase 1 — Foundation
+**Current focus:** Phase 2 — Authentication & Onboarding
 
 ## Current Position
 
-Phase: 1 of 9 (Foundation)
-Plan: 4 of 5 in current phase
+Phase: 2 of 6 (Authentication & Onboarding)
+Plan: 1 of 2 in current phase (02-01 complete)
 Status: In progress
-Last activity: 2026-03-02 — Completed 01-02: Drift schema with UUID v4 PKs, sync metadata, AppDatabase, smoke tests
+Last activity: 2026-03-03 — Completed 02-01: Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config
 
-Progress: [███░░░░░░░] 8%
+Progress: [███░░░░░░░] 12%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 5 min
+- Total plans completed: 4
+- Average duration: 4 min
 - Total execution time: 0.2 hours
 
 **By Phase:**
@@ -41,9 +41,10 @@ Progress: [███░░░░░░░] 8%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation | 3/5 | 14 min | 5 min |
+| 02-authentication-onboarding | 1/2 | 3 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (7 min), 01-04 (5 min), 01-02 (2 min)
+- Last 5 plans: 01-01 (7 min), 01-04 (5 min), 01-02 (2 min), 02-01 (3 min)
 - Trend: Stable
 
 *Updated after each plan completion*
@@ -53,6 +54,7 @@ Progress: [███░░░░░░░] 8%
 | 01-foundation P01 | 7 min | 2 tasks | 12 files |
 | 01-foundation P04 | 5 min | 2 tasks | 7 files |
 | 01-foundation P02 | 2 min | 2 tasks | 7 files |
+| 02-authentication-onboarding P01 | 3 min | 2 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -76,10 +78,13 @@ Recent decisions affecting current work:
 - Drift schema: UUID v4 text PKs on all 4 domain tables (never integer autoIncrement) — offline-first sync safety
 - Drift schema: syncStatus defaults to 'pending'; updatedAt uses currentDateAndTime — PowerSync reads these columns
 - AppDatabase optional QueryExecutor constructor — Phase 8 injects SqliteAsyncDriftConnection without changing this file
+- [Phase 02-01]: authStateProvider alias maintained for backward compat with router.dart; points to authStateChangesProvider
+- [Phase 02-01]: auth_notifier.g.dart hand-crafted (build_runner unavailable); must regenerate on CI with dart run build_runner build
+- [Phase 02-01]: Supabase Dashboard Redirect URL io.mealmate.app://reset-password requires manual setup
 
 ### Pending Todos
 
-None yet.
+- Supabase Dashboard: Add io.mealmate.app://reset-password to Authentication > Redirect URLs (required for password reset deep link)
 
 ### Blockers/Concerns
 
@@ -90,6 +95,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-02
-Stopped at: Completed 01-02-PLAN.md — Drift schema: 4 domain tables with UUID v4 PKs, AppDatabase with WAL mode, smoke tests
+Last session: 2026-03-03
+Stopped at: Completed 02-01-PLAN.md — Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config
 Resume file: None
