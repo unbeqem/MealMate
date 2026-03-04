@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 03-03-PLAN.md — favorites, selected-today bar, and quick-add chips
-last_updated: "2026-03-04T09:27:00.490Z"
+stopped_at: Completed 03-05-PLAN.md — search speed fix, dietary filter wiring, badge enrichment
+last_updated: "2026-03-04T10:21:38.088Z"
 last_activity: "2026-03-03 — Completed 02-01: Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config"
 progress:
   total_phases: 9
   completed_phases: 2
-  total_plans: 21
-  completed_plans: 8
+  total_plans: 23
+  completed_plans: 10
   percent: 38
 ---
 
@@ -103,6 +103,8 @@ Progress: [███░░░░░░░] 12%
 | Phase 03-ingredient-selection P01 | 15 | 2 tasks | 12 files |
 | Phase 03-ingredient-selection P02 | 5 | 2 tasks | 8 files |
 | Phase 03-ingredient-selection P03 | 18 | 2 tasks | 8 files |
+| Phase 03-ingredient-selection P05 | 10 | 2 tasks | 2 files |
+| Phase 03-ingredient-selection P04 | 15 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -140,6 +142,8 @@ Recent decisions affecting current work:
 - [Phase 03-ingredient-selection]: SelectedTodayNotifier state is Map<String,String> (id->name) — names stored at toggle-time so pill bar can render chips without async lookups
 - [Phase 03-ingredient-selection]: toggle() requires {required String name} param — caller provides name at the point they have the Ingredient object
 - [Phase 03-ingredient-selection]: SelectedTodayBar is ConsumerStatefulWidget to hold expand/collapse state locally while watching keepAlive global provider
+- [Phase 03-ingredient-selection]: Local search fast path threshold is >= 5 local matches to skip API debounce entirely
+- [Phase 03-ingredient-selection]: Search dietary filtering uses favorites provider as enrichment cache — uncached items are never hidden
 
 ### Pending Todos
 
@@ -154,6 +158,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-04T09:22:07.116Z
-Stopped at: Completed 03-03-PLAN.md — favorites, selected-today bar, and quick-add chips
+Last session: 2026-03-04T10:21:26.023Z
+Stopped at: Completed 03-05-PLAN.md — search speed fix, dietary filter wiring, badge enrichment
 Resume file: None
