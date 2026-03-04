@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:uuid/uuid.dart';
 import 'tables/ingredients_table.dart';
 import 'tables/recipes_table.dart';
 import 'tables/meal_plan_slots_table.dart';
@@ -7,6 +8,11 @@ import 'tables/shopping_list_items_table.dart';
 import 'tables/selected_today_table.dart';
 
 part 'app_database.g.dart';
+
+// Shared UUID generator — accessible to the generated app_database.g.dart part file
+// (table-level _uuid constants are not visible across non-part imports)
+// ignore: unused_element
+const _uuid = Uuid();
 
 @DriftDatabase(tables: [
   Ingredients,

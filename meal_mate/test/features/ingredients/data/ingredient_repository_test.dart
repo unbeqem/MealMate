@@ -1,11 +1,11 @@
-import 'package:drift/native_database.dart';
+import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:meal_mate/core/database/app_database.dart';
 import 'package:meal_mate/features/ingredients/data/ingredient_local_source.dart';
 import 'package:meal_mate/features/ingredients/data/ingredient_repository.dart';
 import 'package:meal_mate/features/ingredients/data/openfoodfacts_remote_source.dart';
-import 'package:meal_mate/features/ingredients/domain/ingredient.dart';
+import 'package:meal_mate/features/ingredients/domain/ingredient.dart' as domain;
 import 'package:meal_mate/features/ingredients/domain/ingredient_filter.dart';
 
 class MockOpenFoodFactsRemoteSource extends Mock
@@ -59,7 +59,7 @@ void main() {
   group('toggleFavorite', () {
     test('flips isFavorite and sets syncStatus to pending', () async {
       // First upsert an ingredient
-      const ingredient = Ingredient(
+      const ingredient = domain.Ingredient(
         id: 'test-id-1',
         name: 'Tomato',
         isFavorite: false,
@@ -76,7 +76,7 @@ void main() {
     });
 
     test('flips isFavorite back to false on second toggle', () async {
-      const ingredient = Ingredient(
+      const ingredient = domain.Ingredient(
         id: 'test-id-2',
         name: 'Carrot',
         isFavorite: true,
@@ -91,9 +91,10 @@ void main() {
   });
 
   group('selected today', () {
-    test('addSelectedToday and getSelectedToday round-trips correctly', () async {
-      // First add the ingredient
-      const ingredient = Ingredient(id: 'ing-1', name: 'Tomato');
+    test('addSelectedToday and getSelectedToday round-trips correctly',
+        () async {
+      // First add the ingredient (required by FK-like convention)
+      const ingredient = domain.Ingredient(id: 'ing-1', name: 'Tomato');
       await localSource.upsert(ingredient, userId: 'user-1');
 
       await repository.addSelectedToday('ing-1', 'user-1');
@@ -109,8 +110,8 @@ void main() {
     });
 
     test('clearSelectedToday removes all of today entries for user', () async {
-      const ingredient1 = Ingredient(id: 'ing-2', name: 'Onion');
-      const ingredient2 = Ingredient(id: 'ing-3', name: 'Garlic');
+      const ingredient1 = domain.Ingredient(id: 'ing-2', name: 'Onion');
+      const ingredient2 = domain.Ingredient(id: 'ing-3', name: 'Garlic');
       await localSource.upsert(ingredient1, userId: 'user-1');
       await localSource.upsert(ingredient2, userId: 'user-1');
 
@@ -123,8 +124,9 @@ void main() {
       expect(selected, isEmpty);
     });
 
-    test('clearSelectedToday only removes entries for the given user', () async {
-      const ingredient = Ingredient(id: 'ing-4', name: 'Pepper');
+    test('clearSelectedToday only removes entries for the given user',
+        () async {
+      const ingredient = domain.Ingredient(id: 'ing-4', name: 'Pepper');
       await localSource.upsert(ingredient, userId: 'user-1');
       await localSource.upsert(ingredient, userId: 'user-2');
 
@@ -142,12 +144,12 @@ void main() {
 
   group('filterByDietary', () {
     test('returns only ingredients matching dietary flags', () async {
-      const veganIngredient = Ingredient(
+      const veganIngredient = domain.Ingredient(
         id: 'vegan-1',
         name: 'Lettuce',
         dietaryFlags: ['vegan', 'vegetarian'],
       );
-      const nonVeganIngredient = Ingredient(
+      const nonVeganIngredient = domain.Ingredient(
         id: 'meat-1',
         name: 'Chicken',
         dietaryFlags: [],
@@ -155,13 +157,15 @@ void main() {
       await localSource.upsert(veganIngredient, userId: 'user-1');
       await localSource.upsert(nonVeganIngredient, userId: 'user-1');
 
-      final result = await repository.filterByDietary({DietaryRestriction.vegan});
+      final result =
+          await repository.filterByDietary({DietaryRestriction.vegan});
       expect(result.map((i) => i.id), contains('vegan-1'));
       expect(result.map((i) => i.id), isNot(contains('meat-1')));
     });
 
-    test('returns all cached ingredients when no restrictions specified', () async {
-      const ingredient = Ingredient(id: 'any-1', name: 'Rice');
+    test('returns all cached ingredients when no restrictions specified',
+        () async {
+      const ingredient = domain.Ingredient(id: 'any-1', name: 'Rice');
       await localSource.upsert(ingredient, userId: 'user-1');
 
       final result = await repository.filterByDietary({});
