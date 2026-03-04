@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Foundation** - Flutter project scaffolding, Drift schema with UUID PKs, Supabase project with RLS, go_router with auth guard, Edge Functions scaffold
 - [x] **Phase 2: Authentication & Onboarding** - Email/password auth via Supabase, session persistence, password reset, onboarding flow (completed 2026-03-03)
-- [x] **Phase 3: Ingredient Selection** - Ingredient search via OpenFoodFacts, category browsing, favorites, dietary filters, "I have these" selector (completed 2026-03-04)
+- [ ] **Phase 3: Ingredient Selection** - Ingredient search via OpenFoodFacts, category browsing, favorites, dietary filters, "I have these" selector (UAT gap closure in progress)
 - [ ] **Phase 4: Recipe Discovery** - Recipe browsing and search via Spoonacular, recipe detail view, serving size scaling, ingredient-based filtering
 - [ ] **Phase 5: Weekly Meal Planner** - 7-day planner grid, recipe assignment, drag-and-drop rescheduling, plan templates, ingredient reuse suggestions
 - [ ] **Phase 6: Shopping List** - Auto-generated shopping list from meal plan, unit normalization pipeline, deduplication, manual editing, check-off
@@ -69,12 +69,14 @@ Plans:
   3. User can mark any ingredient as a favorite and find it in a dedicated favorites list on relaunch
   4. User can filter the ingredient list to show only items matching their dietary restrictions (vegetarian, vegan, gluten-free, dairy-free)
   5. User can select ingredients from their favorites or search results to indicate "I have these today" for recipe discovery
-**Plans**: 3 plans
+**Plans**: 5 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Ingredient data layer: domain models, OFf SDK integration, Drift schema extension (v2), IngredientRepository with pull-through cache
-- [ ] 03-02-PLAN.md — Ingredient selection UI: debounced autocomplete search, category browser, dietary filter chips, Riverpod 3 providers, route registration
-- [ ] 03-03-PLAN.md — Favorites and "I have these": favorite toggle with optimistic write, selected-today keepAlive provider backed by Drift, favorites screen, selected-today bar
+- [x] 03-01-PLAN.md — Ingredient data layer: domain models, OFf SDK integration, Drift schema extension (v2), IngredientRepository with pull-through cache
+- [x] 03-02-PLAN.md — Ingredient selection UI: debounced autocomplete search, category browser, dietary filter chips, Riverpod 3 providers, route registration
+- [x] 03-03-PLAN.md — Favorites and "I have these": favorite toggle with optimistic write, selected-today keepAlive provider backed by Drift, favorites screen, selected-today bar
+- [ ] 03-04-PLAN.md — Gap closure: fix category double-translation bug, toggleFavorite upsert for non-Drift ingredients, pull-to-refresh on category screen (Wave 1)
+- [ ] 03-05-PLAN.md — Gap closure: fix search speed (local-first before debounce), wire dietary filters to search results, dietary badges on tiles (Wave 2)
 
 ### Phase 4: Recipe Discovery
 **Goal**: Users can browse a large library of real recipes filtered by the ingredients they have, view complete recipe details, and adjust serving sizes — giving them enough information to decide what to cook before touching the meal planner.
@@ -188,7 +190,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/5 | In Progress|  |
 | 2. Authentication & Onboarding | 2/2 | Complete   | 2026-03-03 |
-| 3. Ingredient Selection | 3/3 | Complete   | 2026-03-04 |
+| 3. Ingredient Selection | 3/5 | Gap Closure | - |
 | 4. Recipe Discovery | 0/3 | Not started | - |
 | 5. Weekly Meal Planner | 0/5 | Not started | - |
 | 6. Shopping List | 0/3 | Not started | - |
