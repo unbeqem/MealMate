@@ -1,212 +1,248 @@
 ---
 phase: 03-ingredient-selection
-verified: 2026-03-04T10:00:00Z
+verified: 2026-03-04T11:00:00Z
 status: passed
-score: 22/22 must-haves verified
-re_verification: false
+score: 28/28 must-haves verified
+re_verification: true
+  previous_status: passed
+  previous_score: 22/22
+  gaps_closed:
+    - "Gap 2: Category screen no longer pre-translates display name to OFf tag"
+    - "Gap 5: toggleFavorite upserts minimal Ingredient row before toggling"
+    - "Gap 9: RefreshIndicator wraps all async states on category screen"
+    - "Gap 1: Local commonIngredients check before debounce Timer (fast path)"
+    - "Gap 3: Search screen watches ingredientFilterProvider and filters results"
+    - "Gap 4: Search tiles enriched with dietary badge data from favorites cache"
+  gaps_remaining: []
+  regressions: []
 ---
 
-# Phase 3: Ingredient Selection — Verification Report
+# Phase 3: Ingredient Selection — Re-Verification Report
 
 **Phase Goal:** Users can find any ingredient they want to cook with — by searching, browsing categories, or filtering by dietary restriction — and build a personal favorites list for quick reuse.
-**Verified:** 2026-03-04T10:00:00Z
+**Verified:** 2026-03-04T11:00:00Z
 **Status:** passed
-**Re-verification:** No — initial verification
+**Re-verification:** Yes — after gap closure plans 03-04 and 03-05
 
 ---
 
-## Goal Achievement
+## Re-Verification Focus
 
-### Observable Truths
-
-The must-haves are drawn from the three plan frontmatter blocks (03-01, 03-02, 03-03).
-
-#### From Plan 03-01
-
-| # | Truth | Status | Evidence |
-|---|-------|--------|----------|
-| 1 | OpenFoodFacts SDK configured with MealMate User-Agent before any API call | VERIFIED | `main.dart:19` — `configureOpenFoodFacts()` called after `Supabase.initialize()` and before `runApp`. Config sets `UserAgent(name: 'MealMate', version: '1.0.0')` |
-| 2 | `getSuggestions(TagType.INGREDIENTS)` returns a `List<String>` of canonical ingredient names for autocomplete | VERIFIED | `openfoodfacts_remote_source.dart:23-30` — direct call to `OpenFoodAPIClient.getSuggestions(TagType.INGREDIENTS, ...)`, returns `List<String>` |
-| 3 | Ingredients fetched from OpenFoodFacts are cached to Drift and available offline on subsequent queries | VERIFIED | `ingredient_repository.dart:27-49` — pull-through cache: emits cached data first (`_local.getIngredientsByCategory`), then fetches remote, calls `_local.upsertAll`, re-emits |
-| 4 | A static list of 12 ingredient categories exists (including Baking, Nuts & Seeds) | VERIFIED | `openfoodfacts_remote_source.dart:4-17` — `const ingredientCategories` with exactly 12 entries; 'Baking' and 'Nuts & Seeds' both present |
-| 5 | Dietary flags (vegan, vegetarian, gluten-free, dairy-free) are parsed from OFf responses and stored on the Drift row | VERIFIED | `openfoodfacts_remote_source.dart:69-103` — parses `ingredientsAnalysisTags` (vegan/vegetarian) and `labelsTags` (gluten-free/dairy-free); stored as JSON in `ingredient_local_source.dart:139` |
-| 6 | IngredientRepository is the single source of truth — no direct OFf SDK calls from presentation layer | VERIFIED | No `OpenFoodAPIClient` calls found outside `openfoodfacts_remote_source.dart`; all presentation files consume `ingredientRepositoryProvider` |
-| 7 | `getSelectedToday` returns all selected ingredients for the user with no date filter | VERIFIED | `ingredient_local_source.dart:95-100` — `SELECT WHERE userId = :userId` with no date predicate; comment explicitly states "NO date filter" |
-
-#### From Plan 03-02
-
-| # | Truth | Status | Evidence |
-|---|-------|--------|----------|
-| 8 | User can type in a search box and see ingredient autocomplete results within 500ms (300ms debounce + network) | VERIFIED | `ingredient_search_provider.dart:32` — `Timer(const Duration(milliseconds: 300), ...)` debounce; `ingredient_search_screen.dart:103-105` — `onChanged` calls `search()` |
-| 9 | Search field requires minimum 2 characters before firing API call | VERIFIED | `ingredient_search_provider.dart:28-30` — `if (query.length < 2) { state = const AsyncData([]); return; }` |
-| 10 | Search matches local ~200 ingredient list first; OFf API is fallback for uncommon items | VERIFIED | `ingredient_search_provider.dart:36-53` — local `commonIngredients` checked first; API only called if local results < 5; `common_ingredients.dart` has 213 lines with ~200 entries |
-| 11 | User can browse a list of 12 ingredient categories as colored cards with distinct background colors and icons | VERIFIED | `ingredient_search_screen.dart:205-218` — `const categoryMeta` with exactly 12 entries, each with a distinct `color` and `icon`; rendered as `Card` with `color:` in `_buildCategoryGrid()` |
-| 12 | User can toggle dietary filter chips (vegetarian, vegan, gluten-free, dairy-free) and see filtered results | VERIFIED | `dietary_filter_chips.dart:30-36` — `FilterChip` per `DietaryRestriction.values`; `ingredient_filter_provider.dart:17-27` — `toggle()` updates `Set<DietaryRestriction>` state |
-| 13 | Dietary filter shows 'Results may be incomplete' footnote when gluten-free or dairy-free is active | VERIFIED | `dietary_filter_chips.dart:19-50` — checks `hasIncompleteFilter` for glutenFree or dairyFree; shows italic grey text "Results may be incomplete for this filter" |
-| 14 | Main ingredient screen uses 2 tabs: Search/Browse and Favorites | VERIFIED | `ingredient_main_screen.dart:24-51` — `DefaultTabController(length: 2)` with `IngredientSearchScreen()` and `IngredientFavoritesScreen()` as tab children |
-| 15 | Each ingredient tile shows name + category tag + dietary badges | VERIFIED | `ingredient_tile.dart:75-138` — `title: Text(widget.name)`, `subtitle` with category text + `Wrap` of `_DietaryBadge` chips (V/VG/GF/DF) |
-| 16 | Shimmer placeholders (3-4 tiles) shown during loading — no CircularProgressIndicator | VERIFIED | All screens use `Shimmer.fromColors()` with `ListView.builder(itemCount: 4, ...)` skeleton tiles; zero actual `CircularProgressIndicator()` widget instantiations found |
-
-#### From Plan 03-03
-
-| # | Truth | Status | Evidence |
-|---|-------|--------|----------|
-| 17 | User can tap a heart icon on any ingredient and it persists as a favorite across app restarts | VERIFIED | `ingredient_favorites_provider.dart:19-41` — `toggleFavorite` calls `repo.toggleFavorite(ingredientId)` which writes to Drift via `ingredient_local_source.dart:33-37` with `insertOnConflictUpdate`; `syncStatus: 'pending'` set |
-| 18 | User can view a dedicated favorites list showing only favorited ingredients | VERIFIED | `ingredient_favorites_screen.dart` — `ref.watch(ingredientFavoritesProvider)` renders list; filters to `active = favorites.where((i) => i.isFavorite)` |
-| 19 | User can select ingredients as 'I have these today' and the selection persists across navigation | VERIFIED | `selected_today_provider.dart:18` — `@Riverpod(keepAlive: true)`; backed by Drift via `addSelectedToday` in repository; survives navigation |
-| 20 | Selected-today state is available to Phase 4 recipe discovery (stored in Drift, not widget state) | VERIFIED | `selected_today_provider.dart` — `keepAlive` provider with `Map<String,String>` state; `selectedNames` / `selectedIds` getters; `selected_today_bar.dart:147` — "Find Recipes" routes to `/recipes` |
-| 21 | Selections persist until user manually clears — no auto-reset at midnight | VERIFIED | `ingredient_local_source.dart:93-108` — `getSelectedToday` and `clearSelectedToday` both filter only by `userId`, no date predicates |
-| 22 | Favorite toggle is optimistic — UI updates instantly without waiting for sync | VERIFIED | `ingredient_favorites_provider.dart:22-32` — state updated with `AsyncData(...)` immediately before `await repo.toggleFavorite(ingredientId)` |
-
-**Score: 22/22 truths verified**
+Plans 03-04 and 03-05 closed 6 UAT-diagnosed gaps. Each gap is verified below in full (exists + substantive + wired). The 22 previously-passing truths are regression-checked at existence + basic sanity level.
 
 ---
 
-### Required Artifacts
+## Gap Closure Verification
 
-| Artifact | Expected | Status | Details |
-|----------|----------|--------|---------|
-| `lib/features/ingredients/domain/ingredient.dart` | Freezed Ingredient model with dietary flags | VERIFIED | Contains `@freezed`, `.freezed.dart` and `.g.dart` generated |
-| `lib/features/ingredients/domain/ingredient_filter.dart` | Freezed IngredientFilter with DietaryRestriction enum | VERIFIED | Contains `@freezed`, enum `DietaryRestriction { vegetarian, vegan, glutenFree, dairyFree }` |
-| `lib/features/ingredients/data/openfoodfacts_remote_source.dart` | Wrapper around OFf SDK for autocomplete and product search | VERIFIED | `getSuggestions()` and `searchByCategory()` substantively implemented; 106 lines |
-| `lib/features/ingredients/data/ingredient_local_source.dart` | Drift queries for ingredients — CRUD, filter by category, dietary flags | VERIFIED | Full implementation: 162 lines, all methods present and substantive |
-| `lib/features/ingredients/data/ingredient_repository.dart` | Pull-through cache repository combining remote + local | VERIFIED | 90 lines; `watchIngredientsByCategory` uses async* with pull-through cache pattern |
-| `lib/core/database/tables/ingredients_table.dart` | Extended table with `isFavorite`, `category`, `dietaryFlags`, `cachedAt` | VERIFIED | All Phase 3 columns present: `isFavorite`, `dietaryFlags` (nullable text), `cachedAt` |
-| `lib/core/database/tables/selected_today_table.dart` | Selected-today ingredient IDs table | VERIFIED | `SelectedTodayIngredients` class with `ingredientId`, `selectedDate` (audit), `userId`, UUID PK |
-| `lib/core/config/openfoodfacts_config.dart` | OFf SDK initialization with User-Agent | VERIFIED | Sets `OpenFoodAPIConfiguration.userAgent`, `globalLanguages`, `globalCountry` |
-| `lib/features/ingredients/data/ingredient_repository_provider.dart` | Riverpod providers for AppDatabase and IngredientRepository | VERIFIED | `@Riverpod(keepAlive: true)` for `appDatabase`; `@riverpod` for `ingredientRepository`; `.g.dart` present |
-| `lib/features/ingredients/presentation/providers/ingredient_search_provider.dart` | Debounced AsyncNotifier with local-first matching | VERIFIED | 300ms debounce, `commonIngredients` imported and checked before OFf API |
-| `lib/features/ingredients/presentation/providers/ingredient_category_provider.dart` | Provider for category browsing using pull-through cache | VERIFIED | `watchIngredientsByCategory` stream wired |
-| `lib/features/ingredients/presentation/providers/ingredient_filter_provider.dart` | Notifier holding active DietaryRestriction set | VERIFIED | `IngredientFilterNotifier` and `filteredIngredients` provider present |
-| `lib/features/ingredients/presentation/screens/ingredient_main_screen.dart` | 2-tab shell with DefaultTabController | VERIFIED | `DefaultTabController(length: 2)` with `SelectedTodayBar` outside `TabBarView` |
-| `lib/features/ingredients/presentation/screens/ingredient_search_screen.dart` | Search screen with TextField + autocomplete + category grid | VERIFIED | `ingredientSearchProvider` wired; shimmer loading; colored category grid with 12 cards |
-| `lib/features/ingredients/presentation/screens/ingredient_category_screen.dart` | Category browser with shimmer loading | VERIFIED | `ingredientsByCategoryProvider` wired; shimmer loading; `RefreshIndicator` present |
-| `lib/features/ingredients/presentation/widgets/ingredient_tile.dart` | Reusable tile with name, category, dietary badges, animated heart | VERIFIED | `dietaryFlags` rendered as `_DietaryBadge` chips; `ScaleTransition` + `HapticFeedback.lightImpact()` |
-| `lib/features/ingredients/presentation/widgets/dietary_filter_chips.dart` | Row of FilterChip widgets for dietary restrictions | VERIFIED | `FilterChip` per restriction; incomplete-data warning for GF/DF active |
-| `lib/core/assets/common_ingredients.dart` | Static const list of ~200 common cooking ingredient names | VERIFIED | 213-line file, ~200 entries alphabetically organized |
-| `lib/features/ingredients/presentation/providers/ingredient_favorites_provider.dart` | AsyncNotifier managing favorites with optimistic toggle | VERIFIED | `toggleFavorite` optimistic pattern; `ref.mounted` check present |
-| `lib/features/ingredients/presentation/providers/selected_today_provider.dart` | keepAlive Notifier managing `Map<String,String>` backed by Drift | VERIFIED | `@Riverpod(keepAlive: true)`; `toggle(id, {required String name})`; `addAll`; `clearAll`; 3x `ref.mounted` checks |
-| `lib/features/ingredients/presentation/screens/ingredient_favorites_screen.dart` | Screen listing favorites with "Add all favorites" button | VERIFIED | `ElevatedButton.icon` with "Add all to today" calls `selectedTodayProvider.notifier.addAll(active)` |
-| `lib/features/ingredients/presentation/widgets/selected_today_bar.dart` | Expandable bottom pill bar with name chips and Find Recipes CTA | VERIFIED | `ConsumerStatefulWidget`; `AnimatedContainer`; collapsed shows count + 3 name chips; expanded shows full deletable chip list |
-| `test/features/ingredients/presentation/providers/selected_today_provider_test.dart` | Tests for selected-today toggle, persistence, addAll, no date-scoping | VERIFIED | 233 lines; 10 tests covering toggle add/remove, addAll, clearAll, count, selectedIds, selectedNames, null-user guard |
+### Gap 2: Category screen no longer pre-translates display name to OFf tag
+
+**Claim:** Category screen passes display name directly to `ingredientsByCategoryProvider(categoryName)`; repository's `_getCategoryTag` owns the display-name-to-OFf-tag lookup.
+
+**Verification:**
+
+- `ingredient_category_screen.dart:31-32` — `ref.watch(ingredientsByCategoryProvider(categoryName))` where `categoryName` is the raw route param string (e.g. `"Produce"`). No lookup against `ingredientCategories` map in the screen.
+- `ingredient_repository.dart:34` — `_getCategoryTag(category)` is called inside `watchIngredientsByCategory`, which maps `"Produce"` -> `"en:fruits-and-vegetables"` via `ingredientCategories[displayName]`.
+- `ingredient_repository.dart:100-104` — `_getCategoryTag` imports and uses `ingredientCategories` from `openfoodfacts_remote_source.dart` as a const map lookup.
+
+**Status: VERIFIED** — Double-translation eliminated. Screen -> provider -> repository -> OFf tag is a single translation path.
 
 ---
 
-### Key Link Verification
+### Gap 5: toggleFavorite upserts minimal Ingredient row before toggling
 
-| From | To | Via | Status | Details |
-|------|----|-----|--------|---------|
-| `ingredient_repository.dart` | `openfoodfacts_remote_source.dart` | Constructor injection | WIRED | `IngredientRepository(this._remote, this._local)` with `_remote.getSuggestions()` and `_remote.searchByCategory()` called |
-| `ingredient_repository.dart` | `ingredient_local_source.dart` | Constructor injection | WIRED | `_local.getIngredientsByCategory()`, `_local.upsertAll()`, etc. all called |
-| `app_database.dart` | `selected_today_table.dart` | `@DriftDatabase` tables list | WIRED | `SelectedTodayIngredients` in `@DriftDatabase(tables: [..., SelectedTodayIngredients])` |
-| `ingredient_main_screen.dart` | `ingredient_search_screen.dart` | TabBarView child 0 | WIRED | `IngredientSearchScreen()` as first child of `TabBarView` |
-| `ingredient_search_screen.dart` | `ingredient_search_provider.dart` | `ref.watch(ingredientSearchProvider)` | WIRED | `ref.watch(ingredientSearchProvider)` for results + `ref.read(...).search(text)` on `onChanged` |
-| `ingredient_search_provider.dart` | `common_ingredients.dart` | Import + local-first match | WIRED | `import 'package:meal_mate/core/assets/common_ingredients.dart'`; `commonIngredients.where(...)` in `search()` |
-| `ingredient_category_screen.dart` | `ingredient_category_provider.dart` | `ref.watch` for category stream | WIRED | `ref.watch(ingredientsByCategoryProvider(categoryTag))` |
-| `dietary_filter_chips.dart` | `ingredient_filter_provider.dart` | `ref.watch` + `ref.read` to toggle | WIRED | `ref.watch(ingredientFilterProvider)` + `notifier.toggle(restriction)` on chip tap |
-| `app/router.dart` | `ingredient_main_screen.dart` | `...ingredientRoutes` spread at `/ingredients` | WIRED | `routes: [...ingredientRoutes]` in `routerProvider`; `ingredientRoutes` defines `/ingredients` → `IngredientMainScreen` |
-| `ingredient_favorites_provider.dart` | `ingredient_repository.dart` | `ingredientRepositoryProvider` | WIRED | `ref.watch(ingredientRepositoryProvider)` in `build()`; `repo.getFavorites()` and `repo.toggleFavorite()` called |
-| `selected_today_provider.dart` | `ingredient_repository.dart` | `ingredientRepositoryProvider` | WIRED | `ref.watch(ingredientRepositoryProvider)` in `build()`; `repo.getSelectedToday()`, `addSelectedToday()`, `removeSelectedToday()`, `clearSelectedToday()` all called |
-| `selected_today_bar.dart` | `selected_today_provider.dart` | `ref.watch(selectedTodayProvider)` | WIRED | `ref.watch(selectedTodayProvider)` for state; `ref.read(selectedTodayProvider.notifier).toggle/clearAll()` |
-| `ingredient_favorites_screen.dart` | `ingredient_favorites_provider.dart` | `ref.watch(ingredientFavoritesProvider)` | WIRED | `ref.watch(ingredientFavoritesProvider)` for list + `ref.read(...notifier).toggleFavorite()` |
-| `ingredient_search_screen.dart` | `ingredient_favorites_provider.dart` | Quick-add favorites chips | WIRED | `ref.watch(ingredientFavoritesProvider)` for unselected favorites; `ActionChip` calls `toggle(fav.id, name: fav.name)` |
-| `ingredient_favorites_screen.dart` | `selected_today_provider.dart` | "Add all favorites" bulk action | WIRED | `ref.read(selectedTodayProvider.notifier).addAll(active)` on button press |
+**Claim:** `IngredientRepository.toggleFavorite` checks whether the ingredient exists in Drift first; if absent, creates a minimal row before calling the toggle.
+
+**Verification:**
+
+- `ingredient_repository.dart:57-76` — `toggleFavorite(String ingredientId, {String userId = '', String name = ''})` calls `_local.getIngredient(ingredientId)`. If result is `null`, constructs `Ingredient(id: ingredientId, name: name.isNotEmpty ? name : ingredientId, cachedAt: DateTime.now())` and calls `_local.upsert(ingredient, userId: userId)`. Then computes `updated = ingredient.copyWith(isFavorite: !ingredient.isFavorite)` and upserts again.
+- `ingredient_favorites_provider.dart:47` — provider calls `repo.toggleFavorite(ingredientId, name: name)`, passing the display name through.
+- `ingredient_search_screen.dart:177-179` — `onFavoriteTap` calls `toggleFavorite(name, name: name)`, providing the ingredient display name.
+- `ingredient_category_screen.dart:111-113` — `onFavoriteTap` calls `toggleFavorite(ingredient.id, name: ingredient.name)`.
+
+**Status: VERIFIED** — Upsert-before-toggle pattern correctly implemented at both repository and all call sites.
 
 ---
 
-### Requirements Coverage
+### Gap 9: RefreshIndicator wraps all async states on category screen
 
-| Requirement | Source Plan | Description | Status | Evidence |
-|-------------|------------|-------------|--------|----------|
-| INGR-01 | 03-01, 03-02 | User can search ingredients from external API with autocomplete | SATISFIED | OFf `getSuggestions(TagType.INGREDIENTS)` wired through repository to debounced provider; search screen renders results |
-| INGR-02 | 03-01, 03-02 | User can browse ingredients by category | SATISFIED | 12-category `ingredientCategories` map; colored card grid in search screen; `IngredientCategoryScreen` with pull-through cache |
-| INGR-03 | 03-03 | User can add ingredients to favorites for quick access | SATISFIED | `IngredientFavoritesProvider` with optimistic toggle; persisted to Drift `isFavorite` column; favorites tab in main screen |
-| INGR-04 | 03-01, 03-02 | User can filter ingredients by dietary restrictions | SATISFIED | `DietaryFilterChips` widget; `IngredientFilterNotifier`; server-side Drift LIKE filters + client-side filtering in category screen |
-| INGR-05 | 03-03 | User can select "I have these ingredients today" for recipe discovery | SATISFIED | `SelectedTodayNotifier` (keepAlive, Drift-backed, no date filter); `SelectedTodayBar`; "Find Recipes" CTA routes to `/recipes` |
+**Claim:** `RefreshIndicator` is lifted outside `.when()` so it detects pull gestures in loading, error, and empty states — not only in the data state.
 
-All 5 requirements for Phase 3 are satisfied. No orphaned requirements — all INGR-01 through INGR-05 claimed across plans 03-01 to 03-03.
+**Verification:**
+
+- `ingredient_category_screen.dart:43-121` — `RefreshIndicator` widget wraps `ingredientsAsync.when(...)` at line 43; `onRefresh` calls `ref.invalidate(ingredientsByCategoryProvider(categoryName))` then `await ref.read(...future)`.
+- Loading state (`loading:`) at line 50 returns `_buildShimmerList()` — a `ListView.builder` inside `Shimmer.fromColors`.
+- Error state (`error:`) at lines 51-72 returns a `ListView` with `physics: const AlwaysScrollableScrollPhysics()` — comment at line 52 explicitly notes this is "required so RefreshIndicator detects the pull gesture".
+- Empty data state at lines 84-96 returns a `ListView` with `physics: const AlwaysScrollableScrollPhysics()` — comment at line 86 repeats the same note.
+- Data state at lines 99-119 uses `ListView.builder` with `physics: const AlwaysScrollableScrollPhysics()`.
+
+**Status: VERIFIED** — RefreshIndicator correctly wraps all four `.when()` branches; all non-loading states use `AlwaysScrollableScrollPhysics`.
 
 ---
 
-### Anti-Patterns Found
+### Gap 1: Local commonIngredients check before debounce Timer (fast path)
 
-| File | Line | Pattern | Severity | Impact |
-|------|------|---------|----------|--------|
+**Claim:** `IngredientSearch.search()` checks `commonIngredients` synchronously before starting the `Timer`. If >= 5 matches found, emits immediately and returns without starting the timer at all.
+
+**Verification:**
+
+- `ingredient_search_provider.dart:24-26` — `build()` registers `ref.onDispose(() => _debounce?.cancel())` once. This is no longer registered per keystroke (the original leak).
+- `ingredient_search_provider.dart:37-46` — Before any `Timer(...)` call: `localResults` is computed from `commonIngredients.where(...)`. If `localResults.length >= 5`, `state = AsyncData(localResults)` and `return`. Timer is never started on the fast path.
+- `ingredient_search_provider.dart:49-53` — Partial fast path: if `localResults.isNotEmpty` (but < 5), emits partial results immediately, then falls through to the timer for API fallback.
+- `ingredient_search_provider.dart:56-65` — `_debounce = Timer(const Duration(milliseconds: 300), ...)` only reached when local results < 5.
+
+**Status: VERIFIED** — Local-first fast path emits synchronously before debounce. Timer only started for uncommon queries. `ref.onDispose` registered once in `build()`.
+
+---
+
+### Gap 3: Search screen watches ingredientFilterProvider
+
+**Claim:** `ingredient_search_screen.dart` watches `ingredientFilterProvider` inside the `data:` branch and applies active dietary filters to search results.
+
+**Verification:**
+
+- `ingredient_search_screen.dart:8` — `import '.../ingredient_filter_provider.dart'` present.
+- `ingredient_search_screen.dart:136` — `final activeFilters = ref.watch(ingredientFilterProvider)` inside the `data:` branch of `searchResults.when(...)`.
+- `ingredient_search_screen.dart:152-163` — When `activeFilters.isNotEmpty`, `filtered` list is computed via `suggestions.where(...)` using `_restrictionToFlag()` to match flag strings against `cached.dietaryFlags`. Items without cached metadata pass through (graceful degradation, line 157: `if (cached == null) return true`).
+
+**Status: VERIFIED** — Filter provider is watched and actively applied to search results in the data branch.
+
+---
+
+### Gap 4: Search tiles enriched with dietary badge data
+
+**Claim:** Search result tiles receive dietary badge data from a `favoritesList`-based enrichment lookup, not hardcoded empty lists.
+
+**Verification:**
+
+- `ingredient_search_screen.dart:137` — `final favoritesList = favoritesAsync.value ?? []` (favorites already watched at line 51 via `ref.watch(ingredientFavoritesProvider)`).
+- `ingredient_search_screen.dart:140-143` — `final ingredientLookup = <String, Ingredient>{}` built by iterating `favoritesList` and keying by `fav.name.toLowerCase()`.
+- `ingredient_search_screen.dart:145-149` — `favoriteNames` set computed from `favoritesList` for `isFavorite` determination per tile.
+- `ingredient_search_screen.dart:169,174` — `final cached = ingredientLookup[name.toLowerCase()]` — `IngredientTile` receives `dietaryFlags: cached?.dietaryFlags ?? []` and `isFavorite: isFav`.
+
+**Status: VERIFIED** — Tiles receive correct `dietaryFlags` (from favorites enrichment cache) and `isFavorite` (from `favoriteNames` set). Items not in cache receive empty flags (never hidden from results).
+
+---
+
+## Regression Checks (Previously-Passing Truths)
+
+Quick sanity pass on all 22 truths from the initial verification to confirm no regressions from plans 03-04 and 03-05.
+
+| # | Truth (abbreviated) | Regression Check | Status |
+|---|---------------------|-----------------|--------|
+| 1 | OFf SDK configured with User-Agent | `openfoodfacts_config.dart` unchanged | CLEAN |
+| 2 | `getSuggestions` returns `List<String>` | `openfoodfacts_remote_source.dart` unchanged | CLEAN |
+| 3 | Pull-through cache: Drift first, then OFf | `ingredient_repository.dart:27-49` still present, pull-through pattern intact | CLEAN |
+| 4 | 12 ingredient categories static list | `ingredientCategories` map still 12 entries at line 4-17 of remote source | CLEAN |
+| 5 | Dietary flags parsed and stored | Remote source parsing unchanged | CLEAN |
+| 6 | Repository is single source of truth | No `OpenFoodAPIClient` calls in presentation after plan 03-04/05 changes | CLEAN |
+| 7 | `getSelectedToday` returns all with no date filter | `ingredient_local_source.dart` unchanged | CLEAN |
+| 8 | Debounced search within 500ms | `Timer(300ms)` still present as API fallback; fast path is faster | CLEAN |
+| 9 | Min 2 chars before API call | `ingredient_search_provider.dart:31-33` — guard intact | CLEAN |
+| 10 | Local `commonIngredients` checked before OFf | Now verified to run BEFORE the Timer — stronger than before | CLEAN |
+| 11 | 12 colored category cards | `_buildCategoryGrid` with 12-entry `categoryMeta` const map unchanged | CLEAN |
+| 12 | Dietary filter chips toggle correctly | `dietary_filter_chips.dart` and `ingredient_filter_provider.dart` unchanged | CLEAN |
+| 13 | Incomplete-data footnote for GF/DF | `dietary_filter_chips.dart` unchanged | CLEAN |
+| 14 | 2-tab main screen | `ingredient_main_screen.dart` unchanged | CLEAN |
+| 15 | Ingredient tile shows name + category + dietary badges | `ingredient_tile.dart` unchanged; tiles in search screen now enriched | CLEAN |
+| 16 | Shimmer loading, no CircularProgressIndicator | Both screens still use `Shimmer.fromColors`; no `CircularProgressIndicator` added | CLEAN |
+| 17 | Favorites persist via heart icon | `ingredient_favorites_provider.dart` updated but core persist path intact; `ref.mounted` check at line 50 present | CLEAN |
+| 18 | Favorites tab lists favorited ingredients | `ingredient_favorites_screen.dart` unchanged | CLEAN |
+| 19 | Selected-today persists across navigation | `selected_today_provider.dart` unchanged | CLEAN |
+| 20 | Selected-today available to Phase 4 | `selected_today_provider.dart` keepAlive, `selectedNames`/`selectedIds` getters unchanged | CLEAN |
+| 21 | No auto-reset at midnight | `ingredient_local_source.dart` unchanged | CLEAN |
+| 22 | Favorites toggle is optimistic | `ingredient_favorites_provider.dart:26-43` — state updated before `await repo.toggleFavorite` | CLEAN |
+
+**Zero regressions detected.**
+
+---
+
+## Requirements Coverage
+
+| Requirement | Plans | Description | Status | Evidence |
+|-------------|-------|-------------|--------|----------|
+| INGR-01 | 03-01, 03-02, 03-05 | User can search ingredients from external API with autocomplete | SATISFIED | Local-first fast path (03-05) + OFf fallback; search screen wired; no regressions |
+| INGR-02 | 03-01, 03-02, 03-04 | User can browse ingredients by category | SATISFIED | Double-translation bug fixed (03-04); `RefreshIndicator` in all states (03-04) |
+| INGR-03 | 03-03, 03-04 | User can add ingredients to favorites for quick access | SATISFIED | Upsert-before-toggle ensures favorites from search suggestions always persist (03-04) |
+| INGR-04 | 03-01, 03-02, 03-05 | User can filter ingredients by dietary restrictions | SATISFIED | Filter provider now wired to search results (03-05); category screen filtering unchanged |
+| INGR-05 | 03-03 | User can select "I have these ingredients today" for recipe discovery | SATISFIED | `SelectedTodayProvider` unchanged; no regressions |
+
+All 5 requirements remain satisfied. No orphaned requirements.
+
+---
+
+## Anti-Patterns Check (Plans 03-04 and 03-05 Changes Only)
+
+Files modified in the gap-closure plans:
+
+| File | Line | Pattern | Severity | Notes |
+|------|------|---------|----------|-------|
 | No blockers found | — | — | — | — |
 
-**Summary:** Zero blocker or warning anti-patterns found.
+- `ingredient_repository.dart`: No TODO/stub/placeholder; `getIngredient` null-check is real logic; `upsert` before toggle is real implementation.
+- `ingredient_favorites_provider.dart`: No stubs; optimistic append with `AsyncData([...currentList, newIngredient])` is real logic; `ref.mounted` guard present.
+- `ingredient_search_provider.dart`: No stubs; `ref.onDispose` correctly in `build()` (not per keystroke); local-first check is real code.
+- `ingredient_search_screen.dart`: `ingredientLookup` map and `_restrictionToFlag()` helper are real; graceful degradation (`if (cached == null) return true`) is intentional, not a stub.
+- `ingredient_category_screen.dart`: `RefreshIndicator` lifted outside `.when()` with real `ref.invalidate` + `await future` refresh logic.
 
-- No actual `CircularProgressIndicator()` widget instantiations in any ingredient screen (comments mentioning it are documentation, not code)
-- No `OpenFoodAPIClient` calls outside `openfoodfacts_remote_source.dart`
-- No `StateProvider` or `StateNotifier` (legacy Riverpod) usage
-- No TODO/FIXME/PLACEHOLDER comments in ingredient files
-- No empty stub implementations (`return null`, `return {}`, `return []` without logic)
-- `ref.mounted` checked after every `await` in all async Notifier methods
-- No direct Drift calls from presentation layer
+Zero blocker or warning anti-patterns in any modified file.
 
 ---
 
-### Human Verification Required
+## Human Verification Required
 
-The following items require manual testing on a device or emulator — they cannot be verified programmatically:
+The following items from the initial verification remain relevant and still require manual device/emulator testing:
 
-#### 1. Search Autocomplete Feel
+### 1. Category Browse Loads Correct Ingredients
 
-**Test:** Type "tom" in the ingredient search field on the Search tab
-**Expected:** Within ~500ms, a list of matching ingredients appears (local matches like "Tomato" instantly from `commonIngredients`; API fallback for less common items)
-**Why human:** Timing and UX responsiveness can't be verified via grep; debounce behavior requires real timer execution
+**Test:** Navigate to `/ingredients`, tap "Produce" category card.
+**Expected:** Screen shows real vegetables and fruits from OpenFoodFacts (not a blank screen or wrong-category items).
+**Why human:** The double-translation fix corrects the code path but actual OFf API responses for `en:fruits-and-vegetables` require runtime verification.
 
-#### 2. Category Card Visual Distinction
+### 2. Favorite from Search Persists
 
-**Test:** Navigate to `/ingredients` and scroll the category grid
-**Expected:** 12 cards with visually distinct background colors (green for Produce, blue for Dairy, red for Meat, etc.) and recognizable icons
-**Why human:** Color rendering, contrast, and visual "grocery store section feel" require eyeballing on screen
+**Test:** Search for "quinoa" (uncommon, not in commonIngredients), tap the heart icon. Navigate to the Favorites tab.
+**Expected:** "quinoa" appears in the Favorites tab despite never having been fetched into Drift via category browsing.
+**Why human:** Tests the upsert-before-toggle path with a real ingredient not previously in the local DB.
 
-#### 3. Shimmer Loading Appearance
+### 3. Search Fast Path Feels Instant
 
-**Test:** Navigate to a category screen on a slow network or with simulated network delay
-**Expected:** 4 shimmer skeleton tiles animate smoothly; no spinner appears
-**Why human:** Shimmer animation quality and absence of spinner require visual inspection
+**Test:** Type "chick" in the search box.
+**Expected:** Results appear immediately (no 300ms wait); "Chicken", "Chickpeas", "Chicken breast", etc. appear from local list without spinner.
+**Why human:** Timing perception and absence of loading state require live interaction.
 
-#### 4. Dietary Filter Incomplete Data Warning
+### 4. Dietary Filter on Search Results
 
-**Test:** Tap "Gluten-free" filter chip on any screen
-**Expected:** Chips update (Gluten-free chip selected); grey italic text "Results may be incomplete for this filter" appears below the chip row
-**Why human:** Visual placement and styling of the footnote requires screen inspection
+**Test:** Tap "Vegan" filter chip, then search for an ingredient you have previously favorited with known vegan status.
+**Expected:** That ingredient appears in results; non-vegan cached items are filtered out; unfamiliar items (no cache entry) still appear.
+**Why human:** Requires a pre-populated favorites cache and real filter interaction to verify graceful degradation behavior.
 
-#### 5. Expandable Selected-Today Bar
+### 5. Pull-to-Refresh on Error State
 
-**Test:** Select 2-3 ingredients via the check circle icon, then tap the bottom pill bar
-**Expected:** Bar expands with `AnimatedContainer` animation; full ingredient name chips with delete icons appear; "Clear all" and "Find Recipes" buttons visible
-**Why human:** Animation smoothness, expand/collapse state, and chip chip layout require live interaction
-
-#### 6. Favorites Persist Across Restarts
-
-**Test:** Add an ingredient to favorites, fully close and reopen the app
-**Expected:** The ingredient still appears in the Favorites tab
-**Why human:** Requires app restart; can't simulate via code inspection
-
-#### 7. Selected-Today Persists Across Navigation
-
-**Test:** Select 2 ingredients, navigate to a different screen (e.g., home), then return to `/ingredients`
-**Expected:** The `SelectedTodayBar` still shows the 2 selected ingredients
-**Why human:** Requires live navigation; the `keepAlive` provider behavior needs runtime verification
+**Test:** With airplane mode enabled, navigate to a category screen (triggers error state). Pull down on the error message.
+**Expected:** `RefreshIndicator` spinner appears and a new fetch is attempted.
+**Why human:** Requires simulated network failure and live gesture to test the `AlwaysScrollableScrollPhysics` behavior in the error branch.
 
 ---
 
-### Summary
+## Summary
 
-Phase 3 goal achievement is confirmed. All 22 observable truths are verified against the actual codebase — no stubs, no orphaned artifacts, no broken key links.
+All 6 UAT gaps diagnosed after initial verification are confirmed closed:
 
-**Data layer (03-01):** The pull-through cache, Drift schema v2 with `isFavorite`/`dietaryFlags`/`cachedAt`, `SelectedTodayIngredients` table, and 12-category `ingredientCategories` map are all substantively implemented and correctly wired.
+**Plan 03-04 fixed (3 gaps):**
+- Gap 2 (category double-translation): Screen passes display name directly; repository owns the OFf tag mapping via `_getCategoryTag`. Verified at `ingredient_category_screen.dart:31-32` and `ingredient_repository.dart:100-104`.
+- Gap 5 (favorite from search no-op): Repository `toggleFavorite` now performs `getIngredient` -> upsert minimal row if null -> upsert toggle. Verified at `ingredient_repository.dart:57-76`.
+- Gap 9 (RefreshIndicator only in data state): `RefreshIndicator` lifted to wrap `.when(...)` entirely; error and empty branches use `AlwaysScrollableScrollPhysics`. Verified at `ingredient_category_screen.dart:43-121`.
 
-**Search and Browse UI (03-02):** The 2-tab main screen, debounced local-first autocomplete, 12 colored category cards, shimmer loading (zero `CircularProgressIndicator`), dietary filter chips with incomplete-data warning, and `IngredientTile` with V/VG/GF/DF badges are all present and wired.
+**Plan 03-05 fixed (3 gaps):**
+- Gap 1 (local check after debounce): `commonIngredients` match runs synchronously before `Timer(...)` call; >= 5 matches emit immediately and skip the timer entirely. Verified at `ingredient_search_provider.dart:37-46`.
+- Gap 3 (search screen not watching filter provider): `ref.watch(ingredientFilterProvider)` added inside the `data:` branch at `ingredient_search_screen.dart:136`.
+- Gap 4 (search tiles no dietary badges): `ingredientLookup` map built from `favoritesList` provides `dietaryFlags` to each `IngredientTile`; `isFavorite` computed from `favoriteNames` set. Verified at `ingredient_search_screen.dart:140-184`.
 
-**Favorites and Selection (03-03):** The optimistic favorites toggle, `keepAlive` `Map<String,String>` selected-today provider (Drift-backed, no date filter), expandable `AnimatedContainer` pill bar with name chips, "Add all favorites" bulk action, and quick-add favorites chips on the search screen are all present and wired.
+Zero regressions in the 22 previously-passing truths. All 5 INGR requirements remain satisfied.
 
-The `selectedTodayProvider` is correctly set to `keepAlive: true` with `Map<String,String>` state — Phase 4 recipe discovery can read `selectedNames` or `selectedIds` directly. The "Find Recipes" CTA in `SelectedTodayBar` routes to `/recipes` (Phase 4 must register this route).
+Phase 3 goal is fully achieved — users can find ingredients by search, category browsing, and dietary filtering; favorites persist; selected-today state is ready for Phase 4 recipe discovery.
 
 ---
 
-_Verified: 2026-03-04T10:00:00Z_
+_Verified: 2026-03-04T11:00:00Z_
 _Verifier: Claude (gsd-verifier)_
