@@ -1,0 +1,150 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meal_mate/features/ingredients/data/openfoodfacts_remote_source.dart';
+import 'package:meal_mate/features/ingredients/domain/ingredient_filter.dart';
+import 'package:meal_mate/features/ingredients/presentation/providers/ingredient_category_provider.dart';
+import 'package:meal_mate/features/ingredients/presentation/providers/ingredient_favorites_provider.dart';
+import 'package:meal_mate/features/ingredients/presentation/providers/ingredient_filter_provider.dart';
+import 'package:meal_mate/features/ingredients/presentation/providers/selected_today_provider.dart';
+import 'package:meal_mate/features/ingredients/presentation/widgets/dietary_filter_chips.dart';
+import 'package:meal_mate/features/ingredients/presentation/widgets/ingredient_tile.dart';
+import 'package:shimmer/shimmer.dart';
+
+/// Displays ingredients for a specific category.
+///
+/// Uses the pull-through cache pattern: shows Drift-cached data immediately
+/// then updates when fresh data arrives from OpenFoodFacts.
+/// Dietary filter chips allow client-side filtering of displayed results.
+///
+/// Route: /ingredients/category/:name
+class IngredientCategoryScreen extends ConsumerWidget {
+  final String categoryName;
+
+  const IngredientCategoryScreen({super.key, required this.categoryName});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Look up the OFf tag for this category, fall back to display name
+    final categoryTag = ingredientCategories[categoryName] ?? categoryName;
+    final ingredientsAsync =
+        ref.watch(ingredientsByCategoryProvider(categoryTag));
+    final activeFilters = ref.watch(ingredientFilterProvider);
+    final selectedAsync = ref.watch(selectedTodayProvider);
+    final selectedIds = selectedAsync.value ?? {};
+
+    return Scaffold(
+      appBar: AppBar(title: Text(categoryName)),
+      body: Column(
+        children: [
+          const DietaryFilterChips(),
+          Expanded(
+            child: ingredientsAsync.when(
+              loading: () => _buildShimmerList(),
+              error: (e, _) => Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.error_outline, size: 48),
+                    const SizedBox(height: 8),
+                    Text('Failed to load ingredients: $e'),
+                    TextButton(
+                      onPressed: () =>
+                          ref.invalidate(ingredientsByCategoryProvider),
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              ),
+              data: (ingredients) {
+                // Client-side filter by active dietary restrictions
+                final filtered = activeFilters.isEmpty
+                    ? ingredients
+                    : ingredients.where((i) {
+                        return activeFilters.every((restriction) {
+                          final flag = _restrictionToFlag(restriction);
+                          return i.dietaryFlags.contains(flag);
+                        });
+                      }).toList();
+
+                if (filtered.isEmpty) {
+                  return const Center(
+                    child: Text('No ingredients found for this category'),
+                  );
+                }
+
+                return RefreshIndicator(
+                  onRefresh: () async =>
+                      ref.invalidate(ingredientsByCategoryProvider),
+                  child: ListView.builder(
+                    itemCount: filtered.length,
+                    itemBuilder: (_, i) {
+                      final ingredient = filtered[i];
+                      final isSelected = selectedIds.contains(ingredient.id);
+                      return IngredientTile(
+                        name: ingredient.name,
+                        category: ingredient.category,
+                        dietaryFlags: ingredient.dietaryFlags,
+                        isFavorite: ingredient.isFavorite,
+                        isSelected: isSelected,
+                        onFavoriteTap: () => ref
+                            .read(ingredientFavoritesProvider.notifier)
+                            .toggleFavorite(ingredient.id),
+                        onSelectTap: () => ref
+                            .read(selectedTodayProvider.notifier)
+                            .toggle(ingredient.id),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Shimmer loading skeleton — 4 tiles, no CircularProgressIndicator.
+  Widget _buildShimmerList() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: ListView.builder(
+        itemCount: 4,
+        itemBuilder: (_, __) => ListTile(
+          leading: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          title: Container(
+            height: 14,
+            color: Colors.white,
+            margin: const EdgeInsets.only(right: 80),
+          ),
+          subtitle: Container(
+            height: 10,
+            color: Colors.white,
+            margin: const EdgeInsets.only(right: 140, top: 4),
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _restrictionToFlag(DietaryRestriction restriction) {
+    switch (restriction) {
+      case DietaryRestriction.vegetarian:
+        return 'vegetarian';
+      case DietaryRestriction.vegan:
+        return 'vegan';
+      case DietaryRestriction.glutenFree:
+        return 'gluten-free';
+      case DietaryRestriction.dairyFree:
+        return 'dairy-free';
+    }
+  }
+}
