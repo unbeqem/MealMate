@@ -110,7 +110,7 @@ class IngredientCategoryScreen extends ConsumerWidget {
                         isSelected: isSelected,
                         onFavoriteTap: () => ref
                             .read(ingredientFavoritesProvider.notifier)
-                            .toggleFavorite(ingredient.id),
+                            .toggleFavorite(ingredient.id, name: ingredient.name),
                         onSelectTap: () => ref
                             .read(selectedTodayProvider.notifier)
                             .toggle(ingredient.id, name: ingredient.name),

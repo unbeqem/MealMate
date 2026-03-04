@@ -50,10 +50,25 @@ class IngredientRepository {
 
   /// Toggles the favorite status of an ingredient.
   ///
-  /// Optimistic write: flips isFavorite locally and marks syncStatus as pending.
-  Future<void> toggleFavorite(String ingredientId, {String userId = ''}) async {
-    final ingredient = await _local.getIngredient(ingredientId);
-    if (ingredient == null) return;
+  /// If the ingredient doesn't exist in Drift yet (e.g. from search suggestions),
+  /// a minimal row is upserted first so the toggle can proceed.
+  ///
+  /// [name] is used as the display name when creating the minimal row.
+  Future<void> toggleFavorite(
+    String ingredientId, {
+    String userId = '',
+    String name = '',
+  }) async {
+    var ingredient = await _local.getIngredient(ingredientId);
+    if (ingredient == null) {
+      // Ingredient not in Drift yet — create a minimal row before toggling.
+      ingredient = Ingredient(
+        id: ingredientId,
+        name: name.isNotEmpty ? name : ingredientId,
+        cachedAt: DateTime.now(),
+      );
+      await _local.upsert(ingredient, userId: userId);
+    }
     final updated = ingredient.copyWith(
       isFavorite: !ingredient.isFavorite,
     );
