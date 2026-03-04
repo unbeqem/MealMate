@@ -21,7 +21,10 @@ class IngredientSearch extends _$IngredientSearch {
   Timer? _debounce;
 
   @override
-  FutureOr<List<String>> build() => [];
+  FutureOr<List<String>> build() {
+    ref.onDispose(() => _debounce?.cancel());
+    return [];
+  }
 
   Future<void> search(String query) async {
     _debounce?.cancel();
@@ -29,22 +32,28 @@ class IngredientSearch extends _$IngredientSearch {
       state = const AsyncData([]);
       return;
     }
-    _debounce = Timer(const Duration(milliseconds: 300), () async {
+
+    // LOCAL-FIRST: check curated list BEFORE debounce (instant)
+    final localResults = commonIngredients
+        .where((name) => name.toLowerCase().contains(query.toLowerCase()))
+        .take(10)
+        .toList();
+
+    if (localResults.length >= 5) {
+      // Fast path — enough local matches, emit immediately, no API call
+      state = AsyncData(localResults);
+      return;
+    }
+
+    // Emit local results immediately if any, then debounce for API
+    if (localResults.isNotEmpty) {
+      state = AsyncData(localResults);
+    } else {
       state = const AsyncLoading();
+    }
 
-      // LOCAL-FIRST: match against curated list (instant, no API call)
-      final localResults = commonIngredients
-          .where((name) => name.toLowerCase().contains(query.toLowerCase()))
-          .take(10)
-          .toList();
-
-      if (localResults.length >= 5) {
-        // Fast path — enough local matches, skip API call entirely
-        state = AsyncData(localResults);
-        return;
-      }
-
-      // FALLBACK: OFf API for less common items
+    // FALLBACK: OFf API for less common items (debounced)
+    _debounce = Timer(const Duration(milliseconds: 300), () async {
       state = await AsyncValue.guard(() async {
         final apiResults = await ref
             .read(ingredientRepositoryProvider)
@@ -54,6 +63,5 @@ class IngredientSearch extends _$IngredientSearch {
         return combined.take(20).toList();
       });
     });
-    ref.onDispose(() => _debounce?.cancel());
   }
 }
