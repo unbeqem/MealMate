@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:meal_mate/features/ingredients/data/openfoodfacts_remote_source.dart';
 import 'package:meal_mate/features/ingredients/domain/ingredient_filter.dart';
 import 'package:meal_mate/features/ingredients/presentation/providers/ingredient_category_provider.dart';
 import 'package:meal_mate/features/ingredients/presentation/providers/ingredient_favorites_provider.dart';
@@ -28,10 +27,9 @@ class IngredientCategoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Look up the OFf tag for this category, fall back to display name
-    final categoryTag = ingredientCategories[categoryName] ?? categoryName;
+    // Pass display name directly — repository owns the display-name-to-OFf-tag lookup
     final ingredientsAsync =
-        ref.watch(ingredientsByCategoryProvider(categoryTag));
+        ref.watch(ingredientsByCategoryProvider(categoryName));
     final activeFilters = ref.watch(ingredientFilterProvider);
     final selectedAsync = ref.watch(selectedTodayProvider);
     final selectedMap = selectedAsync.value ?? {};
@@ -42,44 +40,64 @@ class IngredientCategoryScreen extends ConsumerWidget {
         children: [
           const DietaryFilterChips(),
           Expanded(
-            child: ingredientsAsync.when(
-              loading: () => _buildShimmerList(),
-              error: (e, _) => Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+            child: RefreshIndicator(
+              onRefresh: () async {
+                ref.invalidate(ingredientsByCategoryProvider(categoryName));
+                await ref
+                    .read(ingredientsByCategoryProvider(categoryName).future);
+              },
+              child: ingredientsAsync.when(
+                loading: () => _buildShimmerList(),
+                error: (e, _) => ListView(
+                  // ListView required so RefreshIndicator detects the pull gesture
+                  physics: const AlwaysScrollableScrollPhysics(),
                   children: [
-                    const Icon(Icons.error_outline, size: 48),
-                    const SizedBox(height: 8),
-                    Text('Failed to load ingredients: $e'),
-                    TextButton(
-                      onPressed: () =>
-                          ref.invalidate(ingredientsByCategoryProvider),
-                      child: const Text('Retry'),
+                    Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(height: 80),
+                          const Icon(Icons.error_outline, size: 48),
+                          const SizedBox(height: 8),
+                          Text('Failed to load ingredients: $e'),
+                          TextButton(
+                            onPressed: () => ref
+                                .invalidate(ingredientsByCategoryProvider),
+                            child: const Text('Retry'),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-              data: (ingredients) {
-                // Client-side filter by active dietary restrictions
-                final filtered = activeFilters.isEmpty
-                    ? ingredients
-                    : ingredients.where((i) {
-                        return activeFilters.every((restriction) {
-                          final flag = _restrictionToFlag(restriction);
-                          return i.dietaryFlags.contains(flag);
-                        });
-                      }).toList();
+                data: (ingredients) {
+                  // Client-side filter by active dietary restrictions
+                  final filtered = activeFilters.isEmpty
+                      ? ingredients
+                      : ingredients.where((i) {
+                          return activeFilters.every((restriction) {
+                            final flag = _restrictionToFlag(restriction);
+                            return i.dietaryFlags.contains(flag);
+                          });
+                        }).toList();
 
-                if (filtered.isEmpty) {
-                  return const Center(
-                    child: Text('No ingredients found for this category'),
-                  );
-                }
+                  if (filtered.isEmpty) {
+                    return ListView(
+                      // ListView required so RefreshIndicator detects the pull gesture
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: const [
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 80),
+                            child: Text('No ingredients found for this category'),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
 
-                return RefreshIndicator(
-                  onRefresh: () async =>
-                      ref.invalidate(ingredientsByCategoryProvider),
-                  child: ListView.builder(
+                  return ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
                     itemCount: filtered.length,
                     itemBuilder: (_, i) {
                       final ingredient = filtered[i];
@@ -98,9 +116,9 @@ class IngredientCategoryScreen extends ConsumerWidget {
                             .toggle(ingredient.id, name: ingredient.name),
                       );
                     },
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
           // SelectedTodayBar at the bottom — shows selection across navigation
