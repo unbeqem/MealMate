@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 status: unknown
 stopped_at: Completed 03-01-PLAN.md — ingredient data layer
-last_updated: "2026-03-04T09:05:42.190Z"
+last_updated: "2026-03-04T09:13:58.274Z"
 last_activity: "2026-03-03 — Completed 02-01: Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config"
 progress:
   total_phases: 9
   completed_phases: 1
   total_plans: 21
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 ---
@@ -85,6 +85,7 @@ Progress: [███░░░░░░░] 12%
 | 02-authentication-onboarding P01 | 3 min | 2 tasks | 12 files |
 | Phase 02 P02 | 3 | 2 tasks | 10 files |
 | Phase 03-ingredient-selection P01 | 15 | 2 tasks | 12 files |
+| Phase 03-ingredient-selection P02 | 5 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -116,6 +117,9 @@ Recent decisions affecting current work:
 - [Phase 03-ingredient-selection]: selectedToday has NO date filter — getSelectedToday and clearSelectedToday operate on all rows for userId (persist until manual clear)
 - [Phase 03-ingredient-selection]: ingredientCategories has exactly 12 entries including Baking and Nuts & Seeds per locked decision
 - [Phase 03-ingredient-selection]: appDatabaseProvider uses keepAlive: true — db connection survives navigation across all Phase 3 screens
+- [Phase 03-ingredient-selection]: IngredientSearchScreen and IngredientFavoritesScreen are tab children with no own Scaffold — IngredientMainScreen provides the single Scaffold
+- [Phase 03-ingredient-selection]: Local-first search fast path: >= 5 local matches in commonIngredients skips OFf API entirely
+- [Phase 03-ingredient-selection]: /ingredients/favorites removed as standalone route — Favorites is now Tab 1 of IngredientMainScreen
 
 ### Pending Todos
 
@@ -130,6 +134,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-04T09:05:42.187Z
-Stopped at: Completed 03-01-PLAN.md — ingredient data layer
+Last session: 2026-03-04T09:12:32Z
+Stopped at: Completed 03-02-PLAN.md — ingredient UI layer
 Resume file: None
