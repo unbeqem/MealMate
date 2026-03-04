@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meal_mate/features/ingredients/data/openfoodfacts_remote_source.dart';
+import 'package:meal_mate/features/ingredients/domain/ingredient.dart';
+import 'package:meal_mate/features/ingredients/domain/ingredient_filter.dart';
 import 'package:meal_mate/features/ingredients/presentation/providers/ingredient_favorites_provider.dart';
+import 'package:meal_mate/features/ingredients/presentation/providers/ingredient_filter_provider.dart';
 import 'package:meal_mate/features/ingredients/presentation/providers/ingredient_search_provider.dart';
 import 'package:meal_mate/features/ingredients/presentation/providers/selected_today_provider.dart';
 import 'package:meal_mate/features/ingredients/presentation/widgets/dietary_filter_chips.dart';
@@ -129,19 +132,51 @@ class _IngredientSearchScreenState
               if (suggestions.isEmpty) {
                 return _buildEmptyOrBrowseState(context);
               }
+
+              final activeFilters = ref.watch(ingredientFilterProvider);
+              final favoritesList = favoritesAsync.value ?? [];
+
+              // Build lookup: lowercase name -> Ingredient (for flags + isFavorite)
+              final ingredientLookup = <String, Ingredient>{};
+              for (final fav in favoritesList) {
+                ingredientLookup[fav.name.toLowerCase()] = fav;
+              }
+
+              // Build favorite name set for isFavorite display
+              final favoriteNames = favoritesList
+                  .where((f) => f.isFavorite)
+                  .map((f) => f.name.toLowerCase())
+                  .toSet();
+
+              // Apply dietary filter where we have cached metadata
+              List<String> filtered = suggestions;
+              if (activeFilters.isNotEmpty) {
+                filtered = suggestions.where((name) {
+                  final cached = ingredientLookup[name.toLowerCase()];
+                  // Keep items without metadata (graceful degradation — don't hide)
+                  if (cached == null) return true;
+                  return activeFilters.every((restriction) {
+                    final flag = _restrictionToFlag(restriction);
+                    return cached.dietaryFlags.contains(flag);
+                  });
+                }).toList();
+              }
+
               return ListView.builder(
-                itemCount: suggestions.length,
+                itemCount: filtered.length,
                 itemBuilder: (_, i) {
-                  final name = suggestions[i];
-                  // Search results are name strings, not Ingredient domain objects
-                  // Use name as both id and display name for selection
+                  final name = filtered[i];
+                  final cached = ingredientLookup[name.toLowerCase()];
                   final isSelected = selectedMap.containsKey(name);
+                  final isFav = favoriteNames.contains(name.toLowerCase());
                   return IngredientTile(
                     name: name,
+                    dietaryFlags: cached?.dietaryFlags ?? [],
                     isSelected: isSelected,
+                    isFavorite: isFav,
                     onFavoriteTap: () => ref
                         .read(ingredientFavoritesProvider.notifier)
-                        .toggleFavorite(name),
+                        .toggleFavorite(name, name: name),
                     onSelectTap: () => ref
                         .read(selectedTodayProvider.notifier)
                         .toggle(name, name: name),
@@ -153,6 +188,21 @@ class _IngredientSearchScreenState
         ),
       ],
     );
+  }
+
+  /// Maps a [DietaryRestriction] enum value to the flag string stored in
+  /// [Ingredient.dietaryFlags].
+  String _restrictionToFlag(DietaryRestriction restriction) {
+    switch (restriction) {
+      case DietaryRestriction.vegetarian:
+        return 'vegetarian';
+      case DietaryRestriction.vegan:
+        return 'vegan';
+      case DietaryRestriction.glutenFree:
+        return 'gluten-free';
+      case DietaryRestriction.dairyFree:
+        return 'dairy-free';
+    }
   }
 
   /// Shows category grid when there are no search results.
