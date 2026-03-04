@@ -3,11 +3,27 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
+stopped_at: Completed 03-03-PLAN.md — favorites, selected-today bar, and quick-add chips
+last_updated: "2026-03-04T09:22:07.119Z"
+last_activity: "2026-03-03 — Completed 02-01: Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config"
+progress:
+  total_phases: 9
+  completed_phases: 2
+  total_plans: 21
+  completed_plans: 8
+  percent: 38
+---
+
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: unknown
 stopped_at: Completed 03-01-PLAN.md — ingredient data layer
 last_updated: "2026-03-04T09:13:58.274Z"
 last_activity: "2026-03-03 — Completed 02-01: Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config"
 progress:
-  total_phases: 9
+  [████░░░░░░] 38%
   completed_phases: 1
   total_plans: 21
   completed_plans: 7
@@ -86,6 +102,7 @@ Progress: [███░░░░░░░] 12%
 | Phase 02 P02 | 3 | 2 tasks | 10 files |
 | Phase 03-ingredient-selection P01 | 15 | 2 tasks | 12 files |
 | Phase 03-ingredient-selection P02 | 5 | 2 tasks | 8 files |
+| Phase 03-ingredient-selection P03 | 18 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -120,6 +137,9 @@ Recent decisions affecting current work:
 - [Phase 03-ingredient-selection]: IngredientSearchScreen and IngredientFavoritesScreen are tab children with no own Scaffold — IngredientMainScreen provides the single Scaffold
 - [Phase 03-ingredient-selection]: Local-first search fast path: >= 5 local matches in commonIngredients skips OFf API entirely
 - [Phase 03-ingredient-selection]: /ingredients/favorites removed as standalone route — Favorites is now Tab 1 of IngredientMainScreen
+- [Phase 03-ingredient-selection]: SelectedTodayNotifier state is Map<String,String> (id->name) — names stored at toggle-time so pill bar can render chips without async lookups
+- [Phase 03-ingredient-selection]: toggle() requires {required String name} param — caller provides name at the point they have the Ingredient object
+- [Phase 03-ingredient-selection]: SelectedTodayBar is ConsumerStatefulWidget to hold expand/collapse state locally while watching keepAlive global provider
 
 ### Pending Todos
 
@@ -134,6 +154,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-04T09:12:32Z
-Stopped at: Completed 03-02-PLAN.md — ingredient UI layer
+Last session: 2026-03-04T09:22:07.116Z
+Stopped at: Completed 03-03-PLAN.md — favorites, selected-today bar, and quick-add chips
 Resume file: None

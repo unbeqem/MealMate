@@ -19,9 +19,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **INGR-01**: User can search ingredients from external API with autocomplete
 - [x] **INGR-02**: User can browse ingredients by category
-- [ ] **INGR-03**: User can add ingredients to favorites for quick access
+- [x] **INGR-03**: User can add ingredients to favorites for quick access
 - [x] **INGR-04**: User can filter ingredients by dietary restrictions (vegetarian, vegan, gluten-free, dairy-free)
-- [ ] **INGR-05**: User can select "I have these ingredients today" for recipe discovery
+- [x] **INGR-05**: User can select "I have these ingredients today" for recipe discovery
 
 ### Recipe Discovery & Generation
 
@@ -111,9 +111,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-05 | Phase 2 | Complete |
 | INGR-01 | Phase 3 | Complete |
 | INGR-02 | Phase 3 | Complete |
-| INGR-03 | Phase 3 | Pending |
+| INGR-03 | Phase 3 | Complete |
 | INGR-04 | Phase 3 | Complete |
-| INGR-05 | Phase 3 | Pending |
+| INGR-05 | Phase 3 | Complete |
 | RECP-01 | Phase 4 | Pending |
 | RECP-02 | Phase 4 | Pending |
 | RECP-03 | Phase 4 | Pending |
