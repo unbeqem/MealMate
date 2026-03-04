@@ -8,6 +8,7 @@ import 'package:meal_mate/features/ingredients/presentation/providers/ingredient
 import 'package:meal_mate/features/ingredients/presentation/providers/selected_today_provider.dart';
 import 'package:meal_mate/features/ingredients/presentation/widgets/dietary_filter_chips.dart';
 import 'package:meal_mate/features/ingredients/presentation/widgets/ingredient_tile.dart';
+import 'package:meal_mate/features/ingredients/presentation/widgets/selected_today_bar.dart';
 import 'package:shimmer/shimmer.dart';
 
 /// Displays ingredients for a specific category.
@@ -15,6 +16,9 @@ import 'package:shimmer/shimmer.dart';
 /// Uses the pull-through cache pattern: shows Drift-cached data immediately
 /// then updates when fresh data arrives from OpenFoodFacts.
 /// Dietary filter chips allow client-side filtering of displayed results.
+///
+/// [SelectedTodayBar] is embedded at the bottom of the body Column so users
+/// can see their current selection and navigate to recipe discovery from here.
 ///
 /// Route: /ingredients/category/:name
 class IngredientCategoryScreen extends ConsumerWidget {
@@ -30,7 +34,7 @@ class IngredientCategoryScreen extends ConsumerWidget {
         ref.watch(ingredientsByCategoryProvider(categoryTag));
     final activeFilters = ref.watch(ingredientFilterProvider);
     final selectedAsync = ref.watch(selectedTodayProvider);
-    final selectedIds = selectedAsync.value ?? {};
+    final selectedMap = selectedAsync.value ?? {};
 
     return Scaffold(
       appBar: AppBar(title: Text(categoryName)),
@@ -79,7 +83,7 @@ class IngredientCategoryScreen extends ConsumerWidget {
                     itemCount: filtered.length,
                     itemBuilder: (_, i) {
                       final ingredient = filtered[i];
-                      final isSelected = selectedIds.contains(ingredient.id);
+                      final isSelected = selectedMap.containsKey(ingredient.id);
                       return IngredientTile(
                         name: ingredient.name,
                         category: ingredient.category,
@@ -91,7 +95,7 @@ class IngredientCategoryScreen extends ConsumerWidget {
                             .toggleFavorite(ingredient.id),
                         onSelectTap: () => ref
                             .read(selectedTodayProvider.notifier)
-                            .toggle(ingredient.id),
+                            .toggle(ingredient.id, name: ingredient.name),
                       );
                     },
                   ),
@@ -99,6 +103,8 @@ class IngredientCategoryScreen extends ConsumerWidget {
               },
             ),
           ),
+          // SelectedTodayBar at the bottom — shows selection across navigation
+          const SelectedTodayBar(),
         ],
       ),
     );

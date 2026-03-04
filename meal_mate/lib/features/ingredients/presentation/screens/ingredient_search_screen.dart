@@ -15,6 +15,7 @@ import 'package:shimmer/shimmer.dart';
 /// [Scaffold] wrapper; callers must provide one.
 ///
 /// Users can:
+/// - Quick-add favorites via chips at the top (one tap to add to today's selection)
 /// - Search for ingredients by name (300ms debounced, min 2 chars)
 /// - Browse by category — 12 colored cards (navigates to [IngredientCategoryScreen])
 /// - Favorite ingredients (via heart icon)
@@ -41,12 +42,54 @@ class _IngredientSearchScreenState
   Widget build(BuildContext context) {
     final searchResults = ref.watch(ingredientSearchProvider);
     final selectedAsync = ref.watch(selectedTodayProvider);
-    final selectedIds = selectedAsync.value ?? {};
+    final selectedMap = selectedAsync.value ?? {};
+
+    // Quick-add favorites state
+    final favoritesAsync = ref.watch(ingredientFavoritesProvider);
+    final unselectedFavorites = favoritesAsync.value
+            ?.where((fav) => !selectedMap.containsKey(fav.id))
+            .toList() ??
+        [];
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Quick-add favorites chips — per locked decision
+        if (unselectedFavorites.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+            child: Text(
+              'Quick add from favorites',
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: unselectedFavorites.map((fav) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: ActionChip(
+                      avatar: const Icon(Icons.add, size: 16),
+                      label: Text(fav.name),
+                      onPressed: () => ref
+                          .read(selectedTodayProvider.notifier)
+                          .toggle(fav.id, name: fav.name),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+        ],
+
         // Dietary filter chips
         const DietaryFilterChips(),
+
         // Search text field
         Padding(
           padding: const EdgeInsets.all(12.0),
@@ -61,6 +104,7 @@ class _IngredientSearchScreenState
                 ref.read(ingredientSearchProvider.notifier).search(text),
           ),
         ),
+
         // Search results or category grid
         Expanded(
           child: searchResults.when(
@@ -89,15 +133,18 @@ class _IngredientSearchScreenState
                 itemCount: suggestions.length,
                 itemBuilder: (_, i) {
                   final name = suggestions[i];
-                  final isSelected = selectedIds.contains(name);
+                  // Search results are name strings, not Ingredient domain objects
+                  // Use name as both id and display name for selection
+                  final isSelected = selectedMap.containsKey(name);
                   return IngredientTile(
                     name: name,
                     isSelected: isSelected,
                     onFavoriteTap: () => ref
                         .read(ingredientFavoritesProvider.notifier)
                         .toggleFavorite(name),
-                    onSelectTap: () =>
-                        ref.read(selectedTodayProvider.notifier).toggle(name),
+                    onSelectTap: () => ref
+                        .read(selectedTodayProvider.notifier)
+                        .toggle(name, name: name),
                   );
                 },
               );

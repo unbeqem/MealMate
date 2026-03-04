@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meal_mate/features/ingredients/presentation/providers/ingredient_favorites_provider.dart';
 import 'package:meal_mate/features/ingredients/presentation/providers/selected_today_provider.dart';
 import 'package:meal_mate/features/ingredients/presentation/widgets/ingredient_tile.dart';
-import 'package:meal_mate/features/ingredients/presentation/widgets/selected_today_bar.dart';
 import 'package:shimmer/shimmer.dart';
 
 /// Displays all favorited ingredients as a tab child inside [IngredientMainScreen].
@@ -11,9 +10,12 @@ import 'package:shimmer/shimmer.dart';
 /// No standalone [Scaffold] — callers must provide one. Embedded as Tab 1
 /// in the 2-tab shell at /ingredients.
 ///
-/// Users can unfavorite ingredients (removes from this list) and toggle
-/// the "I have this today" selection. Includes the [SelectedTodayBar] at
-/// the bottom so users can proceed to recipe discovery from here.
+/// Features:
+/// - "Add all to today" bulk action button at top (per locked decision)
+/// - Unfavorite action via heart icon (removes from this list optimistically)
+/// - "I have this today" toggle via select icon
+/// - Shimmer loading skeleton (no CircularProgressIndicator)
+/// - Empty state with icon + instructions
 class IngredientFavoritesScreen extends ConsumerWidget {
   const IngredientFavoritesScreen({super.key});
 
@@ -21,7 +23,7 @@ class IngredientFavoritesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final favoritesAsync = ref.watch(ingredientFavoritesProvider);
     final selectedAsync = ref.watch(selectedTodayProvider);
-    final selectedIds = selectedAsync.value ?? {};
+    final selectedMap = selectedAsync.value ?? {};
 
     return Column(
       children: [
@@ -64,30 +66,50 @@ class IngredientFavoritesScreen extends ConsumerWidget {
                 );
               }
 
-              return ListView.builder(
-                itemCount: active.length,
-                itemBuilder: (_, i) {
-                  final ingredient = active[i];
-                  final isSelected = selectedIds.contains(ingredient.id);
-                  return IngredientTile(
-                    name: ingredient.name,
-                    category: ingredient.category,
-                    dietaryFlags: ingredient.dietaryFlags,
-                    isFavorite: true,
-                    isSelected: isSelected,
-                    onFavoriteTap: () => ref
-                        .read(ingredientFavoritesProvider.notifier)
-                        .toggleFavorite(ingredient.id),
-                    onSelectTap: () => ref
-                        .read(selectedTodayProvider.notifier)
-                        .toggle(ingredient.id),
-                  );
-                },
+              return Column(
+                children: [
+                  // "Add all to today" bulk action — per locked decision
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.add_circle_outline),
+                        label: const Text('Add all to today'),
+                        onPressed: () => ref
+                            .read(selectedTodayProvider.notifier)
+                            .addAll(active),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: active.length,
+                      itemBuilder: (_, i) {
+                        final ingredient = active[i];
+                        final isSelected =
+                            selectedMap.containsKey(ingredient.id);
+                        return IngredientTile(
+                          name: ingredient.name,
+                          category: ingredient.category,
+                          dietaryFlags: ingredient.dietaryFlags,
+                          isFavorite: true,
+                          isSelected: isSelected,
+                          onFavoriteTap: () => ref
+                              .read(ingredientFavoritesProvider.notifier)
+                              .toggleFavorite(ingredient.id),
+                          onSelectTap: () => ref
+                              .read(selectedTodayProvider.notifier)
+                              .toggle(ingredient.id, name: ingredient.name),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               );
             },
           ),
         ),
-        const SelectedTodayBar(),
       ],
     );
   }

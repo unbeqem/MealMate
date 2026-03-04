@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meal_mate/features/ingredients/presentation/screens/ingredient_favorites_screen.dart';
 import 'package:meal_mate/features/ingredients/presentation/screens/ingredient_search_screen.dart';
+import 'package:meal_mate/features/ingredients/presentation/widgets/selected_today_bar.dart';
 
 /// Main 2-tab shell for the ingredient selection feature.
 ///
@@ -10,6 +11,9 @@ import 'package:meal_mate/features/ingredients/presentation/screens/ingredient_s
 ///
 /// Tab 1 (Favorites): [IngredientFavoritesScreen] — saved ingredients
 /// the user can quickly add to "I have these today".
+///
+/// [SelectedTodayBar] is placed OUTSIDE the [TabBarView] so it persists
+/// across tab switches without rebuilding its expand/collapse state.
 ///
 /// Route: /ingredients
 class IngredientMainScreen extends ConsumerWidget {
@@ -29,10 +33,17 @@ class IngredientMainScreen extends ConsumerWidget {
             ],
           ),
         ),
-        body: const TabBarView(
+        body: const Column(
           children: [
-            IngredientSearchScreen(), // Tab 0: Search/Browse
-            IngredientFavoritesScreen(), // Tab 1: Favorites
+            Expanded(
+              child: TabBarView(
+                children: [
+                  IngredientSearchScreen(), // Tab 0: Search/Browse
+                  IngredientFavoritesScreen(), // Tab 1: Favorites
+                ],
+              ),
+            ),
+            SelectedTodayBar(), // Shared bar — persists across tab switches
           ],
         ),
       ),
