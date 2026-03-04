@@ -2,18 +2,18 @@ import 'package:meal_mate/features/ingredients/domain/ingredient.dart';
 import 'package:openfoodfacts/openfoodfacts.dart' hide Ingredient;
 
 const ingredientCategories = {
-  'Produce': 'en:fruits-and-vegetables',
-  'Dairy': 'en:dairies',
-  'Meat': 'en:meats',
-  'Seafood': 'en:seafood',
-  'Grains': 'en:cereals-and-potatoes',
-  'Legumes': 'en:legumes-and-their-products',
-  'Spices': 'en:spices',
-  'Condiments': 'en:sauces',
-  'Oils': 'en:fats',
-  'Beverages': 'en:beverages',
-  'Baking': 'en:baking-preparations',
-  'Nuts & Seeds': 'en:nuts-and-their-products',
+  'Produce': 'fruits-and-vegetables',
+  'Dairy': 'dairies',
+  'Meat': 'meats',
+  'Seafood': 'seafood',
+  'Grains': 'cereals-and-potatoes',
+  'Legumes': 'legumes-and-their-products',
+  'Spices': 'spices',
+  'Condiments': 'sauces',
+  'Oils': 'fats',
+  'Beverages': 'beverages',
+  'Baking': 'baking-preparations',
+  'Nuts & Seeds': 'nuts-and-their-products',
 };
 
 class OpenFoodFactsRemoteSource {

@@ -25,9 +25,12 @@ class IngredientRepository {
   /// Implements pull-through cache: emits cached data immediately,
   /// then fetches from remote, upserts to local, and emits again.
   Stream<List<Ingredient>> watchIngredientsByCategory(String category) async* {
-    // Emit cached data first (may be empty on first load)
+    // Emit cached data first — but only if non-empty, so the UI stays in
+    // loading state on first load instead of flashing "No ingredients found".
     final cached = await _local.getIngredientsByCategory(category);
-    yield cached;
+    if (cached.isNotEmpty) {
+      yield cached;
+    }
 
     // Fetch fresh data from OFf API
     try {
@@ -41,10 +44,18 @@ class IngredientRepository {
               .toList();
           await _local.upsertAll(tagged);
           yield tagged;
+        } else if (cached.isEmpty) {
+          yield []; // API returned nothing and no cache — show empty state
         }
+      } else if (cached.isEmpty) {
+        yield []; // Unknown category tag
       }
-    } catch (_) {
-      // Network failure — cached data already emitted, silently ignore
+    } catch (e) {
+      if (cached.isEmpty) {
+        // No cache fallback — surface the error so the UI shows retry
+        throw Exception('Failed to load $category ingredients: $e');
+      }
+      // Has cached data — silently ignore API error
     }
   }
 
