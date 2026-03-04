@@ -4,15 +4,22 @@ import 'tables/ingredients_table.dart';
 import 'tables/recipes_table.dart';
 import 'tables/meal_plan_slots_table.dart';
 import 'tables/shopping_list_items_table.dart';
+import 'tables/selected_today_table.dart';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [Ingredients, Recipes, MealPlanSlots, ShoppingListItems])
+@DriftDatabase(tables: [
+  Ingredients,
+  Recipes,
+  MealPlanSlots,
+  ShoppingListItems,
+  SelectedTodayIngredients,
+])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   static QueryExecutor _openConnection() {
     return driftDatabase(name: 'mealmate');
@@ -22,8 +29,14 @@ class AppDatabase extends _$AppDatabase {
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) => m.createAll(),
     onUpgrade: (m, from, to) async {
-      // Phase 1 is schemaVersion 1 — no upgrades yet
-      // Future migrations: if (from < 2) { await m.addColumn(...); }
+      if (from < 2) {
+        // Add new columns to ingredients table
+        await m.addColumn(ingredients, ingredients.isFavorite);
+        await m.addColumn(ingredients, ingredients.dietaryFlags);
+        await m.addColumn(ingredients, ingredients.cachedAt);
+        // Create selected_today_ingredients table
+        await m.createTable(selectedTodayIngredients);
+      }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA journal_mode = WAL');

@@ -17,6 +17,12 @@ class Ingredients extends Table {
   TextColumn get syncStatus =>
       text().withDefault(const Constant('pending'))();
 
+  // Phase 3 additions
+  BoolColumn get isFavorite =>
+      boolean().withDefault(const Constant(false))();
+  TextColumn get dietaryFlags => text().nullable()(); // JSON-encoded list: ["vegan","gluten-free"]
+  DateTimeColumn get cachedAt => dateTime().nullable()();
+
   @override
   Set<Column> get primaryKey => {id};
 }
