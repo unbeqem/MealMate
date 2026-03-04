@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 03-05-PLAN.md — search speed fix, dietary filter wiring, badge enrichment
-last_updated: "2026-03-04T10:21:38.088Z"
+stopped_at: Completed 03-04-PLAN.md — category browse and favorite toggle root-cause fixes
+last_updated: "2026-03-04T10:21:45.426Z"
 last_activity: "2026-03-03 — Completed 02-01: Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config"
 progress:
   total_phases: 9
@@ -144,6 +144,8 @@ Recent decisions affecting current work:
 - [Phase 03-ingredient-selection]: SelectedTodayBar is ConsumerStatefulWidget to hold expand/collapse state locally while watching keepAlive global provider
 - [Phase 03-ingredient-selection]: Local search fast path threshold is >= 5 local matches to skip API debounce entirely
 - [Phase 03-ingredient-selection]: Search dietary filtering uses favorites provider as enrichment cache — uncached items are never hidden
+- [Phase 03-ingredient-selection]: Category screen passes display name (not OFf tag) to provider — repository owns display-name-to-tag translation
+- [Phase 03-ingredient-selection]: toggleFavorite gains name: param at repository and provider layers; upsert-before-toggle ensures row exists in Drift before mutating
 
 ### Pending Todos
 
@@ -158,6 +160,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-04T10:21:26.023Z
-Stopped at: Completed 03-05-PLAN.md — search speed fix, dietary filter wiring, badge enrichment
+Last session: 2026-03-04T10:21:45.424Z
+Stopped at: Completed 03-04-PLAN.md — category browse and favorite toggle root-cause fixes
 Resume file: None
