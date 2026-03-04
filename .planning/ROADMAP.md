@@ -86,7 +86,7 @@ Plans:
   3. User can change the serving size on a recipe detail screen and see all ingredient quantities update proportionally
   4. User can tap "Find recipes using my ingredients" and see only recipes that use ingredients from their selected list
   5. Previously fetched recipes are available to view offline (cached to Drift on first load)
-**Plans:** 2/2 plans complete
+**Plans:** 1/3 plans executed
 
 Plans:
 - [ ] 04-01-PLAN.md — Spoonacular data layer: Freezed models, Edge Function proxy, Drift cache, RecipeRepository (Wave 1)
@@ -188,7 +188,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/5 | In Progress|  |
 | 2. Authentication & Onboarding | 2/2 | Complete   | 2026-03-03 |
-| 3. Ingredient Selection | 0/3 | Not started | - |
+| 3. Ingredient Selection | 1/3 | In Progress|  |
 | 4. Recipe Discovery | 0/3 | Not started | - |
 | 5. Weekly Meal Planner | 0/5 | Not started | - |
 | 6. Shopping List | 0/3 | Not started | - |

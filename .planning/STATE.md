@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Phase 3 context gathered
-last_updated: "2026-03-04T08:36:48.124Z"
+stopped_at: Completed 03-01-PLAN.md — ingredient data layer
+last_updated: "2026-03-04T09:05:42.190Z"
 last_activity: "2026-03-03 — Completed 02-01: Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config"
 progress:
   total_phases: 9
   completed_phases: 1
   total_plans: 21
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 ---
@@ -84,6 +84,7 @@ Progress: [███░░░░░░░] 12%
 | 01-foundation P02 | 2 min | 2 tasks | 7 files |
 | 02-authentication-onboarding P01 | 3 min | 2 tasks | 12 files |
 | Phase 02 P02 | 3 | 2 tasks | 10 files |
+| Phase 03-ingredient-selection P01 | 15 | 2 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -112,6 +113,9 @@ Recent decisions affecting current work:
 - [Phase 02-01]: Supabase Dashboard Redirect URL io.mealmate.app://reset-password requires manual setup
 - [Phase 02-02]: onboarding_data.freezed.dart and onboarding_notifier.g.dart hand-crafted (build_runner unavailable); must regenerate on CI
 - [Phase 02-02]: onboardingCompletedProvider is AsyncFutureProvider<bool>; router guards on isLoading to prevent flash-of-wrong-route
+- [Phase 03-ingredient-selection]: selectedToday has NO date filter — getSelectedToday and clearSelectedToday operate on all rows for userId (persist until manual clear)
+- [Phase 03-ingredient-selection]: ingredientCategories has exactly 12 entries including Baking and Nuts & Seeds per locked decision
+- [Phase 03-ingredient-selection]: appDatabaseProvider uses keepAlive: true — db connection survives navigation across all Phase 3 screens
 
 ### Pending Todos
 
@@ -126,6 +130,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-04T08:36:48.121Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-ingredient-selection/03-CONTEXT.md
+Last session: 2026-03-04T09:05:42.187Z
+Stopped at: Completed 03-01-PLAN.md — ingredient data layer
+Resume file: None
