@@ -17,7 +17,8 @@ class IngredientLocalSource {
   Future<List<domain.Ingredient>> getIngredientsByCategory(
       String category) async {
     final rows = await (_db.select(_db.ingredients)
-          ..where((t) => t.category.equals(category)))
+          ..where((t) => t.category.equals(category))
+          ..orderBy([(t) => OrderingTerm.asc(t.name)]))
         .get();
     return rows.map(_rowToIngredient).toList();
   }
@@ -72,63 +73,43 @@ class IngredientLocalSource {
   }
 
   Future<void> addSelectedToday(String ingredientId, String userId) async {
-    final today = _todayDate();
+    // selectedDate stored for audit only — NOT used as a filter
     await _db.into(_db.selectedTodayIngredients).insertOnConflictUpdate(
           SelectedTodayIngredientsCompanion.insert(
             ingredientId: ingredientId,
-            selectedDate: today,
+            selectedDate: DateTime.now(),
             userId: userId,
           ),
         );
   }
 
   Future<void> removeSelectedToday(String ingredientId) async {
-    final today = _todayDate();
+    // No date filter — remove any selection of this ingredient
     await (_db.delete(_db.selectedTodayIngredients)
-          ..where(
-            (t) =>
-                t.ingredientId.equals(ingredientId) &
-                t.selectedDate.isBetweenValues(
-                  today,
-                  today.add(const Duration(days: 1)),
-                ),
-          ))
+          ..where((t) => t.ingredientId.equals(ingredientId)))
         .go();
   }
 
+  /// Returns ALL selected ingredient IDs for the user.
+  /// Per locked decision: NO date filter — selections persist until manual clear.
   Future<List<String>> getSelectedToday(String userId) async {
-    final today = _todayDate();
-    final tomorrow = today.add(const Duration(days: 1));
     final rows = await (_db.select(_db.selectedTodayIngredients)
-          ..where(
-            (t) =>
-                t.userId.equals(userId) &
-                t.selectedDate.isBetweenValues(today, tomorrow),
-          ))
+          ..where((t) => t.userId.equals(userId)))
         .get();
     return rows.map((r) => r.ingredientId).toList();
   }
 
+  /// Removes ALL selected ingredient entries for the user.
+  /// Per locked decision: NO date filter — clears entire selection history.
   Future<void> clearSelectedToday(String userId) async {
-    final today = _todayDate();
-    final tomorrow = today.add(const Duration(days: 1));
     await (_db.delete(_db.selectedTodayIngredients)
-          ..where(
-            (t) =>
-                t.userId.equals(userId) &
-                t.selectedDate.isBetweenValues(today, tomorrow),
-          ))
+          ..where((t) => t.userId.equals(userId)))
         .go();
   }
 
   // ---------------------------------------------------------------------------
   // Helpers
   // ---------------------------------------------------------------------------
-
-  DateTime _todayDate() {
-    final now = DateTime.now();
-    return DateTime(now.year, now.month, now.day);
-  }
 
   domain.Ingredient _rowToIngredient(_DbIngredient row) {
     final flags = row.dietaryFlags != null

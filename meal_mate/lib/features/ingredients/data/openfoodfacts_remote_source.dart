@@ -12,6 +12,8 @@ const ingredientCategories = {
   'Condiments': 'en:sauces',
   'Oils': 'en:fats',
   'Beverages': 'en:beverages',
+  'Baking': 'en:baking-preparations',
+  'Nuts & Seeds': 'en:nuts-and-their-products',
 };
 
 class OpenFoodFactsRemoteSource {
@@ -56,10 +58,12 @@ class OpenFoodFactsRemoteSource {
 
     if (result.products == null) return [];
 
-    return result.products!
-        .where((p) => p.productName != null && p.productName!.isNotEmpty)
-        .map((p) => _mapProductToIngredient(p, categoryTag))
-        .toList();
+    // Sort alphabetically by name per locked decision
+    return (result.products!
+          .where((p) => p.productName != null && p.productName!.isNotEmpty)
+          .map((p) => _mapProductToIngredient(p, categoryTag))
+          .toList())
+      ..sort((a, b) => a.name.compareTo(b.name));
   }
 
   Ingredient _mapProductToIngredient(Product product, String categoryTag) {
