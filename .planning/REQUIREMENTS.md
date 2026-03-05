@@ -27,7 +27,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **RECP-01**: User can browse recipes from external API with search by name, ingredient, cuisine, and cook time
 - [x] **RECP-02**: User can view recipe details including ingredients list, step-by-step instructions, cook time, and servings
-- [ ] **RECP-03**: User can scale recipe serving size and see adjusted ingredient quantities
+- [x] **RECP-03**: User can scale recipe serving size and see adjusted ingredient quantities
 - [x] **RECP-04**: User can discover recipes based on selected available ingredients ("use what you have")
 - [ ] **RECP-05**: User receives AI-generated recipes when API returns no matches for selected ingredients
 - [ ] **RECP-06**: AI-generated recipes include validated quantities, proper units, and only ingredients from the user's selection
@@ -116,7 +116,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INGR-05 | Phase 3 | Complete |
 | RECP-01 | Phase 4 | Complete |
 | RECP-02 | Phase 4 | Complete |
-| RECP-03 | Phase 4 | Pending |
+| RECP-03 | Phase 4 | Complete |
 | RECP-04 | Phase 4 | Complete |
 | RECP-05 | Phase 7 | Pending |
 | RECP-06 | Phase 7 | Pending |

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 04-01-PLAN.md — recipe data layer (Freezed models, Edge Function proxy, Drift cache, RecipeRepository)
-last_updated: "2026-03-05T20:18:17.847Z"
+stopped_at: "Completed 04-03-PLAN.md — recipe detail screen with serving scaler, formatAmount utility, and /recipes/:id route"
+last_updated: "2026-03-05T20:26:15.783Z"
 last_activity: "2026-03-03 — Completed 02-01: Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config"
 progress:
   total_phases: 9
   completed_phases: 2
   total_plans: 23
-  completed_plans: 11
+  completed_plans: 12
   percent: 38
 ---
 
@@ -106,6 +106,7 @@ Progress: [███░░░░░░░] 12%
 | Phase 03-ingredient-selection P05 | 10 | 2 tasks | 2 files |
 | Phase 03-ingredient-selection P04 | 15 | 2 tasks | 4 files |
 | Phase 04-recipe-discovery P01 | 7 | 2 tasks | 21 files |
+| Phase 04-recipe-discovery P03 | 5 | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -148,6 +149,9 @@ Recent decisions affecting current work:
 - [Phase 03-ingredient-selection]: Category screen passes display name (not OFf tag) to provider — repository owns display-name-to-tag translation
 - [Phase 03-ingredient-selection]: toggleFavorite gains name: param at repository and provider layers; upsert-before-toggle ensures row exists in Drift before mutating
 - [Phase 04-recipe-discovery]: CachedRecipes uses Spoonacular integer ID as PK (not UUID); schemaVersion incremented to 3 with createTable migration; SpoonacularClient routes all calls through Edge Function proxy; QuotaExhaustedException on 402; 'hide Recipe' alias disambiguates Drift vs Freezed Recipe class
+- [Phase 04-recipe-discovery]: servingSizeProvider generated name: riverpod_generator 4.x strips Notifier suffix from family provider name; callers use servingSizeProvider(n)
+- [Phase 04-recipe-discovery]: Image.network over CachedNetworkImage: cached_network_image absent from pubspec; Image.network with errorBuilder/loadingBuilder provides equivalent UX
+- [Phase 04-recipe-discovery]: recipe_routes.dart updated in-place: /recipes/:id already existed as nested route from Plan 02; replaced placeholder builder rather than adding duplicate top-level route
 
 ### Pending Todos
 
@@ -162,6 +166,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-05T20:18:17.845Z
-Stopped at: Completed 04-01-PLAN.md — recipe data layer (Freezed models, Edge Function proxy, Drift cache, RecipeRepository)
+Last session: 2026-03-05T20:26:15.781Z
+Stopped at: Completed 04-03-PLAN.md — recipe detail screen with serving scaler, formatAmount utility, and /recipes/:id route
 Resume file: None
