@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 03-04-PLAN.md — category browse and favorite toggle root-cause fixes
-last_updated: "2026-03-04T10:25:03.166Z"
+stopped_at: Completed 04-01-PLAN.md — recipe data layer (Freezed models, Edge Function proxy, Drift cache, RecipeRepository)
+last_updated: "2026-03-05T20:18:17.847Z"
 last_activity: "2026-03-03 — Completed 02-01: Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config"
 progress:
   total_phases: 9
   completed_phases: 2
   total_plans: 23
-  completed_plans: 10
+  completed_plans: 11
   percent: 38
 ---
 
@@ -105,6 +105,7 @@ Progress: [███░░░░░░░] 12%
 | Phase 03-ingredient-selection P03 | 18 | 2 tasks | 8 files |
 | Phase 03-ingredient-selection P05 | 10 | 2 tasks | 2 files |
 | Phase 03-ingredient-selection P04 | 15 | 2 tasks | 4 files |
+| Phase 04-recipe-discovery P01 | 7 | 2 tasks | 21 files |
 
 ## Accumulated Context
 
@@ -146,6 +147,7 @@ Recent decisions affecting current work:
 - [Phase 03-ingredient-selection]: Search dietary filtering uses favorites provider as enrichment cache — uncached items are never hidden
 - [Phase 03-ingredient-selection]: Category screen passes display name (not OFf tag) to provider — repository owns display-name-to-tag translation
 - [Phase 03-ingredient-selection]: toggleFavorite gains name: param at repository and provider layers; upsert-before-toggle ensures row exists in Drift before mutating
+- [Phase 04-recipe-discovery]: CachedRecipes uses Spoonacular integer ID as PK (not UUID); schemaVersion incremented to 3 with createTable migration; SpoonacularClient routes all calls through Edge Function proxy; QuotaExhaustedException on 402; 'hide Recipe' alias disambiguates Drift vs Freezed Recipe class
 
 ### Pending Todos
 
@@ -160,6 +162,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-04T10:21:45.424Z
-Stopped at: Completed 03-04-PLAN.md — category browse and favorite toggle root-cause fixes
+Last session: 2026-03-05T20:18:17.845Z
+Stopped at: Completed 04-01-PLAN.md — recipe data layer (Freezed models, Edge Function proxy, Drift cache, RecipeRepository)
 Resume file: None
