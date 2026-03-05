@@ -184,6 +184,99 @@ final class IngredientOverlapCountProvider
 String _$ingredientOverlapCountHash() =>
     r'd2e3f4a5b6c1d2e3f4a5b6c1d2e3f4a5b6c1d2e3';
 
+// ---------------------------------------------------------------------------
+// cachedRecipeIngredientNames — positional-param family FutureProvider returning List<String>
+// ---------------------------------------------------------------------------
+
+/// Returns lowercased ingredient names for a single recipe from CachedRecipes.
+
+@ProviderFor(cachedRecipeIngredientNames)
+final cachedRecipeIngredientNamesProvider =
+    CachedRecipeIngredientNamesFamily._();
+
+/// Returns lowercased ingredient names for a single recipe from CachedRecipes.
+
+final class CachedRecipeIngredientNamesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<String>>,
+          List<String>,
+          FutureOr<List<String>>
+        >
+    with
+        $FutureModifier<List<String>>,
+        $FutureProvider<List<String>> {
+  /// Returns lowercased ingredient names for a single recipe from CachedRecipes.
+  CachedRecipeIngredientNamesProvider._({
+    required CachedRecipeIngredientNamesFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'cachedRecipeIngredientNamesProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$cachedRecipeIngredientNamesHash();
+
+  @override
+  String toString() {
+    return r'cachedRecipeIngredientNamesProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<String>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<String>> create(Ref ref) {
+    final argument = this.argument as int;
+    return cachedRecipeIngredientNames(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is CachedRecipeIngredientNamesProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$cachedRecipeIngredientNamesHash() =>
+    r'e3f4a5b6c1d2e3f4a5b6c1d2e3f4a5b6c1d2e3f4';
+
+/// Returns lowercased ingredient names for a single recipe from CachedRecipes.
+
+final class CachedRecipeIngredientNamesFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<String>>, int> {
+  CachedRecipeIngredientNamesFamily._()
+    : super(
+        retry: null,
+        name: r'cachedRecipeIngredientNamesProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Returns lowercased ingredient names for a single recipe from CachedRecipes.
+
+  CachedRecipeIngredientNamesProvider call(int recipeId) =>
+      CachedRecipeIngredientNamesProvider._(argument: recipeId, from: this);
+
+  @override
+  String toString() => r'cachedRecipeIngredientNamesProvider';
+}
+
 /// Returns the count of ingredients that the given [candidateIngredientNames]
 /// share with the current week's planned recipes.
 

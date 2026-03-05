@@ -370,13 +370,18 @@ class _SelectableRecipeCard extends ConsumerWidget {
       };
       isPlanned = slotList.any((s) => s.recipeId == recipe.id.toString());
 
-      // Overlap badge: only possible if we have extended ingredient data.
-      // RecipeSummary from complexSearch is summary-only; no extendedIngredients.
-      // The provider will return 0 for empty candidate list — badge stays hidden.
+      // Overlap badge: look up cached ingredient names for this recipe.
+      // Returns empty list for summary-only cache entries — badge stays hidden (0).
+      final candidateAsync =
+          ref.watch(cachedRecipeIngredientNamesProvider(recipe.id));
+      final candidateNames = switch (candidateAsync) {
+        AsyncData(:final value) => value,
+        _ => <String>[],
+      };
       overlapCount = ref.watch(
         ingredientOverlapCountProvider(
           weekStart: weekStart!,
-          candidateIngredientNames: const [],
+          candidateIngredientNames: candidateNames,
         ),
       );
     }

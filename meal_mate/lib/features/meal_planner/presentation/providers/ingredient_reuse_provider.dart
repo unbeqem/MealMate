@@ -67,6 +67,38 @@ FutureOr<Set<String>> weekIngredientNames(
   return ingredientNames;
 }
 
+/// Returns lowercased ingredient names for a single recipe from CachedRecipes.
+/// Returns empty list if the recipe is not cached or is summary-only (no extendedIngredients).
+/// This enables the overlap badge to show real counts for recipes the user has previously viewed in detail.
+@riverpod
+FutureOr<List<String>> cachedRecipeIngredientNames(
+  Ref ref,
+  int recipeId,
+) async {
+  final db = ref.watch(appDatabaseProvider);
+  final rows = await (db.select(db.cachedRecipes)
+        ..where((r) => r.id.equals(recipeId)))
+      .get();
+
+  if (rows.isEmpty || rows.first.isSummaryOnly) return [];
+
+  try {
+    final json = jsonDecode(rows.first.jsonData) as Map<String, dynamic>;
+    final extendedIngredients = json['extendedIngredients'];
+    if (extendedIngredients is! List) return [];
+
+    return extendedIngredients
+        .whereType<Map<String, dynamic>>()
+        .map((ing) => ing['name'])
+        .whereType<String>()
+        .where((n) => n.isNotEmpty)
+        .map((n) => n.toLowerCase())
+        .toList();
+  } catch (_) {
+    return [];
+  }
+}
+
 /// Returns the count of ingredients that the given [candidateIngredientNames]
 /// share with the current week's planned recipes.
 ///
