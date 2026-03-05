@@ -386,17 +386,18 @@ class _SelectableRecipeCard extends ConsumerWidget {
       );
     }
 
-    return GestureDetector(
-      onTap: () {
-        context.pop<Map<String, dynamic>>({
-          'recipeId': recipe.id,
-          'recipeTitle': recipe.title,
-          'recipeImage': recipe.image,
-        });
-      },
-      child: Stack(
-        children: [
-          RecipeCard(recipe: recipe),
+    return Stack(
+      children: [
+        RecipeCard(
+          recipe: recipe,
+          onTap: () {
+            context.pop<Map<String, dynamic>>({
+              'recipeId': recipe.id,
+              'recipeTitle': recipe.title,
+              'recipeImage': recipe.image,
+            });
+          },
+        ),
           if (weekStart != null && (isPlanned || overlapCount > 0))
             Positioned(
               bottom: 8,
@@ -443,8 +444,7 @@ class _SelectableRecipeCard extends ConsumerWidget {
                 ],
               ),
             ),
-        ],
-      ),
+      ],
     );
   }
 }

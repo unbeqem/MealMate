@@ -4,14 +4,21 @@ import 'package:go_router/go_router.dart';
 import 'package:meal_mate/features/recipes/domain/recipe_search_result.dart';
 
 /// A card widget that displays a [RecipeSummary] thumbnail, title, and
-/// optionally cook time. Tapping navigates to the recipe detail route.
+/// optionally cook time. Tapping navigates to the recipe detail route by
+/// default, or invokes [onTap] if provided.
 class RecipeCard extends StatelessWidget {
   const RecipeCard({
     super.key,
     required this.recipe,
+    this.onTap,
   });
 
   final RecipeSummary recipe;
+
+  /// Optional tap override. When null, tapping navigates to the recipe detail
+  /// screen. Provide a callback to intercept the tap (e.g. in select-for-slot
+  /// mode).
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +27,7 @@ class RecipeCard extends StatelessWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => context.push('/recipes/${recipe.id}'),
+        onTap: onTap ?? () => context.push('/recipes/${recipe.id}'),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
