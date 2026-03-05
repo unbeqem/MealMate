@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:meal_mate/features/meal_planner/domain/meal_slot.dart';
+import 'package:meal_mate/features/meal_planner/presentation/providers/meal_plan_notifier.dart';
+import 'package:meal_mate/features/meal_planner/presentation/providers/template_notifier.dart';
 import 'package:meal_mate/features/meal_planner/presentation/widgets/planner_grid.dart';
 
 /// The root screen for the weekly meal planner.
@@ -7,6 +11,11 @@ import 'package:meal_mate/features/meal_planner/presentation/widgets/planner_gri
 /// Displays a 7-day grid of breakfast/lunch/dinner slots with week navigation
 /// (previous/next arrows and a date-picker label). Users can tap empty slots
 /// to assign recipes and use inline icons on filled slots to replace or remove.
+///
+/// The overflow menu provides "Save as Template" and "Load Template" actions:
+/// - Save: prompts for a name, validates the week has at least one filled slot,
+///   then calls [TemplateNotifier.saveCurrentWeek].
+/// - Load: navigates to [TemplateListScreen] passing the current [_weekStart].
 class PlannerScreen extends ConsumerStatefulWidget {
   const PlannerScreen({super.key});
 
@@ -59,6 +68,93 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
     }
   }
 
+  /// Shows a dialog prompting for a template name, then saves the current week.
+  Future<void> _saveAsTemplate() async {
+    // Check if the current week has any filled slots before prompting for name.
+    final slotsAsync = ref.read(mealPlanNotifierProvider(_weekStart));
+    final slots = switch (slotsAsync) {
+      AsyncData(:final value) => value,
+      _ => <MealSlot>[],
+    };
+    final hasFilledSlots = slots.any((s) => s.recipeId != null);
+
+    if (!hasFilledSlots) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No meals in this week to save as a template.'),
+          ),
+        );
+      }
+      return;
+    }
+
+    final nameController = TextEditingController();
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Save as Template'),
+        content: TextField(
+          controller: nameController,
+          autofocus: true,
+          maxLength: 30,
+          decoration: const InputDecoration(
+            hintText: 'e.g., Busy Week, Veggie Week',
+            labelText: 'Template name',
+          ),
+          onSubmitted: (_) => Navigator.of(ctx).pop(true),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+
+    final name = nameController.text.trim();
+    nameController.dispose();
+
+    if (confirmed != true || !mounted) return;
+
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a template name.')),
+      );
+      return;
+    }
+
+    try {
+      await ref.read(templateNotifierProvider.notifier).saveCurrentWeek(
+            name: name,
+            weekStart: _weekStart,
+          );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Template saved as '$name'")),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save template: $e')),
+        );
+      }
+    }
+  }
+
+  /// Navigates to the template list, passing the current week as a query param.
+  void _openTemplateList() {
+    context.push(
+      '/planner/templates?week=${_weekStart.millisecondsSinceEpoch}',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,9 +163,11 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
         actions: [
           PopupMenuButton<String>(
             onSelected: (value) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Coming soon')),
-              );
+              if (value == 'save') {
+                _saveAsTemplate();
+              } else if (value == 'load') {
+                _openTemplateList();
+              }
             },
             itemBuilder: (_) => const [
               PopupMenuItem(value: 'save', child: Text('Save as Template')),
