@@ -1,0 +1,58 @@
+import 'package:meal_mate/features/auth/presentation/auth_notifier.dart';
+import 'package:meal_mate/features/ingredients/data/ingredient_repository_provider.dart';
+import 'package:meal_mate/features/meal_planner/data/meal_plan_repository.dart';
+import 'package:meal_mate/features/meal_planner/domain/meal_slot.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'meal_plan_notifier.g.dart';
+
+/// Returns the current user's ID, throwing if not signed in.
+@riverpod
+String currentUserId(Ref ref) {
+  final user = ref.watch(currentUserProvider);
+  if (user == null) throw StateError('Not authenticated');
+  return user.id;
+}
+
+/// Stream-based Riverpod notifier for the weekly meal plan grid.
+///
+/// Watches Drift reactively — any insert/update/delete on mealPlanSlots
+/// for the given [weekStart] automatically emits a new state.
+@riverpod
+class MealPlanNotifier extends _$MealPlanNotifier {
+  late MealPlanRepository _repository;
+
+  @override
+  Stream<List<MealSlot>> build(DateTime weekStart) {
+    final db = ref.watch(appDatabaseProvider);
+    final userId = ref.watch(currentUserIdProvider);
+    _repository = MealPlanRepository(db);
+    return _repository.watchWeek(userId, weekStart);
+  }
+
+  /// Assigns a Spoonacular recipe to the slot identified by its grid position.
+  Future<void> assignRecipe({
+    required String dayOfWeek,
+    required String mealType,
+    required int recipeId,
+  }) async {
+    final userId = ref.read(currentUserIdProvider);
+    await _repository.assignRecipe(
+      userId: userId,
+      dayOfWeek: dayOfWeek,
+      mealType: mealType,
+      weekStart: ref.$arg as DateTime,
+      recipeId: recipeId,
+    );
+  }
+
+  /// Clears the recipe from a slot (sets recipeId to null).
+  Future<void> clearSlot(String slotId) async {
+    await _repository.clearSlot(slotId);
+  }
+
+  /// Swaps the recipe assignments of two slots.
+  Future<void> swapSlots(String slotIdA, String slotIdB) async {
+    await _repository.swapSlots(slotIdA, slotIdB);
+  }
+}
