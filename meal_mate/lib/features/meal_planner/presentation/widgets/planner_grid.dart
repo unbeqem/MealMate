@@ -179,8 +179,6 @@ class _PlannerGridState extends ConsumerState<PlannerGrid> {
   }
 
   Widget _buildGrid(BuildContext context, List<MealSlot> slots) {
-    // Calculate day column width — ~2.8 days visible in portrait.
-    final columnWidth = MediaQuery.of(context).size.width * 0.35;
     const labelColumnWidth = 32.0;
     const cellHeight = 110.0;
     const headerHeight = 48.0;
@@ -220,6 +218,8 @@ class _PlannerGridState extends ConsumerState<PlannerGrid> {
           child: LayoutBuilder(
             builder: (context, constraints) {
               _scrollAreaWidth = constraints.maxWidth;
+              // Calculate day column width — ~2.8 days visible in portrait.
+              final columnWidth = constraints.maxWidth * 0.35;
               return Listener(
                 // Track pointer position for edge-scroll detection.
                 onPointerMove: _isDragging
