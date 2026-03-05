@@ -5,6 +5,7 @@ import 'package:meal_mate/features/meal_planner/domain/meal_slot.dart';
 import 'package:meal_mate/features/meal_planner/presentation/providers/meal_plan_notifier.dart';
 import 'package:meal_mate/features/meal_planner/presentation/providers/template_notifier.dart';
 import 'package:meal_mate/features/meal_planner/presentation/widgets/planner_grid.dart';
+import 'package:meal_mate/features/meal_planner/presentation/widgets/week_ingredient_summary.dart';
 
 /// The root screen for the weekly meal planner.
 ///
@@ -218,9 +219,19 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
           ),
           const Divider(height: 1),
 
-          // --- Planner grid ---
+          // --- Planner grid + ingredient summary ---
           Expanded(
-            child: PlannerGrid(weekStart: _weekStart),
+            child: Column(
+              children: [
+                Expanded(
+                  child: PlannerGrid(weekStart: _weekStart),
+                ),
+                // --- Ingredient summary panel ---
+                // Expandable panel listing all unique ingredients for the week.
+                // Visible when at least one slot is filled; hidden otherwise.
+                WeekIngredientSummary(weekStart: _weekStart),
+              ],
+            ),
           ),
         ],
       ),

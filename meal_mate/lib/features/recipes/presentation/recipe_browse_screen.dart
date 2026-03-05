@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meal_mate/features/ingredients/presentation/providers/selected_today_provider.dart';
+import 'package:meal_mate/features/meal_planner/domain/meal_slot.dart';
+import 'package:meal_mate/features/meal_planner/presentation/providers/ingredient_reuse_provider.dart';
+import 'package:meal_mate/features/meal_planner/presentation/providers/meal_plan_notifier.dart';
+import 'package:meal_mate/features/meal_planner/presentation/widgets/ingredient_overlap_badge.dart';
 import 'package:meal_mate/features/recipes/domain/recipe_search_result.dart';
 import 'package:meal_mate/features/recipes/presentation/providers/recipe_search_provider.dart';
 import 'package:meal_mate/features/recipes/presentation/recipe_card.dart';
@@ -53,6 +57,15 @@ class _RecipeBrowseScreenState extends ConsumerState<RecipeBrowseScreen> {
     final queryParams = GoRouterState.of(context).uri.queryParameters;
     final isSelectMode = queryParams['selectForSlot'] == 'true';
 
+    // Parse weekStart from millisecondsSinceEpoch query param (only in select mode).
+    DateTime? weekStart;
+    if (isSelectMode) {
+      final weekMs = int.tryParse(queryParams['week'] ?? '');
+      if (weekMs != null) {
+        weekStart = DateTime.fromMillisecondsSinceEpoch(weekMs, isUtc: true);
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: isSelectMode
@@ -85,10 +98,14 @@ class _RecipeBrowseScreenState extends ConsumerState<RecipeBrowseScreen> {
           // --- Results ---
           Expanded(
             child: filterState.isIngredientMode
-                ? _IngredientModeBody(isSelectMode: isSelectMode)
+                ? _IngredientModeBody(
+                    isSelectMode: isSelectMode,
+                    weekStart: weekStart,
+                  )
                 : _SearchModeBody(
                     filterState: filterState,
                     isSelectMode: isSelectMode,
+                    weekStart: weekStart,
                   ),
           ),
         ],
@@ -105,10 +122,12 @@ class _SearchModeBody extends ConsumerStatefulWidget {
   const _SearchModeBody({
     required this.filterState,
     this.isSelectMode = false,
+    this.weekStart,
   });
 
   final RecipeFilterState filterState;
   final bool isSelectMode;
+  final DateTime? weekStart;
 
   @override
   ConsumerState<_SearchModeBody> createState() => _SearchModeBodyState();
@@ -220,7 +239,10 @@ class _SearchModeBodyState extends ConsumerState<_SearchModeBody> {
                 }
                 final recipe = results[indexInPage];
                 if (widget.isSelectMode) {
-                  return _SelectableRecipeCard(recipe: recipe);
+                  return _SelectableRecipeCard(
+                    recipe: recipe,
+                    weekStart: widget.weekStart,
+                  );
                 }
                 return RecipeCard(recipe: recipe);
               },
@@ -260,9 +282,10 @@ class _SearchModeBodyState extends ConsumerState<_SearchModeBody> {
 // ---------------------------------------------------------------------------
 
 class _IngredientModeBody extends ConsumerWidget {
-  const _IngredientModeBody({this.isSelectMode = false});
+  const _IngredientModeBody({this.isSelectMode = false, this.weekStart});
 
   final bool isSelectMode;
+  final DateTime? weekStart;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -300,7 +323,10 @@ class _IngredientModeBody extends ConsumerWidget {
               padding: const EdgeInsets.all(8),
               itemCount: summaries.length,
               itemBuilder: (_, i) => isSelectMode
-                  ? _SelectableRecipeCard(recipe: summaries[i])
+                  ? _SelectableRecipeCard(
+                      recipe: summaries[i],
+                      weekStart: weekStart,
+                    )
                   : RecipeCard(recipe: summaries[i]),
             );
           },
@@ -316,13 +342,45 @@ class _IngredientModeBody extends ConsumerWidget {
 
 /// A recipe card that pops with recipe data when tapped, used in
 /// select-for-slot mode so the planner can assign the chosen recipe.
-class _SelectableRecipeCard extends StatelessWidget {
-  const _SelectableRecipeCard({required this.recipe});
+///
+/// When [weekStart] is provided, shows:
+/// - "Planned" chip if the recipe is already assigned to any slot this week.
+/// - [IngredientOverlapBadge] if the recipe shares ingredients with week plan
+///   (best-effort: only when ingredient names are available from the cache).
+class _SelectableRecipeCard extends ConsumerWidget {
+  const _SelectableRecipeCard({
+    required this.recipe,
+    this.weekStart,
+  });
 
   final RecipeSummary recipe;
+  final DateTime? weekStart;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Determine if this recipe is already planned this week.
+    bool isPlanned = false;
+    int overlapCount = 0;
+
+    if (weekStart != null) {
+      final slotsAsync = ref.watch(mealPlanNotifierProvider(weekStart!));
+      final slotList = switch (slotsAsync) {
+        AsyncData(:final value) => value,
+        _ => <MealSlot>[],
+      };
+      isPlanned = slotList.any((s) => s.recipeId == recipe.id.toString());
+
+      // Overlap badge: only possible if we have extended ingredient data.
+      // RecipeSummary from complexSearch is summary-only; no extendedIngredients.
+      // The provider will return 0 for empty candidate list — badge stays hidden.
+      overlapCount = ref.watch(
+        ingredientOverlapCountProvider(
+          weekStart: weekStart!,
+          candidateIngredientNames: const [],
+        ),
+      );
+    }
+
     return GestureDetector(
       onTap: () {
         context.pop<Map<String, dynamic>>({
@@ -331,7 +389,57 @@ class _SelectableRecipeCard extends StatelessWidget {
           'recipeImage': recipe.image,
         });
       },
-      child: RecipeCard(recipe: recipe),
+      child: Stack(
+        children: [
+          RecipeCard(recipe: recipe),
+          if (weekStart != null && (isPlanned || overlapCount > 0))
+            Positioned(
+              bottom: 8,
+              left: 136, // Offset past the 120px thumbnail + some padding
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (isPlanned)
+                    Container(
+                      margin: const EdgeInsets.only(right: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .secondary
+                            .withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.check_circle,
+                            size: 14,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          const SizedBox(width: 3),
+                          Text(
+                            'Planned',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.labelSmall?.copyWith(
+                              color: Theme.of(context).colorScheme.secondary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  IngredientOverlapBadge(overlapCount: overlapCount),
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
