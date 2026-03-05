@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-02-PLAN.md — meal planner grid UI
-last_updated: "2026-03-05T22:04:22.561Z"
+stopped_at: Completed 05-04-PLAN.md — template save/load UI
+last_updated: "2026-03-05T22:09:03.191Z"
 last_activity: "2026-03-03 — Completed 02-01: Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config"
 progress:
   total_phases: 9
   completed_phases: 3
   total_plans: 23
-  completed_plans: 15
+  completed_plans: 17
   percent: 38
 ---
 
@@ -110,6 +110,8 @@ Progress: [███░░░░░░░] 12%
 | Phase 04-recipe-discovery P02 | 6 | 2 tasks | 8 files |
 | Phase 05-weekly-meal-planner P01 | 7 | 2 tasks | 14 files |
 | Phase 05-weekly-meal-planner P02 | 4 | 2 tasks | 9 files |
+| Phase 05-weekly-meal-planner P03 | 2 | 2 tasks | 3 files |
+| Phase 05-weekly-meal-planner P04 | 2 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -159,6 +161,11 @@ Recent decisions affecting current work:
 - [Phase 05-01]: currentUserIdProvider wraps currentUserProvider, throws StateError if not authenticated; MealPlanNotifier uses ref.$arg for weekStart family param; Template slots snapshot title/image at save time; weekStart normalised to UTC midnight for consistent DB equality
 - [Phase 05-02]: [Phase 05-02]: RecipeBrowseScreen reads GoRouterState.of(context).uri.queryParameters for selectForSlot mode — no constructor params required
 - [Phase 05-02]: [Phase 05-02]: PlannerScreen avoids intl package — manual month name array for date range formatting
+- [Phase 05-03]: PlannerGrid converted to ConsumerStatefulWidget to own _isDragging flag and ScrollController alongside Riverpod watching
+- [Phase 05-03]: _SlotCell extracted as private StatelessWidget to encapsulate DragTarget logic cleanly while keeping grid layout code readable
+- [Phase 05-03]: [Phase 05-03]: Drop onto existing-but-empty slot uses swapSlots; drop onto slot with no DB row uses assignRecipe+clearSlot pair
+- [Phase 05-04]: weekStart passed to TemplateListScreen via ?week=epochMs query param — avoids GoRouter extra complexity, survives hot reload
+- [Phase 05-04]: AsyncValue switch pattern used instead of valueOrNull — Riverpod 3.x stream notifier compat
 
 ### Pending Todos
 
@@ -173,6 +180,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-05T22:04:22.558Z
-Stopped at: Completed 05-02-PLAN.md — meal planner grid UI
+Last session: 2026-03-05T22:09:03.189Z
+Stopped at: Completed 05-04-PLAN.md — template save/load UI
 Resume file: None

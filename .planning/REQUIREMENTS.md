@@ -37,7 +37,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **PLAN-01**: User can view a 7-day weekly planner with breakfast, lunch, and dinner slots
 - [x] **PLAN-02**: User can assign a recipe to any meal slot
 - [x] **PLAN-03**: User can edit or replace a recipe in any meal slot
-- [ ] **PLAN-04**: User can drag and drop meals to reschedule between slots
+- [x] **PLAN-04**: User can drag and drop meals to reschedule between slots
 - [x] **PLAN-05**: User can save current week as a meal plan template
 - [x] **PLAN-06**: User can load a saved template into a future week
 - [ ] **PLAN-07**: Planner suggests recipes that reuse ingredients already in the week's plan to reduce waste
@@ -123,7 +123,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAN-01 | Phase 5 | Complete |
 | PLAN-02 | Phase 5 | Complete |
 | PLAN-03 | Phase 5 | Complete |
-| PLAN-04 | Phase 5 | Pending |
+| PLAN-04 | Phase 5 | Complete |
 | PLAN-05 | Phase 5 | Complete |
 | PLAN-06 | Phase 5 | Complete |
 | PLAN-07 | Phase 5 | Pending |
