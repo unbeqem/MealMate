@@ -105,7 +105,7 @@ Plans:
   3. User can drag a meal card from one slot to another slot and the change persists on reload
   4. User can save the current week's plan as a named template and later load that template into any future week
   5. When browsing recipes to fill a slot, the planner highlights recipes that reuse ingredients already in the current week's plan
-**Plans:** 5/5 plans complete
+**Plans:** 6 plans
 
 Plans:
 - [ ] 05-01-PLAN.md — Meal plan data layer: Drift schema extension (weekStart column), MealSlot/WeekPlan domain models, MealPlanRepository CRUD, Riverpod stream notifier (Wave 1)
@@ -113,6 +113,7 @@ Plans:
 - [ ] 05-03-PLAN.md — Drag-and-drop rescheduling: LongPressDraggable + DragTarget, scroll conflict mitigation, atomic swap persistence (Wave 3)
 - [ ] 05-04-PLAN.md — Templates: MealPlanTemplates + MealPlanTemplateSlots tables, TemplateRepository save/load, TemplateListScreen (Wave 2)
 - [ ] 05-05-PLAN.md — Ingredient reuse suggestions: weekIngredientNames provider, overlap computation via Set.intersection, badge in recipe picker (Wave 3)
+- [ ] 05-06-PLAN.md — Gap closure: wire ingredient overlap badge with cached recipe data in selectForSlot mode (Wave 1)
 
 ### Phase 6: Shopping List
 **Goal**: The meal plan automatically produces a single, clean shopping list that a user can walk into a store with — no duplicates, sensible units, and the ability to check off items and make manual adjustments.
