@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-07-PLAN.md — grid scroll and recipe picker bug fixes
-last_updated: "2026-03-05T22:54:52.150Z"
+stopped_at: Completed 05-08-PLAN.md — template save snackbar fix and ingredient panel backfill
+last_updated: "2026-03-05T23:41:24.298Z"
 last_activity: "2026-03-03 — Completed 02-01: Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config"
 progress:
   total_phases: 9
   completed_phases: 4
-  total_plans: 25
-  completed_plans: 20
+  total_plans: 26
+  completed_plans: 21
   percent: 38
 ---
 
@@ -115,6 +115,7 @@ Progress: [███░░░░░░░] 12%
 | Phase 05-weekly-meal-planner P05 | 3 | 2 tasks | 6 files |
 | Phase 05-weekly-meal-planner P06 | 5 | 2 tasks | 3 files |
 | Phase 05-weekly-meal-planner P07 | 2 | 2 tasks | 3 files |
+| Phase 05-weekly-meal-planner P08 | 10 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -176,6 +177,8 @@ Recent decisions affecting current work:
 - [Phase 05-06]: Overlap badge wiring uses AsyncData switch pattern: candidateNames falls back to empty list while provider is loading — badge stays hidden during initial load
 - [Phase 05-weekly-meal-planner]: columnWidth inside LayoutBuilder uses constraints.maxWidth * 0.35 — shows ~2.8 days on screen, all 7 scrollable
 - [Phase 05-weekly-meal-planner]: RecipeCard optional onTap param eliminates GestureDetector + InkWell double-tap conflict; _SelectableRecipeCard passes pop callback via onTap
+- [Phase 05-08]: invalidateSelf() wrapped in try/catch in TemplateNotifier.saveCurrentWeek() — provider disposal after successful DB insert must not show error SnackBar
+- [Phase 05-08]: Full recipe detail fetch triggered in MealPlanNotifier.assignRecipe() as fire-and-forget — slot assignment offline-safe; ingredient panel populates once network responds
 
 ### Pending Todos
 
@@ -190,6 +193,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-05T22:54:52.147Z
-Stopped at: Completed 05-07-PLAN.md — grid scroll and recipe picker bug fixes
+Last session: 2026-03-05T23:41:16.046Z
+Stopped at: Completed 05-08-PLAN.md — template save snackbar fix and ingredient panel backfill
 Resume file: None

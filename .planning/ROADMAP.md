@@ -105,7 +105,7 @@ Plans:
   3. User can drag a meal card from one slot to another slot and the change persists on reload
   4. User can save the current week's plan as a named template and later load that template into any future week
   5. When browsing recipes to fill a slot, the planner highlights recipes that reuse ingredients already in the current week's plan
-**Plans:** 7/7 plans complete
+**Plans:** 8/8 plans complete
 
 Plans:
 - [ ] 05-01-PLAN.md — Meal plan data layer: Drift schema extension (weekStart column), MealSlot/WeekPlan domain models, MealPlanRepository CRUD, Riverpod stream notifier (Wave 1)
@@ -194,7 +194,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
 | 2. Authentication & Onboarding | 2/2 | Complete   | 2026-03-03 |
 | 3. Ingredient Selection | 5/5 | Complete   | 2026-03-04 |
 | 4. Recipe Discovery | 3/3 | Complete   | 2026-03-05 |
-| 5. Weekly Meal Planner | 7/7 | Complete   | 2026-03-05 |
+| 5. Weekly Meal Planner | 8/8 | Complete   | 2026-03-05 |
 | 6. Shopping List | 0/3 | Not started | - |
 | 7. AI Recipe Generation | 0/3 | Not started | - |
 | 8. Offline & Sync | 0/4 | Not started | - |
