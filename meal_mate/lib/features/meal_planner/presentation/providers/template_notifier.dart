@@ -20,6 +20,10 @@ class TemplateNotifier extends _$TemplateNotifier {
   }
 
   /// Saves the current week as a named template.
+  ///
+  /// The DB write is awaited and any failure propagates to the caller.
+  /// Post-save invalidation is best-effort — provider disposal or Riverpod
+  /// lifecycle errors after a successful insert must not surface as failures.
   Future<void> saveCurrentWeek({
     required String name,
     required DateTime weekStart,
@@ -30,7 +34,15 @@ class TemplateNotifier extends _$TemplateNotifier {
       userId: userId,
       weekStart: weekStart,
     );
-    ref.invalidateSelf();
+    // Refresh the template list. Wrapped in try/catch because invalidateSelf()
+    // can throw if the provider is disposed between the DB write and this call
+    // (e.g. navigation away). The save already succeeded, so any error here
+    // must not propagate back to the caller's error SnackBar.
+    try {
+      ref.invalidateSelf();
+    } catch (_) {
+      // Provider disposed after successful save — safe to ignore.
+    }
   }
 
   /// Loads a saved template into the target week.
