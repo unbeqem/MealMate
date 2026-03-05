@@ -45,7 +45,9 @@ class EmptySlotCard extends ConsumerWidget {
             ? primaryColor.withValues(alpha: 0.08)
             : Colors.grey.shade50,
       ),
-      child: GestureDetector(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
         onTap: () => _onTap(context, ref),
         child: Center(
           child: isHovered
@@ -65,6 +67,7 @@ class EmptySlotCard extends ConsumerWidget {
                   ],
                 )
               : const Icon(Icons.add, color: Colors.grey),
+        ),
         ),
       ),
     );

@@ -218,8 +218,10 @@ class _PlannerGridState extends ConsumerState<PlannerGrid> {
           child: LayoutBuilder(
             builder: (context, constraints) {
               _scrollAreaWidth = constraints.maxWidth;
-              // Calculate day column width — ~2.8 days visible in portrait.
-              final columnWidth = constraints.maxWidth * 0.35;
+              // Fixed column width — works on both mobile and desktop.
+              // On mobile (~370px available) shows ~2.8 columns; on desktop
+              // shows more columns with the same card size.
+              const columnWidth = 130.0;
               return Listener(
                 // Track pointer position for edge-scroll detection.
                 onPointerMove: _isDragging
@@ -227,14 +229,17 @@ class _PlannerGridState extends ConsumerState<PlannerGrid> {
                         _pointerX = event.localPosition.dx;
                       }
                     : null,
-                child: SingleChildScrollView(
+                child: Scrollbar(
+                  controller: _scrollController,
+                  thumbVisibility: true,
+                  child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   controller: _scrollController,
                   // Disable scroll while a drag is active to prevent gesture
                   // conflict between horizontal scroll and drag recogniser.
                   physics: _isDragging
                       ? const NeverScrollableScrollPhysics()
-                      : const ClampingScrollPhysics(),
+                      : const AlwaysScrollableScrollPhysics(),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: _orderedDays.map((day) {
@@ -292,6 +297,7 @@ class _PlannerGridState extends ConsumerState<PlannerGrid> {
                       );
                     }).toList(),
                   ),
+                ),
                 ),
               );
             },
