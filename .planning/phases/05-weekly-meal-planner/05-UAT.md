@@ -1,9 +1,9 @@
 ---
-status: diagnosed
+status: resolved
 phase: 05-weekly-meal-planner
 source: 05-01-SUMMARY.md, 05-02-SUMMARY.md, 05-03-SUMMARY.md, 05-04-SUMMARY.md, 05-05-SUMMARY.md, 05-06-SUMMARY.md
 started: 2026-03-05T23:00:00Z
-updated: 2026-03-05T23:15:00Z
+updated: 2026-03-05T23:55:00Z
 ---
 
 ## Current Test
@@ -77,7 +77,7 @@ skipped: 4
 ## Gaps
 
 - truth: "Planner screen shows a 7-day x 3-row grid with day columns scrollable horizontally"
-  status: failed
+  status: resolved
   reason: "User reported: its showing only 3 days, there is no option to scroll further"
   severity: major
   test: 2
@@ -90,7 +90,7 @@ skipped: 4
   debug_session: ".planning/debug/planner-grid-3-days-no-scroll.md"
 
 - truth: "Tapping an empty slot opens recipe picker in selection mode; selecting a recipe assigns it to the slot with thumbnail and title"
-  status: failed
+  status: resolved
   reason: "User reported: it worked only one time now i cant even click anything and also before instead of adding the thumbnail and title it showed the details of the recipe plus instructions"
   severity: blocker
   test: 3
@@ -106,7 +106,7 @@ skipped: 4
   debug_session: ".planning/debug/meal-planner-slot-tap-bugs.md"
 
 - truth: "Planner overflow menu shows Save as Template and Load Template options"
-  status: failed
+  status: resolved
   reason: "User reported: nope this doesnt exist"
   severity: major
   test: 6
@@ -119,7 +119,7 @@ skipped: 4
   debug_session: ".planning/debug/planner-overflow-template-summary-missing.md"
 
 - truth: "Template list screen is accessible and shows saved templates with delete action"
-  status: failed
+  status: resolved
   reason: "User reported: no template screen there yet"
   severity: major
   test: 8
@@ -132,7 +132,7 @@ skipped: 4
   debug_session: ".planning/debug/planner-overflow-template-summary-missing.md"
 
 - truth: "Expandable ingredient summary panel below planner grid lists unique ingredient names as sorted chips"
-  status: failed
+  status: resolved
   reason: "User reported: none of that exists"
   severity: major
   test: 9
