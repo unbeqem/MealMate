@@ -2678,6 +2678,408 @@ class SelectedTodayIngredientsCompanion
   }
 }
 
+class $CachedRecipesTable extends CachedRecipes
+    with TableInfo<$CachedRecipesTable, CachedRecipe> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CachedRecipesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _imageMeta = const VerificationMeta('image');
+  @override
+  late final GeneratedColumn<String> image = GeneratedColumn<String>(
+    'image',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _jsonDataMeta = const VerificationMeta(
+    'jsonData',
+  );
+  @override
+  late final GeneratedColumn<String> jsonData = GeneratedColumn<String>(
+    'json_data',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isSummaryOnlyMeta = const VerificationMeta(
+    'isSummaryOnly',
+  );
+  @override
+  late final GeneratedColumn<bool> isSummaryOnly = GeneratedColumn<bool>(
+    'is_summary_only',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_summary_only" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _cachedAtMeta = const VerificationMeta(
+    'cachedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
+    'cached_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    title,
+    image,
+    jsonData,
+    isSummaryOnly,
+    cachedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cached_recipes';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CachedRecipe> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('image')) {
+      context.handle(
+        _imageMeta,
+        image.isAcceptableOrUnknown(data['image']!, _imageMeta),
+      );
+    }
+    if (data.containsKey('json_data')) {
+      context.handle(
+        _jsonDataMeta,
+        jsonData.isAcceptableOrUnknown(data['json_data']!, _jsonDataMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_jsonDataMeta);
+    }
+    if (data.containsKey('is_summary_only')) {
+      context.handle(
+        _isSummaryOnlyMeta,
+        isSummaryOnly.isAcceptableOrUnknown(
+          data['is_summary_only']!,
+          _isSummaryOnlyMeta,
+        ),
+      );
+    }
+    if (data.containsKey('cached_at')) {
+      context.handle(
+        _cachedAtMeta,
+        cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CachedRecipe map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CachedRecipe(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      image: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image'],
+      ),
+      jsonData: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}json_data'],
+      )!,
+      isSummaryOnly: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_summary_only'],
+      )!,
+      cachedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cached_at'],
+      )!,
+    );
+  }
+
+  @override
+  $CachedRecipesTable createAlias(String alias) {
+    return $CachedRecipesTable(attachedDatabase, alias);
+  }
+}
+
+class CachedRecipe extends DataClass implements Insertable<CachedRecipe> {
+  /// Spoonacular recipe ID — integer PK, not UUID (external key)
+  final int id;
+  final String title;
+  final String? image;
+
+  /// Full JSON from getRecipeInformation (or summary JSON from complexSearch)
+  final String jsonData;
+
+  /// True when cached from complexSearch (no ingredients/instructions)
+  final bool isSummaryOnly;
+  final DateTime cachedAt;
+  const CachedRecipe({
+    required this.id,
+    required this.title,
+    this.image,
+    required this.jsonData,
+    required this.isSummaryOnly,
+    required this.cachedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['title'] = Variable<String>(title);
+    if (!nullToAbsent || image != null) {
+      map['image'] = Variable<String>(image);
+    }
+    map['json_data'] = Variable<String>(jsonData);
+    map['is_summary_only'] = Variable<bool>(isSummaryOnly);
+    map['cached_at'] = Variable<DateTime>(cachedAt);
+    return map;
+  }
+
+  CachedRecipesCompanion toCompanion(bool nullToAbsent) {
+    return CachedRecipesCompanion(
+      id: Value(id),
+      title: Value(title),
+      image: image == null && nullToAbsent
+          ? const Value.absent()
+          : Value(image),
+      jsonData: Value(jsonData),
+      isSummaryOnly: Value(isSummaryOnly),
+      cachedAt: Value(cachedAt),
+    );
+  }
+
+  factory CachedRecipe.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CachedRecipe(
+      id: serializer.fromJson<int>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      image: serializer.fromJson<String?>(json['image']),
+      jsonData: serializer.fromJson<String>(json['jsonData']),
+      isSummaryOnly: serializer.fromJson<bool>(json['isSummaryOnly']),
+      cachedAt: serializer.fromJson<DateTime>(json['cachedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'title': serializer.toJson<String>(title),
+      'image': serializer.toJson<String?>(image),
+      'jsonData': serializer.toJson<String>(jsonData),
+      'isSummaryOnly': serializer.toJson<bool>(isSummaryOnly),
+      'cachedAt': serializer.toJson<DateTime>(cachedAt),
+    };
+  }
+
+  CachedRecipe copyWith({
+    int? id,
+    String? title,
+    Value<String?> image = const Value.absent(),
+    String? jsonData,
+    bool? isSummaryOnly,
+    DateTime? cachedAt,
+  }) => CachedRecipe(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    image: image.present ? image.value : this.image,
+    jsonData: jsonData ?? this.jsonData,
+    isSummaryOnly: isSummaryOnly ?? this.isSummaryOnly,
+    cachedAt: cachedAt ?? this.cachedAt,
+  );
+  CachedRecipe copyWithCompanion(CachedRecipesCompanion data) {
+    return CachedRecipe(
+      id: data.id.present ? data.id.value : this.id,
+      title: data.title.present ? data.title.value : this.title,
+      image: data.image.present ? data.image.value : this.image,
+      jsonData: data.jsonData.present ? data.jsonData.value : this.jsonData,
+      isSummaryOnly: data.isSummaryOnly.present
+          ? data.isSummaryOnly.value
+          : this.isSummaryOnly,
+      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CachedRecipe(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('image: $image, ')
+          ..write('jsonData: $jsonData, ')
+          ..write('isSummaryOnly: $isSummaryOnly, ')
+          ..write('cachedAt: $cachedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, title, image, jsonData, isSummaryOnly, cachedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CachedRecipe &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.image == this.image &&
+          other.jsonData == this.jsonData &&
+          other.isSummaryOnly == this.isSummaryOnly &&
+          other.cachedAt == this.cachedAt);
+}
+
+class CachedRecipesCompanion extends UpdateCompanion<CachedRecipe> {
+  final Value<int> id;
+  final Value<String> title;
+  final Value<String?> image;
+  final Value<String> jsonData;
+  final Value<bool> isSummaryOnly;
+  final Value<DateTime> cachedAt;
+  const CachedRecipesCompanion({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.image = const Value.absent(),
+    this.jsonData = const Value.absent(),
+    this.isSummaryOnly = const Value.absent(),
+    this.cachedAt = const Value.absent(),
+  });
+  CachedRecipesCompanion.insert({
+    this.id = const Value.absent(),
+    required String title,
+    this.image = const Value.absent(),
+    required String jsonData,
+    this.isSummaryOnly = const Value.absent(),
+    this.cachedAt = const Value.absent(),
+  }) : title = Value(title),
+       jsonData = Value(jsonData);
+  static Insertable<CachedRecipe> custom({
+    Expression<int>? id,
+    Expression<String>? title,
+    Expression<String>? image,
+    Expression<String>? jsonData,
+    Expression<bool>? isSummaryOnly,
+    Expression<DateTime>? cachedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (image != null) 'image': image,
+      if (jsonData != null) 'json_data': jsonData,
+      if (isSummaryOnly != null) 'is_summary_only': isSummaryOnly,
+      if (cachedAt != null) 'cached_at': cachedAt,
+    });
+  }
+
+  CachedRecipesCompanion copyWith({
+    Value<int>? id,
+    Value<String>? title,
+    Value<String?>? image,
+    Value<String>? jsonData,
+    Value<bool>? isSummaryOnly,
+    Value<DateTime>? cachedAt,
+  }) {
+    return CachedRecipesCompanion(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      image: image ?? this.image,
+      jsonData: jsonData ?? this.jsonData,
+      isSummaryOnly: isSummaryOnly ?? this.isSummaryOnly,
+      cachedAt: cachedAt ?? this.cachedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (image.present) {
+      map['image'] = Variable<String>(image.value);
+    }
+    if (jsonData.present) {
+      map['json_data'] = Variable<String>(jsonData.value);
+    }
+    if (isSummaryOnly.present) {
+      map['is_summary_only'] = Variable<bool>(isSummaryOnly.value);
+    }
+    if (cachedAt.present) {
+      map['cached_at'] = Variable<DateTime>(cachedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CachedRecipesCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('image: $image, ')
+          ..write('jsonData: $jsonData, ')
+          ..write('isSummaryOnly: $isSummaryOnly, ')
+          ..write('cachedAt: $cachedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2688,6 +3090,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $ShoppingListItemsTable(this);
   late final $SelectedTodayIngredientsTable selectedTodayIngredients =
       $SelectedTodayIngredientsTable(this);
+  late final $CachedRecipesTable cachedRecipes = $CachedRecipesTable(this);
+  late final RecipeCacheDao recipeCacheDao = RecipeCacheDao(
+    this as AppDatabase,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2698,6 +3104,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     mealPlanSlots,
     shoppingListItems,
     selectedTodayIngredients,
+    cachedRecipes,
   ];
 }
 
@@ -4307,6 +4714,221 @@ typedef $$SelectedTodayIngredientsTableProcessedTableManager =
       SelectedTodayIngredient,
       PrefetchHooks Function()
     >;
+typedef $$CachedRecipesTableCreateCompanionBuilder =
+    CachedRecipesCompanion Function({
+      Value<int> id,
+      required String title,
+      Value<String?> image,
+      required String jsonData,
+      Value<bool> isSummaryOnly,
+      Value<DateTime> cachedAt,
+    });
+typedef $$CachedRecipesTableUpdateCompanionBuilder =
+    CachedRecipesCompanion Function({
+      Value<int> id,
+      Value<String> title,
+      Value<String?> image,
+      Value<String> jsonData,
+      Value<bool> isSummaryOnly,
+      Value<DateTime> cachedAt,
+    });
+
+class $$CachedRecipesTableFilterComposer
+    extends Composer<_$AppDatabase, $CachedRecipesTable> {
+  $$CachedRecipesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get image => $composableBuilder(
+    column: $table.image,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get jsonData => $composableBuilder(
+    column: $table.jsonData,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSummaryOnly => $composableBuilder(
+    column: $table.isSummaryOnly,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CachedRecipesTableOrderingComposer
+    extends Composer<_$AppDatabase, $CachedRecipesTable> {
+  $$CachedRecipesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get image => $composableBuilder(
+    column: $table.image,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get jsonData => $composableBuilder(
+    column: $table.jsonData,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSummaryOnly => $composableBuilder(
+    column: $table.isSummaryOnly,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CachedRecipesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CachedRecipesTable> {
+  $$CachedRecipesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get image =>
+      $composableBuilder(column: $table.image, builder: (column) => column);
+
+  GeneratedColumn<String> get jsonData =>
+      $composableBuilder(column: $table.jsonData, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSummaryOnly => $composableBuilder(
+    column: $table.isSummaryOnly,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get cachedAt =>
+      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
+}
+
+class $$CachedRecipesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CachedRecipesTable,
+          CachedRecipe,
+          $$CachedRecipesTableFilterComposer,
+          $$CachedRecipesTableOrderingComposer,
+          $$CachedRecipesTableAnnotationComposer,
+          $$CachedRecipesTableCreateCompanionBuilder,
+          $$CachedRecipesTableUpdateCompanionBuilder,
+          (
+            CachedRecipe,
+            BaseReferences<_$AppDatabase, $CachedRecipesTable, CachedRecipe>,
+          ),
+          CachedRecipe,
+          PrefetchHooks Function()
+        > {
+  $$CachedRecipesTableTableManager(_$AppDatabase db, $CachedRecipesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CachedRecipesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CachedRecipesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CachedRecipesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String?> image = const Value.absent(),
+                Value<String> jsonData = const Value.absent(),
+                Value<bool> isSummaryOnly = const Value.absent(),
+                Value<DateTime> cachedAt = const Value.absent(),
+              }) => CachedRecipesCompanion(
+                id: id,
+                title: title,
+                image: image,
+                jsonData: jsonData,
+                isSummaryOnly: isSummaryOnly,
+                cachedAt: cachedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String title,
+                Value<String?> image = const Value.absent(),
+                required String jsonData,
+                Value<bool> isSummaryOnly = const Value.absent(),
+                Value<DateTime> cachedAt = const Value.absent(),
+              }) => CachedRecipesCompanion.insert(
+                id: id,
+                title: title,
+                image: image,
+                jsonData: jsonData,
+                isSummaryOnly: isSummaryOnly,
+                cachedAt: cachedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CachedRecipesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CachedRecipesTable,
+      CachedRecipe,
+      $$CachedRecipesTableFilterComposer,
+      $$CachedRecipesTableOrderingComposer,
+      $$CachedRecipesTableAnnotationComposer,
+      $$CachedRecipesTableCreateCompanionBuilder,
+      $$CachedRecipesTableUpdateCompanionBuilder,
+      (
+        CachedRecipe,
+        BaseReferences<_$AppDatabase, $CachedRecipesTable, CachedRecipe>,
+      ),
+      CachedRecipe,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -4324,4 +4946,6 @@ class $AppDatabaseManager {
         _db,
         _db.selectedTodayIngredients,
       );
+  $$CachedRecipesTableTableManager get cachedRecipes =>
+      $$CachedRecipesTableTableManager(_db, _db.cachedRecipes);
 }
