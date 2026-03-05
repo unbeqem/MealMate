@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Phase 5 context gathered
-last_updated: "2026-03-05T21:30:16.217Z"
+stopped_at: Completed 05-01-PLAN.md — meal planner data layer
+last_updated: "2026-03-05T21:58:26.860Z"
 last_activity: "2026-03-03 — Completed 02-01: Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config"
 progress:
   total_phases: 9
   completed_phases: 3
   total_plans: 23
-  completed_plans: 13
+  completed_plans: 14
   percent: 38
 ---
 
@@ -108,6 +108,7 @@ Progress: [███░░░░░░░] 12%
 | Phase 04-recipe-discovery P01 | 7 | 2 tasks | 21 files |
 | Phase 04-recipe-discovery P03 | 5 | 2 tasks | 10 files |
 | Phase 04-recipe-discovery P02 | 6 | 2 tasks | 8 files |
+| Phase 05-weekly-meal-planner P01 | 7 | 2 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -154,6 +155,7 @@ Recent decisions affecting current work:
 - [Phase 04-recipe-discovery]: Image.network over CachedNetworkImage: cached_network_image absent from pubspec; Image.network with errorBuilder/loadingBuilder provides equivalent UX
 - [Phase 04-recipe-discovery]: recipe_routes.dart updated in-place: /recipes/:id already existed as nested route from Plan 02; replaced placeholder builder rather than adding duplicate top-level route
 - [Phase 04-recipe-discovery]: [Phase 04-02]: recipeFilterStateProvider (not recipeFilterStateNotifierProvider) is the Riverpod 3.x generated name; page is required param in recipeSearchPageProvider; recipe_routes.dart mirrors ingredient route pattern; CachedNetworkImage added via cached_network_image package
+- [Phase 05-01]: currentUserIdProvider wraps currentUserProvider, throws StateError if not authenticated; MealPlanNotifier uses ref.$arg for weekStart family param; Template slots snapshot title/image at save time; weekStart normalised to UTC midnight for consistent DB equality
 
 ### Pending Todos
 
@@ -168,6 +170,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-05T21:30:16.215Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-weekly-meal-planner/05-CONTEXT.md
+Last session: 2026-03-05T21:58:26.857Z
+Stopped at: Completed 05-01-PLAN.md — meal planner data layer
+Resume file: None
