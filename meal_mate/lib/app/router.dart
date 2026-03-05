@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' show AuthChangeEvent;
+import 'package:supabase_flutter/supabase_flutter.dart' show AuthChangeEvent, Supabase;
 import '../features/auth/presentation/auth_notifier.dart';
 import '../features/auth/presentation/onboarding_notifier.dart';
 import '../features/auth/presentation/screens/login_screen.dart';
@@ -11,6 +11,8 @@ import '../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../features/auth/presentation/screens/reset_password_screen.dart';
 import '../features/auth/presentation/screens/onboarding/onboarding_shell.dart';
 import '../features/home/presentation/screens/home_screen.dart';
+import '../core/router/app_router.dart';
+import '../features/recipes/presentation/recipe_routes.dart';
 
 // ---------------------------------------------------------------------------
 // RouterRefreshNotifier
@@ -40,8 +42,8 @@ final routerProvider = Provider<GoRouter>((ref) {
   // When the user reinstalls, the local SharedPreferences flag is gone but Supabase
   // still has the completed profile row. We fetch it and restore the local flag.
   ref.listen(authStateChangesProvider, (_, next) async {
-    final authEvent = next.valueOrNull?.event;
-    final user = next.valueOrNull?.session?.user;
+    final authEvent = next.value?.event;
+    final user = next.value?.session?.user;
     if (authEvent == AuthChangeEvent.initialSession && user != null) {
       try {
         final response = await Supabase.instance.client
@@ -72,9 +74,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       // CRITICAL: Don't redirect while auth state is loading — prevents login flash.
       if (authState.isLoading || authState.hasError) return null;
 
-      final session = authState.valueOrNull?.session;
+      final session = authState.value?.session;
       final isAuthenticated = session != null;
-      final authEvent = authState.valueOrNull?.event;
+      final authEvent = authState.value?.event;
 
       // Handle passwordRecovery deep link event — route to reset password screen.
       if (authEvent == AuthChangeEvent.passwordRecovery) {
@@ -93,7 +95,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       // --- AUTHENTICATED ---
       // Read onboarding completion state. While the async provider loads,
       // treat it as not completed (stay on current screen, re-evaluate on load).
-      final isOnboarded = onboardingCompletedAsync.valueOrNull ?? false;
+      final isOnboarded = onboardingCompletedAsync.value ?? false;
       final isLoadingOnboarding = onboardingCompletedAsync.isLoading;
 
       // Wait for the onboarding state to resolve before making routing decisions.
@@ -141,6 +143,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/home',
         builder: (_, __) => const HomeScreen(),
       ),
+      // Phase 3: Ingredient selection routes
+      ...ingredientRoutes,
+      // Phase 4: Recipe routes (browse + detail via recipe_routes.dart)
+      ...recipeRoutes,
     ],
   );
 });
