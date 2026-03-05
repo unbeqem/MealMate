@@ -35,6 +35,8 @@ class MealPlanNotifier extends _$MealPlanNotifier {
     required String dayOfWeek,
     required String mealType,
     required int recipeId,
+    String? recipeTitle,
+    String? recipeImage,
   }) async {
     final userId = ref.read(currentUserIdProvider);
     await _repository.assignRecipe(
@@ -43,6 +45,8 @@ class MealPlanNotifier extends _$MealPlanNotifier {
       mealType: mealType,
       weekStart: ref.$arg as DateTime,
       recipeId: recipeId,
+      recipeTitle: recipeTitle,
+      recipeImage: recipeImage,
     );
   }
 

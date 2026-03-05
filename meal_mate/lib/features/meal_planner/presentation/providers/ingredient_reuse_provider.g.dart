@@ -8,15 +8,22 @@ part of 'ingredient_reuse_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-
 /// Returns the set of all ingredient names (lowercased) used in the current
 /// week's meal plan by loading each assigned recipe from [CachedRecipes].
+///
+/// - Watches [mealPlanNotifierProvider] reactively — updates whenever slots change.
+/// - Parses `extendedIngredients[].name` from each recipe's cached JSON.
+/// - Skips any recipe whose cache entry is missing (cache expired).
 
 @ProviderFor(weekIngredientNames)
 final weekIngredientNamesProvider = WeekIngredientNamesFamily._();
 
 /// Returns the set of all ingredient names (lowercased) used in the current
 /// week's meal plan by loading each assigned recipe from [CachedRecipes].
+///
+/// - Watches [mealPlanNotifierProvider] reactively — updates whenever slots change.
+/// - Parses `extendedIngredients[].name` from each recipe's cached JSON.
+/// - Skips any recipe whose cache entry is missing (cache expired).
 
 final class WeekIngredientNamesProvider
     extends
@@ -25,11 +32,13 @@ final class WeekIngredientNamesProvider
           Set<String>,
           FutureOr<Set<String>>
         >
-    with
-        $FutureModifier<Set<String>>,
-        $FutureProvider<Set<String>> {
+    with $FutureModifier<Set<String>>, $FutureProvider<Set<String>> {
   /// Returns the set of all ingredient names (lowercased) used in the current
   /// week's meal plan by loading each assigned recipe from [CachedRecipes].
+  ///
+  /// - Watches [mealPlanNotifierProvider] reactively — updates whenever slots change.
+  /// - Parses `extendedIngredients[].name` from each recipe's cached JSON.
+  /// - Skips any recipe whose cache entry is missing (cache expired).
   WeekIngredientNamesProvider._({
     required WeekIngredientNamesFamily super.from,
     required DateTime super.argument,
@@ -74,10 +83,15 @@ final class WeekIngredientNamesProvider
   }
 }
 
-String _$weekIngredientNamesHash() => r'c1d2e3f4a5b6c1d2e3f4a5b6c1d2e3f4a5b6c1d2';
+String _$weekIngredientNamesHash() =>
+    r'90058e9568919a0aeaea80e72415a191333de19e';
 
 /// Returns the set of all ingredient names (lowercased) used in the current
 /// week's meal plan by loading each assigned recipe from [CachedRecipes].
+///
+/// - Watches [mealPlanNotifierProvider] reactively — updates whenever slots change.
+/// - Parses `extendedIngredients[].name` from each recipe's cached JSON.
+/// - Skips any recipe whose cache entry is missing (cache expired).
 
 final class WeekIngredientNamesFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Set<String>>, DateTime> {
@@ -92,6 +106,10 @@ final class WeekIngredientNamesFamily extends $Family
 
   /// Returns the set of all ingredient names (lowercased) used in the current
   /// week's meal plan by loading each assigned recipe from [CachedRecipes].
+  ///
+  /// - Watches [mealPlanNotifierProvider] reactively — updates whenever slots change.
+  /// - Parses `extendedIngredients[].name` from each recipe's cached JSON.
+  /// - Skips any recipe whose cache entry is missing (cache expired).
 
   WeekIngredientNamesProvider call(DateTime weekStart) =>
       WeekIngredientNamesProvider._(argument: weekStart, from: this);
@@ -100,101 +118,17 @@ final class WeekIngredientNamesFamily extends $Family
   String toString() => r'weekIngredientNamesProvider';
 }
 
-// ---------------------------------------------------------------------------
-// ingredientOverlapCount — named-param family FutureProvider returning int
-// ---------------------------------------------------------------------------
-
-/// Returns the count of ingredients that the given [candidateIngredientNames]
-/// share with the current week's planned recipes.
-
-@ProviderFor(ingredientOverlapCount)
-final ingredientOverlapCountProvider = IngredientOverlapCountFamily._();
-
-/// Returns the count of ingredients that the given [candidateIngredientNames]
-/// share with the current week's planned recipes.
-
-final class IngredientOverlapCountProvider
-    extends
-        $FunctionalProvider<int, int, int>
-    with $Provider<int> {
-  /// Returns the count of ingredients that the given [candidateIngredientNames]
-  /// share with the current week's planned recipes.
-  IngredientOverlapCountProvider._({
-    required IngredientOverlapCountFamily super.from,
-    required ({DateTime weekStart, List<String> candidateIngredientNames})
-    super.argument,
-  }) : super(
-         retry: null,
-         name: r'ingredientOverlapCountProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$ingredientOverlapCountHash();
-
-  @override
-  String toString() {
-    return r'ingredientOverlapCountProvider'
-        ''
-        '$argument';
-  }
-
-  @$internal
-  @override
-  $ProviderElement<int> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  int create(Ref ref) {
-    final argument =
-        this.argument
-            as ({
-              DateTime weekStart,
-              List<String> candidateIngredientNames,
-            });
-    return ingredientOverlapCount(
-      ref,
-      weekStart: argument.weekStart,
-      candidateIngredientNames: argument.candidateIngredientNames,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is IngredientOverlapCountProvider &&
-        other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(int value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<int>(value),
-    );
-  }
-}
-
-String _$ingredientOverlapCountHash() =>
-    r'd2e3f4a5b6c1d2e3f4a5b6c1d2e3f4a5b6c1d2e3';
-
-// ---------------------------------------------------------------------------
-// cachedRecipeIngredientNames — positional-param family FutureProvider returning List<String>
-// ---------------------------------------------------------------------------
-
 /// Returns lowercased ingredient names for a single recipe from CachedRecipes.
+/// Returns empty list if the recipe is not cached or is summary-only (no extendedIngredients).
+/// This enables the overlap badge to show real counts for recipes the user has previously viewed in detail.
 
 @ProviderFor(cachedRecipeIngredientNames)
 final cachedRecipeIngredientNamesProvider =
     CachedRecipeIngredientNamesFamily._();
 
 /// Returns lowercased ingredient names for a single recipe from CachedRecipes.
+/// Returns empty list if the recipe is not cached or is summary-only (no extendedIngredients).
+/// This enables the overlap badge to show real counts for recipes the user has previously viewed in detail.
 
 final class CachedRecipeIngredientNamesProvider
     extends
@@ -203,10 +137,10 @@ final class CachedRecipeIngredientNamesProvider
           List<String>,
           FutureOr<List<String>>
         >
-    with
-        $FutureModifier<List<String>>,
-        $FutureProvider<List<String>> {
+    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
   /// Returns lowercased ingredient names for a single recipe from CachedRecipes.
+  /// Returns empty list if the recipe is not cached or is summary-only (no extendedIngredients).
+  /// This enables the overlap badge to show real counts for recipes the user has previously viewed in detail.
   CachedRecipeIngredientNamesProvider._({
     required CachedRecipeIngredientNamesFamily super.from,
     required int super.argument,
@@ -253,9 +187,11 @@ final class CachedRecipeIngredientNamesProvider
 }
 
 String _$cachedRecipeIngredientNamesHash() =>
-    r'e3f4a5b6c1d2e3f4a5b6c1d2e3f4a5b6c1d2e3f4';
+    r'2033452b439ef51f0ae1d69c8465bfe127a85101';
 
 /// Returns lowercased ingredient names for a single recipe from CachedRecipes.
+/// Returns empty list if the recipe is not cached or is summary-only (no extendedIngredients).
+/// This enables the overlap badge to show real counts for recipes the user has previously viewed in detail.
 
 final class CachedRecipeIngredientNamesFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<String>>, int> {
@@ -269,6 +205,8 @@ final class CachedRecipeIngredientNamesFamily extends $Family
       );
 
   /// Returns lowercased ingredient names for a single recipe from CachedRecipes.
+  /// Returns empty list if the recipe is not cached or is summary-only (no extendedIngredients).
+  /// This enables the overlap badge to show real counts for recipes the user has previously viewed in detail.
 
   CachedRecipeIngredientNamesProvider call(int recipeId) =>
       CachedRecipeIngredientNamesProvider._(argument: recipeId, from: this);
@@ -279,6 +217,94 @@ final class CachedRecipeIngredientNamesFamily extends $Family
 
 /// Returns the count of ingredients that the given [candidateIngredientNames]
 /// share with the current week's planned recipes.
+///
+/// - Watches [weekIngredientNamesProvider] — updates reactively.
+/// - Returns 0 while the week ingredient set is still loading.
+
+@ProviderFor(ingredientOverlapCount)
+final ingredientOverlapCountProvider = IngredientOverlapCountFamily._();
+
+/// Returns the count of ingredients that the given [candidateIngredientNames]
+/// share with the current week's planned recipes.
+///
+/// - Watches [weekIngredientNamesProvider] — updates reactively.
+/// - Returns 0 while the week ingredient set is still loading.
+
+final class IngredientOverlapCountProvider
+    extends $FunctionalProvider<int, int, int>
+    with $Provider<int> {
+  /// Returns the count of ingredients that the given [candidateIngredientNames]
+  /// share with the current week's planned recipes.
+  ///
+  /// - Watches [weekIngredientNamesProvider] — updates reactively.
+  /// - Returns 0 while the week ingredient set is still loading.
+  IngredientOverlapCountProvider._({
+    required IngredientOverlapCountFamily super.from,
+    required ({DateTime weekStart, List<String> candidateIngredientNames})
+    super.argument,
+  }) : super(
+         retry: null,
+         name: r'ingredientOverlapCountProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$ingredientOverlapCountHash();
+
+  @override
+  String toString() {
+    return r'ingredientOverlapCountProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<int> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  int create(Ref ref) {
+    final argument =
+        this.argument
+            as ({DateTime weekStart, List<String> candidateIngredientNames});
+    return ingredientOverlapCount(
+      ref,
+      weekStart: argument.weekStart,
+      candidateIngredientNames: argument.candidateIngredientNames,
+    );
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<int>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is IngredientOverlapCountProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$ingredientOverlapCountHash() =>
+    r'8ca5c3061f38e9824fee34bccfc4967543891284';
+
+/// Returns the count of ingredients that the given [candidateIngredientNames]
+/// share with the current week's planned recipes.
+///
+/// - Watches [weekIngredientNamesProvider] — updates reactively.
+/// - Returns 0 while the week ingredient set is still loading.
 
 final class IngredientOverlapCountFamily extends $Family
     with
@@ -297,6 +323,9 @@ final class IngredientOverlapCountFamily extends $Family
 
   /// Returns the count of ingredients that the given [candidateIngredientNames]
   /// share with the current week's planned recipes.
+  ///
+  /// - Watches [weekIngredientNamesProvider] — updates reactively.
+  /// - Returns 0 while the week ingredient set is still loading.
 
   IngredientOverlapCountProvider call({
     required DateTime weekStart,

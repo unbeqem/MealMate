@@ -11,11 +11,11 @@ part of 'meal_slot.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$MealSlot {
 
- String get id; String get dayOfWeek; String get mealType; DateTime get weekStart; String? get recipeId; String? get recipeTitle; String? get recipeImage;
+ String get id; String get dayOfWeek; String get mealType; DateTime get weekStart; String? get recipeId;// Spoonacular ID as string (e.g. "716429")
+ String? get recipeTitle; String? get recipeImage;
 /// Create a copy of MealSlot
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -23,12 +23,13 @@ mixin _$MealSlot {
 $MealSlotCopyWith<MealSlot> get copyWith => _$MealSlotCopyWithImpl<MealSlot>(this as MealSlot, _$identity);
 
 
+
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is MealSlot&&(identical(other.id, id) || other.id == id)&&(identical(other.dayOfWeek, dayOfWeek) || other.dayOfWeek == dayOfWeek)&&(identical(other.mealType, mealType) || other.mealType == mealType)&&(identical(other.weekStart, weekStart) || other.weekStart == weekStart)&&(identical(other.recipeId, recipeId) || other.recipeId == recipeId)&&(identical(other.recipeTitle, recipeTitle) || other.recipeTitle == recipeTitle)&&(identical(other.recipeImage, recipeImage) || other.recipeImage == recipeImage));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,id,dayOfWeek,mealType,weekStart,recipeId,recipeTitle,recipeImage);
 
@@ -80,6 +81,18 @@ as String?,
 
 /// Adds pattern-matching-related methods to [MealSlot].
 extension MealSlotPatterns on MealSlot {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
 @optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MealSlot value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
@@ -89,12 +102,37 @@ return $default(_that);case _:
 
 }
 }
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
 @optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MealSlot value)  $default,){
 final _that = this;
 switch (_that) {
 case _MealSlot():
 return $default(_that);}
 }
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
 @optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MealSlot value)?  $default,){
 final _that = this;
 switch (_that) {
@@ -104,6 +142,18 @@ return $default(_that);case _:
 
 }
 }
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String dayOfWeek,  String mealType,  DateTime weekStart,  String? recipeId,  String? recipeTitle,  String? recipeImage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MealSlot() when $default != null:
@@ -112,11 +162,36 @@ return $default(_that.id,_that.dayOfWeek,_that.mealType,_that.weekStart,_that.re
 
 }
 }
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String dayOfWeek,  String mealType,  DateTime weekStart,  String? recipeId,  String? recipeTitle,  String? recipeImage)  $default,) {final _that = this;
 switch (_that) {
 case _MealSlot():
 return $default(_that.id,_that.dayOfWeek,_that.mealType,_that.weekStart,_that.recipeId,_that.recipeTitle,_that.recipeImage);}
 }
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String dayOfWeek,  String mealType,  DateTime weekStart,  String? recipeId,  String? recipeTitle,  String? recipeImage)?  $default,) {final _that = this;
 switch (_that) {
 case _MealSlot() when $default != null:
@@ -130,15 +205,17 @@ return $default(_that.id,_that.dayOfWeek,_that.mealType,_that.weekStart,_that.re
 
 /// @nodoc
 
+
 class _MealSlot implements MealSlot {
   const _MealSlot({required this.id, required this.dayOfWeek, required this.mealType, required this.weekStart, this.recipeId, this.recipeTitle, this.recipeImage});
-
+  
 
 @override final  String id;
 @override final  String dayOfWeek;
 @override final  String mealType;
 @override final  DateTime weekStart;
 @override final  String? recipeId;
+// Spoonacular ID as string (e.g. "716429")
 @override final  String? recipeTitle;
 @override final  String? recipeImage;
 
@@ -149,12 +226,13 @@ class _MealSlot implements MealSlot {
 _$MealSlotCopyWith<_MealSlot> get copyWith => __$MealSlotCopyWithImpl<_MealSlot>(this, _$identity);
 
 
+
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _MealSlot&&(identical(other.id, id) || other.id == id)&&(identical(other.dayOfWeek, dayOfWeek) || other.dayOfWeek == dayOfWeek)&&(identical(other.mealType, mealType) || other.mealType == mealType)&&(identical(other.weekStart, weekStart) || other.weekStart == weekStart)&&(identical(other.recipeId, recipeId) || other.recipeId == recipeId)&&(identical(other.recipeTitle, recipeTitle) || other.recipeTitle == recipeTitle)&&(identical(other.recipeImage, recipeImage) || other.recipeImage == recipeImage));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,id,dayOfWeek,mealType,weekStart,recipeId,recipeTitle,recipeImage);
 

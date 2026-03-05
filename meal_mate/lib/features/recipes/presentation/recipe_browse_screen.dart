@@ -363,7 +363,7 @@ class _SelectableRecipeCard extends ConsumerWidget {
     int overlapCount = 0;
 
     if (weekStart != null) {
-      final slotsAsync = ref.watch(mealPlanNotifierProvider(weekStart!));
+      final slotsAsync = ref.watch(mealPlanProvider(weekStart!));
       final slotList = switch (slotsAsync) {
         AsyncData(:final value) => value,
         _ => <MealSlot>[],

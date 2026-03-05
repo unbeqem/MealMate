@@ -81,11 +81,13 @@ class EmptySlotCard extends ConsumerWidget {
       final recipeId = result['recipeId'] as int?;
       if (recipeId != null) {
         await ref
-            .read(mealPlanNotifierProvider(weekStart).notifier)
+            .read(mealPlanProvider(weekStart).notifier)
             .assignRecipe(
               dayOfWeek: dayOfWeek,
               mealType: mealType,
               recipeId: recipeId,
+              recipeTitle: result['recipeTitle'] as String?,
+              recipeImage: result['recipeImage'] as String?,
             );
       }
     }

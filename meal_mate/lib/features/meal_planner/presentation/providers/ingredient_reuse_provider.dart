@@ -9,7 +9,7 @@ part 'ingredient_reuse_provider.g.dart';
 /// Returns the set of all ingredient names (lowercased) used in the current
 /// week's meal plan by loading each assigned recipe from [CachedRecipes].
 ///
-/// - Watches [mealPlanNotifierProvider] reactively — updates whenever slots change.
+/// - Watches [mealPlanProvider] reactively — updates whenever slots change.
 /// - Parses `extendedIngredients[].name` from each recipe's cached JSON.
 /// - Skips any recipe whose cache entry is missing (cache expired).
 @riverpod
@@ -17,7 +17,7 @@ FutureOr<Set<String>> weekIngredientNames(
   Ref ref,
   DateTime weekStart,
 ) async {
-  final slots = ref.watch(mealPlanNotifierProvider(weekStart));
+  final slots = ref.watch(mealPlanProvider(weekStart));
   final db = ref.watch(appDatabaseProvider);
 
   // Wait for the meal plan stream to have data.

@@ -11,17 +11,18 @@ part of 'template_notifier.dart';
 /// Manages the list of saved plan templates and template lifecycle operations.
 
 @ProviderFor(TemplateNotifier)
-final templateNotifierProvider = TemplateNotifierProvider._();
+final templateProvider = TemplateNotifierProvider._();
 
 /// Manages the list of saved plan templates and template lifecycle operations.
 final class TemplateNotifierProvider
     extends $AsyncNotifierProvider<TemplateNotifier, List<PlanTemplate>> {
+  /// Manages the list of saved plan templates and template lifecycle operations.
   TemplateNotifierProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'templateNotifierProvider',
+        name: r'templateProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
@@ -35,11 +36,11 @@ final class TemplateNotifierProvider
   TemplateNotifier create() => TemplateNotifier();
 }
 
-String _$templateNotifierHash() =>
-    r'c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4';
+String _$templateNotifierHash() => r'377e207c631cd907002424d79a99567eed3610fb';
 
-abstract class _$TemplateNotifier
-    extends $AsyncNotifier<List<PlanTemplate>> {
+/// Manages the list of saved plan templates and template lifecycle operations.
+
+abstract class _$TemplateNotifier extends $AsyncNotifier<List<PlanTemplate>> {
   FutureOr<List<PlanTemplate>> build();
   @$mustCallSuper
   @override
@@ -49,10 +50,7 @@ abstract class _$TemplateNotifier
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<
-                AsyncValue<List<PlanTemplate>>,
-                List<PlanTemplate>
-              >,
+              AnyNotifier<AsyncValue<List<PlanTemplate>>, List<PlanTemplate>>,
               AsyncValue<List<PlanTemplate>>,
               Object?,
               Object?

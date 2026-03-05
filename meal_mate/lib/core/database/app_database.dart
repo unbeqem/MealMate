@@ -35,7 +35,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   static QueryExecutor _openConnection() {
     return driftDatabase(name: 'mealmate');
@@ -61,6 +61,29 @@ class AppDatabase extends _$AppDatabase {
         // Phase 5: Add meal plan template tables
         await m.createTable(mealPlanTemplates);
         await m.createTable(mealPlanTemplateSlots);
+      }
+      if (from < 5) {
+        // Fix: mealPlanSlots.recipeId had FK → Recipes.id (UUID) but stores
+        // Spoonacular integer IDs. Recreate table without FK constraint.
+        await customStatement('''
+          CREATE TABLE meal_plan_slots_new (
+            id TEXT NOT NULL PRIMARY KEY,
+            user_id TEXT NOT NULL,
+            recipe_id TEXT,
+            day_of_week TEXT NOT NULL,
+            meal_type TEXT NOT NULL,
+            week_start INTEGER NOT NULL,
+            updated_at INTEGER NOT NULL DEFAULT (strftime('%s','now')),
+            sync_status TEXT NOT NULL DEFAULT 'pending'
+          )
+        ''');
+        await customStatement(
+          'INSERT INTO meal_plan_slots_new SELECT * FROM meal_plan_slots',
+        );
+        await customStatement('DROP TABLE meal_plan_slots');
+        await customStatement(
+          'ALTER TABLE meal_plan_slots_new RENAME TO meal_plan_slots',
+        );
       }
     },
     beforeOpen: (details) async {

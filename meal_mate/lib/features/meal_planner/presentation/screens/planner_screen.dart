@@ -72,7 +72,7 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
   /// Shows a dialog prompting for a template name, then saves the current week.
   Future<void> _saveAsTemplate() async {
     // Check if the current week has any filled slots before prompting for name.
-    final slotsAsync = ref.read(mealPlanNotifierProvider(_weekStart));
+    final slotsAsync = ref.read(mealPlanProvider(_weekStart));
     final slots = switch (slotsAsync) {
       AsyncData(:final value) => value,
       _ => <MealSlot>[],
@@ -131,7 +131,7 @@ class _PlannerScreenState extends ConsumerState<PlannerScreen> {
     }
 
     try {
-      await ref.read(templateNotifierProvider.notifier).saveCurrentWeek(
+      await ref.read(templateProvider.notifier).saveCurrentWeek(
             name: name,
             weekStart: _weekStart,
           );

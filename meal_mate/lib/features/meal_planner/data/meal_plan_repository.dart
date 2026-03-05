@@ -62,13 +62,34 @@ class MealPlanRepository {
   /// already-assigned slot replaces the recipe without creating a duplicate row.
   ///
   /// The [recipeId] integer is stored as its string representation.
+  /// [recipeTitle] and [recipeImage] are upserted into CachedRecipes so the
+  /// watchWeek JOIN always finds display data for the slot.
   Future<void> assignRecipe({
     required String userId,
     required String dayOfWeek,
     required String mealType,
     required DateTime weekStart,
     required int recipeId,
+    String? recipeTitle,
+    String? recipeImage,
   }) async {
+    // Ensure the recipe exists in CachedRecipes so the watchWeek JOIN
+    // returns title/image. Uses insertOnConflictUpdate to avoid overwriting
+    // a full-detail entry with summary-only data.
+    final existing = await (_db.select(_db.cachedRecipes)
+          ..where((r) => r.id.equals(recipeId)))
+        .getSingleOrNull();
+    if (existing == null) {
+      await _db.into(_db.cachedRecipes).insertOnConflictUpdate(
+            CachedRecipesCompanion.insert(
+              id: Value(recipeId),
+              title: recipeTitle ?? 'Recipe',
+              image: Value(recipeImage),
+              jsonData: '{}',
+              isSummaryOnly: const Value(true),
+            ),
+          );
+    }
     final weekStartNormalised = DateTime.utc(
       weekStart.year,
       weekStart.month,
@@ -76,7 +97,7 @@ class MealPlanRepository {
     );
 
     // Find existing slot for this position, or create a new id
-    final existing = await (_db.select(_db.mealPlanSlots)
+    final existingSlot = await (_db.select(_db.mealPlanSlots)
           ..where(
             (s) =>
                 s.userId.equals(userId) &
@@ -86,7 +107,7 @@ class MealPlanRepository {
           ))
         .getSingleOrNull();
 
-    final slotId = existing?.id ?? _uuid.v4();
+    final slotId = existingSlot?.id ?? _uuid.v4();
 
     await _db.into(_db.mealPlanSlots).insertOnConflictUpdate(
       MealPlanSlotsCompanion.insert(

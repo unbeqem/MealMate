@@ -1,8 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
-import 'recipes_table.dart';
-
 const _uuid = Uuid();
 
 class MealPlanSlots extends Table {
@@ -11,9 +9,8 @@ class MealPlanSlots extends Table {
 
   TextColumn get userId => text()();
 
-  // FK → Recipes.id (nullable: slot may be empty)
-  TextColumn get recipeId =>
-      text().nullable().references(Recipes, #id)();
+  // Spoonacular recipe ID stored as text (e.g. "716429"), nullable when empty
+  TextColumn get recipeId => text().nullable()();
 
   // 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
   TextColumn get dayOfWeek => text()();

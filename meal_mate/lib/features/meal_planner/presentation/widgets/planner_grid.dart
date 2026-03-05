@@ -130,7 +130,7 @@ class _PlannerGridState extends ConsumerState<PlannerGrid> {
     String targetMealType,
   ) async {
     final notifier =
-        ref.read(mealPlanNotifierProvider(widget.weekStart).notifier);
+        ref.read(mealPlanProvider(widget.weekStart).notifier);
 
     // Same cell — ignore.
     if (dragged.dayOfWeek == targetDay && dragged.mealType == targetMealType) {
@@ -160,7 +160,7 @@ class _PlannerGridState extends ConsumerState<PlannerGrid> {
 
   @override
   Widget build(BuildContext context) {
-    final slotsAsync = ref.watch(mealPlanNotifierProvider(widget.weekStart));
+    final slotsAsync = ref.watch(mealPlanProvider(widget.weekStart));
 
     return slotsAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -218,10 +218,11 @@ class _PlannerGridState extends ConsumerState<PlannerGrid> {
           child: LayoutBuilder(
             builder: (context, constraints) {
               _scrollAreaWidth = constraints.maxWidth;
-              // Fixed column width — works on both mobile and desktop.
-              // On mobile (~370px available) shows ~2.8 columns; on desktop
-              // shows more columns with the same card size.
-              const columnWidth = 130.0;
+              // Responsive column width: show ~3.5 partial columns so the
+              // cut-off hints at scrollability. Clamped to [100, 160] so
+              // columns stay usable on both phones and wide desktops.
+              final columnWidth = (constraints.maxWidth / 3.5)
+                  .clamp(100.0, 160.0);
               return Listener(
                 // Track pointer position for edge-scroll detection.
                 onPointerMove: _isDragging

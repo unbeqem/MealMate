@@ -8,13 +8,17 @@ part of 'meal_plan_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Returns the current user's ID, throwing if not signed in.
 
 @ProviderFor(currentUserId)
 final currentUserIdProvider = CurrentUserIdProvider._();
 
+/// Returns the current user's ID, throwing if not signed in.
+
 final class CurrentUserIdProvider
     extends $FunctionalProvider<String, String, String>
     with $Provider<String> {
+  /// Returns the current user's ID, throwing if not signed in.
   CurrentUserIdProvider._()
     : super(
         from: null,
@@ -48,7 +52,7 @@ final class CurrentUserIdProvider
   }
 }
 
-String _$currentUserIdHash() => r'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2';
+String _$currentUserIdHash() => r'574f3a051a5cd828c275c34dc9e4d923b304f3a8';
 
 /// Stream-based Riverpod notifier for the weekly meal plan grid.
 ///
@@ -56,17 +60,24 @@ String _$currentUserIdHash() => r'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2';
 /// for the given [weekStart] automatically emits a new state.
 
 @ProviderFor(MealPlanNotifier)
-final mealPlanNotifierProvider = MealPlanNotifierFamily._();
+final mealPlanProvider = MealPlanNotifierFamily._();
 
 /// Stream-based Riverpod notifier for the weekly meal plan grid.
+///
+/// Watches Drift reactively — any insert/update/delete on mealPlanSlots
+/// for the given [weekStart] automatically emits a new state.
 final class MealPlanNotifierProvider
     extends $StreamNotifierProvider<MealPlanNotifier, List<MealSlot>> {
+  /// Stream-based Riverpod notifier for the weekly meal plan grid.
+  ///
+  /// Watches Drift reactively — any insert/update/delete on mealPlanSlots
+  /// for the given [weekStart] automatically emits a new state.
   MealPlanNotifierProvider._({
     required MealPlanNotifierFamily super.from,
     required DateTime super.argument,
   }) : super(
          retry: null,
-         name: r'mealPlanNotifierProvider',
+         name: r'mealPlanProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
@@ -77,7 +88,7 @@ final class MealPlanNotifierProvider
 
   @override
   String toString() {
-    return r'mealPlanNotifierProvider'
+    return r'mealPlanProvider'
         ''
         '($argument)';
   }
@@ -97,7 +108,12 @@ final class MealPlanNotifierProvider
   }
 }
 
-String _$mealPlanNotifierHash() => r'b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3';
+String _$mealPlanNotifierHash() => r'3bc98d5572a01b1f28b6818074d81e876ca7fec3';
+
+/// Stream-based Riverpod notifier for the weekly meal plan grid.
+///
+/// Watches Drift reactively — any insert/update/delete on mealPlanSlots
+/// for the given [weekStart] automatically emits a new state.
 
 final class MealPlanNotifierFamily extends $Family
     with
@@ -111,21 +127,30 @@ final class MealPlanNotifierFamily extends $Family
   MealPlanNotifierFamily._()
     : super(
         retry: null,
-        name: r'mealPlanNotifierProvider',
+        name: r'mealPlanProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
+  /// Stream-based Riverpod notifier for the weekly meal plan grid.
+  ///
+  /// Watches Drift reactively — any insert/update/delete on mealPlanSlots
+  /// for the given [weekStart] automatically emits a new state.
+
   MealPlanNotifierProvider call(DateTime weekStart) =>
       MealPlanNotifierProvider._(argument: weekStart, from: this);
 
   @override
-  String toString() => r'mealPlanNotifierProvider';
+  String toString() => r'mealPlanProvider';
 }
 
-abstract class _$MealPlanNotifier
-    extends $StreamNotifier<List<MealSlot>> {
+/// Stream-based Riverpod notifier for the weekly meal plan grid.
+///
+/// Watches Drift reactively — any insert/update/delete on mealPlanSlots
+/// for the given [weekStart] automatically emits a new state.
+
+abstract class _$MealPlanNotifier extends $StreamNotifier<List<MealSlot>> {
   late final _$args = ref.$arg as DateTime;
   DateTime get weekStart => _$args;
 

@@ -184,10 +184,12 @@ class MealSlotCard extends ConsumerWidget {
     if (result != null) {
       final recipeId = result['recipeId'] as int?;
       if (recipeId != null) {
-        await ref.read(mealPlanNotifierProvider(weekStart).notifier).assignRecipe(
+        await ref.read(mealPlanProvider(weekStart).notifier).assignRecipe(
               dayOfWeek: slot.dayOfWeek,
               mealType: slot.mealType,
               recipeId: recipeId,
+              recipeTitle: result['recipeTitle'] as String?,
+              recipeImage: result['recipeImage'] as String?,
             );
       }
     }
@@ -195,7 +197,7 @@ class MealSlotCard extends ConsumerWidget {
 
   Future<void> _onRemove(WidgetRef ref) async {
     await ref
-        .read(mealPlanNotifierProvider(weekStart).notifier)
+        .read(mealPlanProvider(weekStart).notifier)
         .clearSlot(slot.id);
   }
 }

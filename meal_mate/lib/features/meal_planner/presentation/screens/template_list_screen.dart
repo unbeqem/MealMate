@@ -20,7 +20,7 @@ class TemplateListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final templateAsync = ref.watch(templateNotifierProvider);
+    final templateAsync = ref.watch(templateProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Meal Plan Templates')),
@@ -33,7 +33,7 @@ class TemplateListScreen extends ConsumerWidget {
               Text('Failed to load templates: $err'),
               const SizedBox(height: 12),
               ElevatedButton(
-                onPressed: () => ref.invalidate(templateNotifierProvider),
+                onPressed: () => ref.invalidate(templateProvider),
                 child: const Text('Retry'),
               ),
             ],
@@ -200,7 +200,7 @@ class _TemplateCard extends ConsumerWidget {
     if (replaceAll == null || !context.mounted) return;
 
     try {
-      await ref.read(templateNotifierProvider.notifier).loadTemplate(
+      await ref.read(templateProvider.notifier).loadTemplate(
             templateId: template.id,
             targetWeekStart: normalised,
             replaceAll: replaceAll,
@@ -247,7 +247,7 @@ class _TemplateCard extends ConsumerWidget {
 
     try {
       await ref
-          .read(templateNotifierProvider.notifier)
+          .read(templateProvider.notifier)
           .deleteTemplate(template.id);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
