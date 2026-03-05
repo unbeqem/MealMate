@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-01-PLAN.md — meal planner data layer
-last_updated: "2026-03-05T21:58:26.860Z"
+stopped_at: Completed 05-02-PLAN.md — meal planner grid UI
+last_updated: "2026-03-05T22:04:22.561Z"
 last_activity: "2026-03-03 — Completed 02-01: Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config"
 progress:
   total_phases: 9
   completed_phases: 3
   total_plans: 23
-  completed_plans: 14
+  completed_plans: 15
   percent: 38
 ---
 
@@ -109,6 +109,7 @@ Progress: [███░░░░░░░] 12%
 | Phase 04-recipe-discovery P03 | 5 | 2 tasks | 10 files |
 | Phase 04-recipe-discovery P02 | 6 | 2 tasks | 8 files |
 | Phase 05-weekly-meal-planner P01 | 7 | 2 tasks | 14 files |
+| Phase 05-weekly-meal-planner P02 | 4 | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -156,6 +157,8 @@ Recent decisions affecting current work:
 - [Phase 04-recipe-discovery]: recipe_routes.dart updated in-place: /recipes/:id already existed as nested route from Plan 02; replaced placeholder builder rather than adding duplicate top-level route
 - [Phase 04-recipe-discovery]: [Phase 04-02]: recipeFilterStateProvider (not recipeFilterStateNotifierProvider) is the Riverpod 3.x generated name; page is required param in recipeSearchPageProvider; recipe_routes.dart mirrors ingredient route pattern; CachedNetworkImage added via cached_network_image package
 - [Phase 05-01]: currentUserIdProvider wraps currentUserProvider, throws StateError if not authenticated; MealPlanNotifier uses ref.$arg for weekStart family param; Template slots snapshot title/image at save time; weekStart normalised to UTC midnight for consistent DB equality
+- [Phase 05-02]: [Phase 05-02]: RecipeBrowseScreen reads GoRouterState.of(context).uri.queryParameters for selectForSlot mode — no constructor params required
+- [Phase 05-02]: [Phase 05-02]: PlannerScreen avoids intl package — manual month name array for date range formatting
 
 ### Pending Todos
 
@@ -170,6 +173,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-05T21:58:26.857Z
-Stopped at: Completed 05-01-PLAN.md — meal planner data layer
+Last session: 2026-03-05T22:04:22.558Z
+Stopped at: Completed 05-02-PLAN.md — meal planner grid UI
 Resume file: None
