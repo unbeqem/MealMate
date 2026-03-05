@@ -1,0 +1,127 @@
+---
+status: complete
+phase: 05-weekly-meal-planner
+source: 05-01-SUMMARY.md, 05-02-SUMMARY.md, 05-03-SUMMARY.md, 05-04-SUMMARY.md, 05-05-SUMMARY.md, 05-06-SUMMARY.md
+started: 2026-03-05T23:00:00Z
+updated: 2026-03-05T23:15:00Z
+---
+
+## Current Test
+
+[testing complete]
+
+## Tests
+
+### 1. Home Screen Meal Planner Entry
+expected: Home screen shows a "Meal Planner" card with a calendar icon. Tapping it navigates to the planner screen.
+result: pass
+
+### 2. Planner Grid Layout and Week Navigation
+expected: Planner screen shows a 7-day x 3-row grid (Breakfast/Lunch/Dinner labels on the left, day columns scrollable horizontally). Prev/next arrows shift the week. Tapping the date range opens a date picker to jump to any week.
+result: issue
+reported: "its showing only 3 days, there is no option to scroll further"
+severity: major
+
+### 3. Assign Recipe to Empty Slot
+expected: Tapping an empty slot (+ icon) opens the recipe browser in "Pick a Recipe" mode (filter chips hidden). Selecting a recipe returns to the planner with the slot now showing the recipe's thumbnail and title.
+result: issue
+reported: "it worked only one time now i cant even click anything and also before instead of adding the thumbnail and title it showed the details of the recipe plus instructions"
+severity: blocker
+
+### 4. Replace and Remove Recipe from Filled Slot
+expected: A filled slot card shows replace and remove icons in the top-right corner. Tapping remove clears the slot back to empty. Tapping replace opens the recipe picker; selecting a new recipe swaps it in.
+result: skipped
+reason: Blocked by test 3 — slot assignment doesn't work
+
+### 5. Drag-and-Drop Rescheduling
+expected: Long-pressing a filled meal card (~200ms) starts a drag with a visual ghost. Dragging to another filled slot swaps the two meals. Dragging to an empty slot moves the meal. Horizontal scroll is disabled during drag; auto-scroll activates near the left/right edges. Empty slots show a highlighted border and "Drop here" hint when hovered.
+result: skipped
+reason: Blocked by test 3 — can't fill slots
+
+### 6. Save Week as Template
+expected: Opening the planner overflow menu (three dots) shows "Save as Template". Tapping it opens a name dialog (max 30 chars). After entering a name and confirming, a success SnackBar appears. If the week has no filled slots, the save is blocked with a message.
+result: issue
+reported: "nope this doesnt exist"
+severity: major
+
+### 7. View and Load Template
+expected: Overflow menu "Load Template" navigates to the templates screen. Saved templates show name, creation date, and 7 day-density dots. Tapping a template opens a date picker, then a dialog asking "Replace all meals" vs "Fill empty slots only". After confirming, the template loads into the selected week.
+result: skipped
+reason: Blocked by test 6 — overflow menu missing
+
+### 8. Delete Template
+expected: On the templates screen, tapping delete on a template shows a confirmation dialog. After confirming, the template is removed from the list with a SnackBar confirmation.
+result: issue
+reported: "no template screen there yet"
+severity: major
+
+### 9. Week Ingredient Summary Panel
+expected: Below the planner grid, an expandable "Ingredients" panel lists all unique ingredient names from the week's assigned recipes as sorted chips. The panel is hidden when no slots are filled.
+result: issue
+reported: "none of that exists"
+severity: major
+
+### 10. Ingredient Overlap Badge in Recipe Picker
+expected: When picking a recipe for a slot, recipes you've previously viewed in detail show an eco-icon badge with "N shared" indicating how many ingredients overlap with the current week's plan. Recipes never viewed in detail show no badge (graceful fallback). Already-assigned recipes show a green "Planned" chip.
+result: skipped
+reason: Blocked by tests 3 and 9
+
+## Summary
+
+total: 10
+passed: 1
+issues: 6
+pending: 0
+skipped: 4
+
+## Gaps
+
+- truth: "Planner screen shows a 7-day x 3-row grid with day columns scrollable horizontally"
+  status: failed
+  reason: "User reported: its showing only 3 days, there is no option to scroll further"
+  severity: major
+  test: 2
+  root_cause: ""
+  artifacts: []
+  missing: []
+  debug_session: ""
+
+- truth: "Tapping an empty slot opens recipe picker in selection mode; selecting a recipe assigns it to the slot with thumbnail and title"
+  status: failed
+  reason: "User reported: it worked only one time now i cant even click anything and also before instead of adding the thumbnail and title it showed the details of the recipe plus instructions"
+  severity: blocker
+  test: 3
+  root_cause: ""
+  artifacts: []
+  missing: []
+  debug_session: ""
+
+- truth: "Planner overflow menu shows Save as Template and Load Template options"
+  status: failed
+  reason: "User reported: nope this doesnt exist"
+  severity: major
+  test: 6
+  root_cause: ""
+  artifacts: []
+  missing: []
+  debug_session: ""
+
+- truth: "Template list screen is accessible and shows saved templates with delete action"
+  status: failed
+  reason: "User reported: no template screen there yet"
+  severity: major
+  test: 8
+  root_cause: ""
+  artifacts: []
+  missing: []
+  debug_session: ""
+
+- truth: "Expandable ingredient summary panel below planner grid lists unique ingredient names as sorted chips"
+  status: failed
+  reason: "User reported: none of that exists"
+  severity: major
+  test: 9
+  root_cause: ""
+  artifacts: []
+  missing: []
+  debug_session: ""
