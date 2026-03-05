@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-04-PLAN.md — template save/load UI
-last_updated: "2026-03-05T22:09:03.191Z"
+stopped_at: Completed 05-05-PLAN.md — ingredient reuse suggestions
+last_updated: "2026-03-05T22:10:49.601Z"
 last_activity: "2026-03-03 — Completed 02-01: Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config"
 progress:
   total_phases: 9
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 23
-  completed_plans: 17
+  completed_plans: 18
   percent: 38
 ---
 
@@ -112,6 +112,7 @@ Progress: [███░░░░░░░] 12%
 | Phase 05-weekly-meal-planner P02 | 4 | 2 tasks | 9 files |
 | Phase 05-weekly-meal-planner P03 | 2 | 2 tasks | 3 files |
 | Phase 05-weekly-meal-planner P04 | 2 | 2 tasks | 3 files |
+| Phase 05-weekly-meal-planner P05 | 3 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -166,6 +167,9 @@ Recent decisions affecting current work:
 - [Phase 05-03]: [Phase 05-03]: Drop onto existing-but-empty slot uses swapSlots; drop onto slot with no DB row uses assignRecipe+clearSlot pair
 - [Phase 05-04]: weekStart passed to TemplateListScreen via ?week=epochMs query param — avoids GoRouter extra complexity, survives hot reload
 - [Phase 05-04]: AsyncValue switch pattern used instead of valueOrNull — Riverpod 3.x stream notifier compat
+- [Phase 05-05]: weekIngredientNamesProvider skips isSummaryOnly=true CachedRecipes entries — extendedIngredients only present in full detail entries
+- [Phase 05-05]: ingredientOverlapCountProvider is synchronous, returning 0 on loading — avoids async cascade through callers; overlap badge stays hidden until data resolves
+- [Phase 05-05]: Overlap badge in RecipeBrowseScreen is best-effort — RecipeSummary from complexSearch has no extendedIngredients; badge shows 0 for standard search cards (correct behavior)
 
 ### Pending Todos
 
@@ -180,6 +184,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-05T22:09:03.189Z
-Stopped at: Completed 05-04-PLAN.md — template save/load UI
+Last session: 2026-03-05T22:10:49.598Z
+Stopped at: Completed 05-05-PLAN.md — ingredient reuse suggestions
 Resume file: None

@@ -40,7 +40,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **PLAN-04**: User can drag and drop meals to reschedule between slots
 - [x] **PLAN-05**: User can save current week as a meal plan template
 - [x] **PLAN-06**: User can load a saved template into a future week
-- [ ] **PLAN-07**: Planner suggests recipes that reuse ingredients already in the week's plan to reduce waste
+- [x] **PLAN-07**: Planner suggests recipes that reuse ingredients already in the week's plan to reduce waste
 
 ### Shopping List
 
@@ -126,7 +126,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAN-04 | Phase 5 | Complete |
 | PLAN-05 | Phase 5 | Complete |
 | PLAN-06 | Phase 5 | Complete |
-| PLAN-07 | Phase 5 | Pending |
+| PLAN-07 | Phase 5 | Complete |
 | SHOP-01 | Phase 6 | Pending |
 | SHOP-02 | Phase 6 | Pending |
 | SHOP-03 | Phase 6 | Pending |
