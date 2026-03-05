@@ -32,6 +32,16 @@ class HomeScreen extends StatelessWidget {
                 onTap: () => context.push('/recipes'),
               ),
             ),
+            const SizedBox(height: 8),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.calendar_today),
+                title: const Text('Meal Planner'),
+                subtitle: const Text('Plan your weekly meals'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push('/planner'),
+              ),
+            ),
           ],
         ),
       ),

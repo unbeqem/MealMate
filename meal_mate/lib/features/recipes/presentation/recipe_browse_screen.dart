@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:meal_mate/features/ingredients/presentation/providers/selected_today_provider.dart';
-import 'package:meal_mate/features/recipes/data/spoonacular_client.dart';
 import 'package:meal_mate/features/recipes/domain/recipe_search_result.dart';
 import 'package:meal_mate/features/recipes/presentation/providers/recipe_search_provider.dart';
 import 'package:meal_mate/features/recipes/presentation/recipe_card.dart';
@@ -13,6 +13,10 @@ import 'package:meal_mate/features/recipes/presentation/widgets/filter_chips_row
 ///
 /// - Search mode (default): paginated recipe list from Spoonacular.
 /// - Ingredient mode: list of recipes matching the user's selected ingredients.
+/// - Select-for-slot mode: triggered via `?selectForSlot=true` query param.
+///   In this mode the AppBar title changes to "Pick a Recipe" and tapping a
+///   recipe card pops back with `{'recipeId': int, 'recipeTitle': String?,
+///   'recipeImage': String?}` instead of navigating to the detail screen.
 class RecipeBrowseScreen extends ConsumerStatefulWidget {
   const RecipeBrowseScreen({super.key});
 
@@ -45,36 +49,47 @@ class _RecipeBrowseScreenState extends ConsumerState<RecipeBrowseScreen> {
   Widget build(BuildContext context) {
     final filterState = ref.watch(recipeFilterStateProvider);
 
+    // Detect select-for-slot mode from GoRouter query parameters.
+    final queryParams = GoRouterState.of(context).uri.queryParameters;
+    final isSelectMode = queryParams['selectForSlot'] == 'true';
+
     return Scaffold(
       appBar: AppBar(
-        title: TextField(
-          controller: _searchController,
-          decoration: const InputDecoration(
-            hintText: 'Search recipes...',
-            border: InputBorder.none,
-            prefixIcon: Icon(Icons.search),
-          ),
-          textInputAction: TextInputAction.search,
-          onChanged: _onQueryChanged,
-          onSubmitted: (value) {
-            _debounce?.cancel();
-            ref
-                .read(recipeFilterStateProvider.notifier)
-                .setQuery(value);
-          },
-        ),
+        title: isSelectMode
+            ? const Text('Pick a Recipe')
+            : TextField(
+                controller: _searchController,
+                decoration: const InputDecoration(
+                  hintText: 'Search recipes...',
+                  border: InputBorder.none,
+                  prefixIcon: Icon(Icons.search),
+                ),
+                textInputAction: TextInputAction.search,
+                onChanged: _onQueryChanged,
+                onSubmitted: (value) {
+                  _debounce?.cancel();
+                  ref
+                      .read(recipeFilterStateProvider.notifier)
+                      .setQuery(value);
+                },
+              ),
       ),
       body: Column(
         children: [
-          // --- Filter chips ---
-          const FilterChipsRow(),
-          const Divider(height: 1),
+          // --- Filter chips (hidden in select mode to keep UI focused) ---
+          if (!isSelectMode) ...[
+            const FilterChipsRow(),
+            const Divider(height: 1),
+          ],
 
           // --- Results ---
           Expanded(
             child: filterState.isIngredientMode
-                ? const _IngredientModeBody()
-                : _SearchModeBody(filterState: filterState),
+                ? _IngredientModeBody(isSelectMode: isSelectMode)
+                : _SearchModeBody(
+                    filterState: filterState,
+                    isSelectMode: isSelectMode,
+                  ),
           ),
         ],
       ),
@@ -87,9 +102,13 @@ class _RecipeBrowseScreenState extends ConsumerState<RecipeBrowseScreen> {
 // ---------------------------------------------------------------------------
 
 class _SearchModeBody extends ConsumerStatefulWidget {
-  const _SearchModeBody({required this.filterState});
+  const _SearchModeBody({
+    required this.filterState,
+    this.isSelectMode = false,
+  });
 
   final RecipeFilterState filterState;
+  final bool isSelectMode;
 
   @override
   ConsumerState<_SearchModeBody> createState() => _SearchModeBodyState();
@@ -199,7 +218,11 @@ class _SearchModeBodyState extends ConsumerState<_SearchModeBody> {
                 if (indexInPage >= results.length) {
                   return const SizedBox.shrink();
                 }
-                return RecipeCard(recipe: results[indexInPage]);
+                final recipe = results[indexInPage];
+                if (widget.isSelectMode) {
+                  return _SelectableRecipeCard(recipe: recipe);
+                }
+                return RecipeCard(recipe: recipe);
               },
             );
           },
@@ -209,31 +232,6 @@ class _SearchModeBodyState extends ConsumerState<_SearchModeBody> {
   }
 
   Widget _buildError(Object error) {
-    if (error is QuotaExhaustedException) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.warning_amber_rounded,
-                  size: 48, color: Colors.orange),
-              SizedBox(height: 16),
-              Text(
-                'Daily recipe limit reached',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'You have reached the daily recipe quota. Please try again tomorrow.',
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -262,7 +260,9 @@ class _SearchModeBodyState extends ConsumerState<_SearchModeBody> {
 // ---------------------------------------------------------------------------
 
 class _IngredientModeBody extends ConsumerWidget {
-  const _IngredientModeBody();
+  const _IngredientModeBody({this.isSelectMode = false});
+
+  final bool isSelectMode;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -282,36 +282,9 @@ class _IngredientModeBody extends ConsumerWidget {
 
         return recipesAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) {
-            if (error is QuotaExhaustedException) {
-              return const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(24),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.warning_amber_rounded,
-                          size: 48, color: Colors.orange),
-                      SizedBox(height: 16),
-                      Text(
-                        'Daily recipe limit reached',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'You have reached the daily recipe quota. Please try again tomorrow.',
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-            return const Center(
-              child: Text('Error loading ingredient-based recipes.'),
-            );
-          },
+          error: (_, __) => const Center(
+            child: Text('Error loading ingredient-based recipes.'),
+          ),
           data: (recipes) {
             if (recipes.isEmpty) {
               return const _EmptySearchState();
@@ -326,11 +299,39 @@ class _IngredientModeBody extends ConsumerWidget {
             return ListView.builder(
               padding: const EdgeInsets.all(8),
               itemCount: summaries.length,
-              itemBuilder: (_, i) => RecipeCard(recipe: summaries[i]),
+              itemBuilder: (_, i) => isSelectMode
+                  ? _SelectableRecipeCard(recipe: summaries[i])
+                  : RecipeCard(recipe: summaries[i]),
             );
           },
         );
       },
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Selectable recipe card (select-for-slot mode)
+// ---------------------------------------------------------------------------
+
+/// A recipe card that pops with recipe data when tapped, used in
+/// select-for-slot mode so the planner can assign the chosen recipe.
+class _SelectableRecipeCard extends StatelessWidget {
+  const _SelectableRecipeCard({required this.recipe});
+
+  final RecipeSummary recipe;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        context.pop<Map<String, dynamic>>({
+          'recipeId': recipe.id,
+          'recipeTitle': recipe.title,
+          'recipeImage': recipe.image,
+        });
+      },
+      child: RecipeCard(recipe: recipe),
     );
   }
 }

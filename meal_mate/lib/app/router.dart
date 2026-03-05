@@ -13,6 +13,7 @@ import '../features/auth/presentation/screens/onboarding/onboarding_shell.dart';
 import '../features/home/presentation/screens/home_screen.dart';
 import '../core/router/app_router.dart';
 import '../features/recipes/presentation/recipe_routes.dart';
+import '../features/meal_planner/presentation/meal_planner_routes.dart';
 
 // ---------------------------------------------------------------------------
 // RouterRefreshNotifier
@@ -147,6 +148,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       ...ingredientRoutes,
       // Phase 4: Recipe routes (browse + detail via recipe_routes.dart)
       ...recipeRoutes,
+      // Phase 5: Meal planner routes
+      ...mealPlannerRoutes,
     ],
   );
 });
