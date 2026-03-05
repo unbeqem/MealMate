@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-05-PLAN.md — ingredient reuse suggestions
-last_updated: "2026-03-05T22:10:49.601Z"
+stopped_at: Completed 05-06-PLAN.md — ingredient overlap badge wiring
+last_updated: "2026-03-05T22:27:12.297Z"
 last_activity: "2026-03-03 — Completed 02-01: Supabase email/password auth with SecureLocalStorage, AuthRepository, four auth screens, and deep link config"
 progress:
   total_phases: 9
   completed_phases: 4
-  total_plans: 23
-  completed_plans: 18
+  total_plans: 24
+  completed_plans: 19
   percent: 38
 ---
 
@@ -113,6 +113,7 @@ Progress: [███░░░░░░░] 12%
 | Phase 05-weekly-meal-planner P03 | 2 | 2 tasks | 3 files |
 | Phase 05-weekly-meal-planner P04 | 2 | 2 tasks | 3 files |
 | Phase 05-weekly-meal-planner P05 | 3 | 2 tasks | 6 files |
+| Phase 05-weekly-meal-planner P06 | 5 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -170,6 +171,8 @@ Recent decisions affecting current work:
 - [Phase 05-05]: weekIngredientNamesProvider skips isSummaryOnly=true CachedRecipes entries — extendedIngredients only present in full detail entries
 - [Phase 05-05]: ingredientOverlapCountProvider is synchronous, returning 0 on loading — avoids async cascade through callers; overlap badge stays hidden until data resolves
 - [Phase 05-05]: Overlap badge in RecipeBrowseScreen is best-effort — RecipeSummary from complexSearch has no extendedIngredients; badge shows 0 for standard search cards (correct behavior)
+- [Phase 05-06]: cachedRecipeIngredientNamesProvider is best-effort: returns empty list for summary-only CachedRecipes entries to avoid exhausting Spoonacular quota on every search result
+- [Phase 05-06]: Overlap badge wiring uses AsyncData switch pattern: candidateNames falls back to empty list while provider is loading — badge stays hidden during initial load
 
 ### Pending Todos
 
@@ -184,6 +187,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-03-05T22:10:49.598Z
-Stopped at: Completed 05-05-PLAN.md — ingredient reuse suggestions
+Last session: 2026-03-05T22:27:12.294Z
+Stopped at: Completed 05-06-PLAN.md — ingredient overlap badge wiring
 Resume file: None
