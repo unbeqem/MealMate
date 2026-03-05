@@ -7,6 +7,8 @@ import 'tables/meal_plan_slots_table.dart';
 import 'tables/shopping_list_items_table.dart';
 import 'tables/selected_today_table.dart';
 import 'tables/cached_recipes_table.dart';
+import 'tables/meal_plan_templates_table.dart';
+import 'tables/meal_plan_template_slots_table.dart';
 import '../../features/recipes/data/recipe_cache_dao.dart';
 
 part 'app_database.g.dart';
@@ -24,6 +26,8 @@ const _uuid = Uuid();
     ShoppingListItems,
     SelectedTodayIngredients,
     CachedRecipes,
+    MealPlanTemplates,
+    MealPlanTemplateSlots,
   ],
   daos: [RecipeCacheDao],
 )
@@ -31,7 +35,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   static QueryExecutor _openConnection() {
     return driftDatabase(name: 'mealmate');
@@ -52,6 +56,11 @@ class AppDatabase extends _$AppDatabase {
       if (from < 3) {
         // Phase 4: Add Spoonacular recipe cache table
         await m.createTable(cachedRecipes);
+      }
+      if (from < 4) {
+        // Phase 5: Add meal plan template tables
+        await m.createTable(mealPlanTemplates);
+        await m.createTable(mealPlanTemplateSlots);
       }
     },
     beforeOpen: (details) async {

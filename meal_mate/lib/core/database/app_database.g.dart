@@ -3091,6 +3091,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SelectedTodayIngredientsTable selectedTodayIngredients =
       $SelectedTodayIngredientsTable(this);
   late final $CachedRecipesTable cachedRecipes = $CachedRecipesTable(this);
+  late final $MealPlanTemplatesTable mealPlanTemplates =
+      $MealPlanTemplatesTable(this);
+  late final $MealPlanTemplateSlotsTable mealPlanTemplateSlots =
+      $MealPlanTemplateSlotsTable(this);
   late final RecipeCacheDao recipeCacheDao = RecipeCacheDao(
     this as AppDatabase,
   );
@@ -3105,6 +3109,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     shoppingListItems,
     selectedTodayIngredients,
     cachedRecipes,
+    mealPlanTemplates,
+    mealPlanTemplateSlots,
   ];
 }
 
@@ -4930,6 +4936,1373 @@ typedef $$CachedRecipesTableProcessedTableManager =
       PrefetchHooks Function()
     >;
 
+// ==================== MealPlanTemplates ====================
+
+class $MealPlanTemplatesTable extends MealPlanTemplates
+    with TableInfo<$MealPlanTemplatesTable, MealPlanTemplateData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MealPlanTemplatesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: () => _uuid.v4(),
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    name,
+    createdAt,
+    updatedAt,
+    syncStatus,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'meal_plan_templates';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MealPlanTemplateData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(
+          data['sync_status']!,
+          _syncStatusMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MealPlanTemplateData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MealPlanTemplateData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+    );
+  }
+
+  @override
+  $MealPlanTemplatesTable createAlias(String alias) {
+    return $MealPlanTemplatesTable(attachedDatabase, alias);
+  }
+}
+
+class MealPlanTemplateData extends DataClass
+    implements Insertable<MealPlanTemplateData> {
+  final String id;
+  final String userId;
+  final String name;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String syncStatus;
+  const MealPlanTemplateData({
+    required this.id,
+    required this.userId,
+    required this.name,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.syncStatus,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['name'] = Variable<String>(name);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['sync_status'] = Variable<String>(syncStatus);
+    return map;
+  }
+
+  MealPlanTemplatesCompanion toCompanion(bool nullToAbsent) {
+    return MealPlanTemplatesCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      name: Value(name),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+    );
+  }
+
+  factory MealPlanTemplateData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MealPlanTemplateData(
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      name: serializer.fromJson<String>(json['name']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'name': serializer.toJson<String>(name),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+    };
+  }
+
+  MealPlanTemplateData copyWith({
+    String? id,
+    String? userId,
+    String? name,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? syncStatus,
+  }) => MealPlanTemplateData(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    name: name ?? this.name,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    syncStatus: syncStatus ?? this.syncStatus,
+  );
+
+  MealPlanTemplateData copyWithCompanion(MealPlanTemplatesCompanion data) {
+    return MealPlanTemplateData(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      name: data.name.present ? data.name.value : this.name,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MealPlanTemplateData(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('name: $name, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, userId, name, createdAt, updatedAt, syncStatus);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MealPlanTemplateData &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.name == this.name &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus);
+}
+
+class MealPlanTemplatesCompanion extends UpdateCompanion<MealPlanTemplateData> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<String> name;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<String> syncStatus;
+  final Value<int> rowid;
+  const MealPlanTemplatesCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MealPlanTemplatesCompanion.insert({
+    this.id = const Value.absent(),
+    required String userId,
+    required String name,
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : userId = Value(userId),
+       name = Value(name);
+  static Insertable<MealPlanTemplateData> custom({
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<String>? name,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (name != null) 'name': name,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MealPlanTemplatesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String>? name,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<String>? syncStatus,
+    Value<int>? rowid,
+  }) {
+    return MealPlanTemplatesCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MealPlanTemplatesCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('name: $name, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+typedef $$MealPlanTemplatesTableCreateCompanionBuilder =
+    MealPlanTemplatesCompanion Function({
+      Value<String> id,
+      required String userId,
+      required String name,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+typedef $$MealPlanTemplatesTableUpdateCompanionBuilder =
+    MealPlanTemplatesCompanion Function({
+      Value<String> id,
+      Value<String> userId,
+      Value<String> name,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+
+class $$MealPlanTemplatesTableFilterComposer
+    extends Composer<_$AppDatabase, $MealPlanTemplatesTable> {
+  $$MealPlanTemplatesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MealPlanTemplatesTableOrderingComposer
+    extends Composer<_$AppDatabase, $MealPlanTemplatesTable> {
+  $$MealPlanTemplatesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MealPlanTemplatesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $MealPlanTemplatesTable> {
+  $$MealPlanTemplatesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+  GeneratedColumn<String> get syncStatus =>
+      $composableBuilder(column: $table.syncStatus, builder: (column) => column);
+}
+
+class $$MealPlanTemplatesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $MealPlanTemplatesTable,
+          MealPlanTemplateData,
+          $$MealPlanTemplatesTableFilterComposer,
+          $$MealPlanTemplatesTableOrderingComposer,
+          $$MealPlanTemplatesTableAnnotationComposer,
+          $$MealPlanTemplatesTableCreateCompanionBuilder,
+          $$MealPlanTemplatesTableUpdateCompanionBuilder,
+          (
+            MealPlanTemplateData,
+            BaseReferences<
+              _$AppDatabase,
+              $MealPlanTemplatesTable,
+              MealPlanTemplateData
+            >,
+          ),
+          MealPlanTemplateData,
+          PrefetchHooks Function()
+        > {
+  $$MealPlanTemplatesTableTableManager(
+    _$AppDatabase db,
+    $MealPlanTemplatesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MealPlanTemplatesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MealPlanTemplatesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$MealPlanTemplatesTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MealPlanTemplatesCompanion(
+                id: id,
+                userId: userId,
+                name: name,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                required String userId,
+                required String name,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MealPlanTemplatesCompanion.insert(
+                id: id,
+                userId: userId,
+                name: name,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  BaseReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MealPlanTemplatesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $MealPlanTemplatesTable,
+      MealPlanTemplateData,
+      $$MealPlanTemplatesTableFilterComposer,
+      $$MealPlanTemplatesTableOrderingComposer,
+      $$MealPlanTemplatesTableAnnotationComposer,
+      $$MealPlanTemplatesTableCreateCompanionBuilder,
+      $$MealPlanTemplatesTableUpdateCompanionBuilder,
+      (
+        MealPlanTemplateData,
+        BaseReferences<
+          _$AppDatabase,
+          $MealPlanTemplatesTable,
+          MealPlanTemplateData
+        >,
+      ),
+      MealPlanTemplateData,
+      PrefetchHooks Function()
+    >;
+
+// ==================== MealPlanTemplateSlots ====================
+
+class $MealPlanTemplateSlotsTable extends MealPlanTemplateSlots
+    with TableInfo<$MealPlanTemplateSlotsTable, MealPlanTemplateSlotData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MealPlanTemplateSlotsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: () => _uuid.v4(),
+  );
+  static const VerificationMeta _templateIdMeta = const VerificationMeta(
+    'templateId',
+  );
+  @override
+  late final GeneratedColumn<String> templateId = GeneratedColumn<String>(
+    'template_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES meal_plan_templates (id)',
+    ),
+  );
+  static const VerificationMeta _dayOfWeekMeta = const VerificationMeta(
+    'dayOfWeek',
+  );
+  @override
+  late final GeneratedColumn<String> dayOfWeek = GeneratedColumn<String>(
+    'day_of_week',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _mealTypeMeta = const VerificationMeta(
+    'mealType',
+  );
+  @override
+  late final GeneratedColumn<String> mealType = GeneratedColumn<String>(
+    'meal_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _recipeIdMeta = const VerificationMeta(
+    'recipeId',
+  );
+  @override
+  late final GeneratedColumn<String> recipeId = GeneratedColumn<String>(
+    'recipe_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _recipeTitleMeta = const VerificationMeta(
+    'recipeTitle',
+  );
+  @override
+  late final GeneratedColumn<String> recipeTitle = GeneratedColumn<String>(
+    'recipe_title',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _recipeImageMeta = const VerificationMeta(
+    'recipeImage',
+  );
+  @override
+  late final GeneratedColumn<String> recipeImage = GeneratedColumn<String>(
+    'recipe_image',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    templateId,
+    dayOfWeek,
+    mealType,
+    recipeId,
+    recipeTitle,
+    recipeImage,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'meal_plan_template_slots';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MealPlanTemplateSlotData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('template_id')) {
+      context.handle(
+        _templateIdMeta,
+        templateId.isAcceptableOrUnknown(
+          data['template_id']!,
+          _templateIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_templateIdMeta);
+    }
+    if (data.containsKey('day_of_week')) {
+      context.handle(
+        _dayOfWeekMeta,
+        dayOfWeek.isAcceptableOrUnknown(data['day_of_week']!, _dayOfWeekMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dayOfWeekMeta);
+    }
+    if (data.containsKey('meal_type')) {
+      context.handle(
+        _mealTypeMeta,
+        mealType.isAcceptableOrUnknown(data['meal_type']!, _mealTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_mealTypeMeta);
+    }
+    if (data.containsKey('recipe_id')) {
+      context.handle(
+        _recipeIdMeta,
+        recipeId.isAcceptableOrUnknown(data['recipe_id']!, _recipeIdMeta),
+      );
+    }
+    if (data.containsKey('recipe_title')) {
+      context.handle(
+        _recipeTitleMeta,
+        recipeTitle.isAcceptableOrUnknown(
+          data['recipe_title']!,
+          _recipeTitleMeta,
+        ),
+      );
+    }
+    if (data.containsKey('recipe_image')) {
+      context.handle(
+        _recipeImageMeta,
+        recipeImage.isAcceptableOrUnknown(
+          data['recipe_image']!,
+          _recipeImageMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MealPlanTemplateSlotData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MealPlanTemplateSlotData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      templateId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}template_id'],
+      )!,
+      dayOfWeek: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}day_of_week'],
+      )!,
+      mealType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}meal_type'],
+      )!,
+      recipeId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}recipe_id'],
+      ),
+      recipeTitle: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}recipe_title'],
+      ),
+      recipeImage: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}recipe_image'],
+      ),
+    );
+  }
+
+  @override
+  $MealPlanTemplateSlotsTable createAlias(String alias) {
+    return $MealPlanTemplateSlotsTable(attachedDatabase, alias);
+  }
+}
+
+class MealPlanTemplateSlotData extends DataClass
+    implements Insertable<MealPlanTemplateSlotData> {
+  final String id;
+  final String templateId;
+  final String dayOfWeek;
+  final String mealType;
+  final String? recipeId;
+  final String? recipeTitle;
+  final String? recipeImage;
+  const MealPlanTemplateSlotData({
+    required this.id,
+    required this.templateId,
+    required this.dayOfWeek,
+    required this.mealType,
+    this.recipeId,
+    this.recipeTitle,
+    this.recipeImage,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['template_id'] = Variable<String>(templateId);
+    map['day_of_week'] = Variable<String>(dayOfWeek);
+    map['meal_type'] = Variable<String>(mealType);
+    if (!nullToAbsent || recipeId != null) {
+      map['recipe_id'] = Variable<String>(recipeId);
+    }
+    if (!nullToAbsent || recipeTitle != null) {
+      map['recipe_title'] = Variable<String>(recipeTitle);
+    }
+    if (!nullToAbsent || recipeImage != null) {
+      map['recipe_image'] = Variable<String>(recipeImage);
+    }
+    return map;
+  }
+
+  MealPlanTemplateSlotsCompanion toCompanion(bool nullToAbsent) {
+    return MealPlanTemplateSlotsCompanion(
+      id: Value(id),
+      templateId: Value(templateId),
+      dayOfWeek: Value(dayOfWeek),
+      mealType: Value(mealType),
+      recipeId: recipeId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recipeId),
+      recipeTitle: recipeTitle == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recipeTitle),
+      recipeImage: recipeImage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recipeImage),
+    );
+  }
+
+  factory MealPlanTemplateSlotData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MealPlanTemplateSlotData(
+      id: serializer.fromJson<String>(json['id']),
+      templateId: serializer.fromJson<String>(json['templateId']),
+      dayOfWeek: serializer.fromJson<String>(json['dayOfWeek']),
+      mealType: serializer.fromJson<String>(json['mealType']),
+      recipeId: serializer.fromJson<String?>(json['recipeId']),
+      recipeTitle: serializer.fromJson<String?>(json['recipeTitle']),
+      recipeImage: serializer.fromJson<String?>(json['recipeImage']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'templateId': serializer.toJson<String>(templateId),
+      'dayOfWeek': serializer.toJson<String>(dayOfWeek),
+      'mealType': serializer.toJson<String>(mealType),
+      'recipeId': serializer.toJson<String?>(recipeId),
+      'recipeTitle': serializer.toJson<String?>(recipeTitle),
+      'recipeImage': serializer.toJson<String?>(recipeImage),
+    };
+  }
+
+  MealPlanTemplateSlotData copyWith({
+    String? id,
+    String? templateId,
+    String? dayOfWeek,
+    String? mealType,
+    Value<String?> recipeId = const Value.absent(),
+    Value<String?> recipeTitle = const Value.absent(),
+    Value<String?> recipeImage = const Value.absent(),
+  }) => MealPlanTemplateSlotData(
+    id: id ?? this.id,
+    templateId: templateId ?? this.templateId,
+    dayOfWeek: dayOfWeek ?? this.dayOfWeek,
+    mealType: mealType ?? this.mealType,
+    recipeId: recipeId.present ? recipeId.value : this.recipeId,
+    recipeTitle: recipeTitle.present ? recipeTitle.value : this.recipeTitle,
+    recipeImage: recipeImage.present ? recipeImage.value : this.recipeImage,
+  );
+
+  MealPlanTemplateSlotData copyWithCompanion(
+    MealPlanTemplateSlotsCompanion data,
+  ) {
+    return MealPlanTemplateSlotData(
+      id: data.id.present ? data.id.value : this.id,
+      templateId: data.templateId.present
+          ? data.templateId.value
+          : this.templateId,
+      dayOfWeek: data.dayOfWeek.present ? data.dayOfWeek.value : this.dayOfWeek,
+      mealType: data.mealType.present ? data.mealType.value : this.mealType,
+      recipeId: data.recipeId.present ? data.recipeId.value : this.recipeId,
+      recipeTitle: data.recipeTitle.present
+          ? data.recipeTitle.value
+          : this.recipeTitle,
+      recipeImage: data.recipeImage.present
+          ? data.recipeImage.value
+          : this.recipeImage,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MealPlanTemplateSlotData(')
+          ..write('id: $id, ')
+          ..write('templateId: $templateId, ')
+          ..write('dayOfWeek: $dayOfWeek, ')
+          ..write('mealType: $mealType, ')
+          ..write('recipeId: $recipeId, ')
+          ..write('recipeTitle: $recipeTitle, ')
+          ..write('recipeImage: $recipeImage')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    templateId,
+    dayOfWeek,
+    mealType,
+    recipeId,
+    recipeTitle,
+    recipeImage,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MealPlanTemplateSlotData &&
+          other.id == this.id &&
+          other.templateId == this.templateId &&
+          other.dayOfWeek == this.dayOfWeek &&
+          other.mealType == this.mealType &&
+          other.recipeId == this.recipeId &&
+          other.recipeTitle == this.recipeTitle &&
+          other.recipeImage == this.recipeImage);
+}
+
+class MealPlanTemplateSlotsCompanion
+    extends UpdateCompanion<MealPlanTemplateSlotData> {
+  final Value<String> id;
+  final Value<String> templateId;
+  final Value<String> dayOfWeek;
+  final Value<String> mealType;
+  final Value<String?> recipeId;
+  final Value<String?> recipeTitle;
+  final Value<String?> recipeImage;
+  final Value<int> rowid;
+  const MealPlanTemplateSlotsCompanion({
+    this.id = const Value.absent(),
+    this.templateId = const Value.absent(),
+    this.dayOfWeek = const Value.absent(),
+    this.mealType = const Value.absent(),
+    this.recipeId = const Value.absent(),
+    this.recipeTitle = const Value.absent(),
+    this.recipeImage = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MealPlanTemplateSlotsCompanion.insert({
+    this.id = const Value.absent(),
+    required String templateId,
+    required String dayOfWeek,
+    required String mealType,
+    this.recipeId = const Value.absent(),
+    this.recipeTitle = const Value.absent(),
+    this.recipeImage = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : templateId = Value(templateId),
+       dayOfWeek = Value(dayOfWeek),
+       mealType = Value(mealType);
+  static Insertable<MealPlanTemplateSlotData> custom({
+    Expression<String>? id,
+    Expression<String>? templateId,
+    Expression<String>? dayOfWeek,
+    Expression<String>? mealType,
+    Expression<String>? recipeId,
+    Expression<String>? recipeTitle,
+    Expression<String>? recipeImage,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (templateId != null) 'template_id': templateId,
+      if (dayOfWeek != null) 'day_of_week': dayOfWeek,
+      if (mealType != null) 'meal_type': mealType,
+      if (recipeId != null) 'recipe_id': recipeId,
+      if (recipeTitle != null) 'recipe_title': recipeTitle,
+      if (recipeImage != null) 'recipe_image': recipeImage,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MealPlanTemplateSlotsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? templateId,
+    Value<String>? dayOfWeek,
+    Value<String>? mealType,
+    Value<String?>? recipeId,
+    Value<String?>? recipeTitle,
+    Value<String?>? recipeImage,
+    Value<int>? rowid,
+  }) {
+    return MealPlanTemplateSlotsCompanion(
+      id: id ?? this.id,
+      templateId: templateId ?? this.templateId,
+      dayOfWeek: dayOfWeek ?? this.dayOfWeek,
+      mealType: mealType ?? this.mealType,
+      recipeId: recipeId ?? this.recipeId,
+      recipeTitle: recipeTitle ?? this.recipeTitle,
+      recipeImage: recipeImage ?? this.recipeImage,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (templateId.present) {
+      map['template_id'] = Variable<String>(templateId.value);
+    }
+    if (dayOfWeek.present) {
+      map['day_of_week'] = Variable<String>(dayOfWeek.value);
+    }
+    if (mealType.present) {
+      map['meal_type'] = Variable<String>(mealType.value);
+    }
+    if (recipeId.present) {
+      map['recipe_id'] = Variable<String>(recipeId.value);
+    }
+    if (recipeTitle.present) {
+      map['recipe_title'] = Variable<String>(recipeTitle.value);
+    }
+    if (recipeImage.present) {
+      map['recipe_image'] = Variable<String>(recipeImage.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MealPlanTemplateSlotsCompanion(')
+          ..write('id: $id, ')
+          ..write('templateId: $templateId, ')
+          ..write('dayOfWeek: $dayOfWeek, ')
+          ..write('mealType: $mealType, ')
+          ..write('recipeId: $recipeId, ')
+          ..write('recipeTitle: $recipeTitle, ')
+          ..write('recipeImage: $recipeImage, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+typedef $$MealPlanTemplateSlotsTableCreateCompanionBuilder =
+    MealPlanTemplateSlotsCompanion Function({
+      Value<String> id,
+      required String templateId,
+      required String dayOfWeek,
+      required String mealType,
+      Value<String?> recipeId,
+      Value<String?> recipeTitle,
+      Value<String?> recipeImage,
+      Value<int> rowid,
+    });
+typedef $$MealPlanTemplateSlotsTableUpdateCompanionBuilder =
+    MealPlanTemplateSlotsCompanion Function({
+      Value<String> id,
+      Value<String> templateId,
+      Value<String> dayOfWeek,
+      Value<String> mealType,
+      Value<String?> recipeId,
+      Value<String?> recipeTitle,
+      Value<String?> recipeImage,
+      Value<int> rowid,
+    });
+
+class $$MealPlanTemplateSlotsTableFilterComposer
+    extends Composer<_$AppDatabase, $MealPlanTemplateSlotsTable> {
+  $$MealPlanTemplateSlotsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+  ColumnFilters<String> get templateId => $composableBuilder(
+    column: $table.templateId,
+    builder: (column) => ColumnFilters(column),
+  );
+  ColumnFilters<String> get dayOfWeek => $composableBuilder(
+    column: $table.dayOfWeek,
+    builder: (column) => ColumnFilters(column),
+  );
+  ColumnFilters<String> get mealType => $composableBuilder(
+    column: $table.mealType,
+    builder: (column) => ColumnFilters(column),
+  );
+  ColumnFilters<String> get recipeId => $composableBuilder(
+    column: $table.recipeId,
+    builder: (column) => ColumnFilters(column),
+  );
+  ColumnFilters<String> get recipeTitle => $composableBuilder(
+    column: $table.recipeTitle,
+    builder: (column) => ColumnFilters(column),
+  );
+  ColumnFilters<String> get recipeImage => $composableBuilder(
+    column: $table.recipeImage,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MealPlanTemplateSlotsTableOrderingComposer
+    extends Composer<_$AppDatabase, $MealPlanTemplateSlotsTable> {
+  $$MealPlanTemplateSlotsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+  ColumnOrderings<String> get templateId => $composableBuilder(
+    column: $table.templateId,
+    builder: (column) => ColumnOrderings(column),
+  );
+  ColumnOrderings<String> get dayOfWeek => $composableBuilder(
+    column: $table.dayOfWeek,
+    builder: (column) => ColumnOrderings(column),
+  );
+  ColumnOrderings<String> get mealType => $composableBuilder(
+    column: $table.mealType,
+    builder: (column) => ColumnOrderings(column),
+  );
+  ColumnOrderings<String> get recipeId => $composableBuilder(
+    column: $table.recipeId,
+    builder: (column) => ColumnOrderings(column),
+  );
+  ColumnOrderings<String> get recipeTitle => $composableBuilder(
+    column: $table.recipeTitle,
+    builder: (column) => ColumnOrderings(column),
+  );
+  ColumnOrderings<String> get recipeImage => $composableBuilder(
+    column: $table.recipeImage,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MealPlanTemplateSlotsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $MealPlanTemplateSlotsTable> {
+  $$MealPlanTemplateSlotsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<String> get templateId =>
+      $composableBuilder(column: $table.templateId, builder: (column) => column);
+  GeneratedColumn<String> get dayOfWeek =>
+      $composableBuilder(column: $table.dayOfWeek, builder: (column) => column);
+  GeneratedColumn<String> get mealType =>
+      $composableBuilder(column: $table.mealType, builder: (column) => column);
+  GeneratedColumn<String> get recipeId =>
+      $composableBuilder(column: $table.recipeId, builder: (column) => column);
+  GeneratedColumn<String> get recipeTitle =>
+      $composableBuilder(column: $table.recipeTitle, builder: (column) => column);
+  GeneratedColumn<String> get recipeImage =>
+      $composableBuilder(column: $table.recipeImage, builder: (column) => column);
+}
+
+class $$MealPlanTemplateSlotsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $MealPlanTemplateSlotsTable,
+          MealPlanTemplateSlotData,
+          $$MealPlanTemplateSlotsTableFilterComposer,
+          $$MealPlanTemplateSlotsTableOrderingComposer,
+          $$MealPlanTemplateSlotsTableAnnotationComposer,
+          $$MealPlanTemplateSlotsTableCreateCompanionBuilder,
+          $$MealPlanTemplateSlotsTableUpdateCompanionBuilder,
+          (
+            MealPlanTemplateSlotData,
+            BaseReferences<
+              _$AppDatabase,
+              $MealPlanTemplateSlotsTable,
+              MealPlanTemplateSlotData
+            >,
+          ),
+          MealPlanTemplateSlotData,
+          PrefetchHooks Function()
+        > {
+  $$MealPlanTemplateSlotsTableTableManager(
+    _$AppDatabase db,
+    $MealPlanTemplateSlotsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MealPlanTemplateSlotsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$MealPlanTemplateSlotsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$MealPlanTemplateSlotsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> templateId = const Value.absent(),
+                Value<String> dayOfWeek = const Value.absent(),
+                Value<String> mealType = const Value.absent(),
+                Value<String?> recipeId = const Value.absent(),
+                Value<String?> recipeTitle = const Value.absent(),
+                Value<String?> recipeImage = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MealPlanTemplateSlotsCompanion(
+                id: id,
+                templateId: templateId,
+                dayOfWeek: dayOfWeek,
+                mealType: mealType,
+                recipeId: recipeId,
+                recipeTitle: recipeTitle,
+                recipeImage: recipeImage,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                required String templateId,
+                required String dayOfWeek,
+                required String mealType,
+                Value<String?> recipeId = const Value.absent(),
+                Value<String?> recipeTitle = const Value.absent(),
+                Value<String?> recipeImage = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MealPlanTemplateSlotsCompanion.insert(
+                id: id,
+                templateId: templateId,
+                dayOfWeek: dayOfWeek,
+                mealType: mealType,
+                recipeId: recipeId,
+                recipeTitle: recipeTitle,
+                recipeImage: recipeImage,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  BaseReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MealPlanTemplateSlotsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $MealPlanTemplateSlotsTable,
+      MealPlanTemplateSlotData,
+      $$MealPlanTemplateSlotsTableFilterComposer,
+      $$MealPlanTemplateSlotsTableOrderingComposer,
+      $$MealPlanTemplateSlotsTableAnnotationComposer,
+      $$MealPlanTemplateSlotsTableCreateCompanionBuilder,
+      $$MealPlanTemplateSlotsTableUpdateCompanionBuilder,
+      (
+        MealPlanTemplateSlotData,
+        BaseReferences<
+          _$AppDatabase,
+          $MealPlanTemplateSlotsTable,
+          MealPlanTemplateSlotData
+        >,
+      ),
+      MealPlanTemplateSlotData,
+      PrefetchHooks Function()
+    >;
+
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
@@ -4948,4 +6321,8 @@ class $AppDatabaseManager {
       );
   $$CachedRecipesTableTableManager get cachedRecipes =>
       $$CachedRecipesTableTableManager(_db, _db.cachedRecipes);
+  $$MealPlanTemplatesTableTableManager get mealPlanTemplates =>
+      $$MealPlanTemplatesTableTableManager(_db, _db.mealPlanTemplates);
+  $$MealPlanTemplateSlotsTableTableManager get mealPlanTemplateSlots =>
+      $$MealPlanTemplateSlotsTableTableManager(_db, _db.mealPlanTemplateSlots);
 }
