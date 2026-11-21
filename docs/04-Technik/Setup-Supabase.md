@@ -56,8 +56,8 @@ Die App schickt beim Anmelden eine Mail. Darin steht ein **Link** (geht immer) u
    cd C:\Obsidian\mealmate\app
    npm run dev
    ```
-2. Browser: <http://localhost:8081> → deine E-Mail eingeben → **Code per Mail senden**.
-3. Mail öffnen → auf den Link tippen, **im selben Browser**, in dem die App offen ist (sonst schlägt die Anmeldung fehl). Das Code-Feld in der App brauchst du dann nicht.
+2. Browser: <http://localhost:8081> → deine E-Mail eingeben → **Anmelde-Link senden**.
+3. Mail öffnen (Betreff „Confirm Your Signup“ bzw. „Your Magic Link“, auf Englisch) → auf den Link tippen, **im selben Browser**, in dem die App offen ist (sonst schlägt die Anmeldung fehl). Das Code-Feld in der App brauchst du dann nicht.
 4. Du landest im Onboarding. Kontrolle im Dashboard: **Authentication → Users** zeigt deine Adresse. **Table Editor → profiles** hat eine neue Zeile.
 
 > [!WARNING]
@@ -91,7 +91,7 @@ Die App schickt beim Anmelden eine Mail. Darin steht ein **Link** (geht immer) u
      ```
    - **Save changes**.
 3. Vorlage **Magic Link** öffnen (diese Mail bekommen **bestehende** Nutzer) und genau dasselbe eintragen. **Save changes**.
-4. Test: wie A4, aber diesmal den **Code** aus der Mail in der App eingeben → **Anmelden**.
+4. Test: wie A4, dann in der App **Die Mail enthält einen Code** → Code eingeben → **Mit Code anmelden**.
 
 ### A6. Stufe 3 – eigene Domain + Resend (vor echten Nutzern)
 1. Domain kaufen, z. B. `mealmate-app.de` (ca. 5–15 €/Jahr, z. B. bei IONOS, Strato, INWX oder Cloudflare). Dieselbe Domain nutzt du auch für die Landingpage.

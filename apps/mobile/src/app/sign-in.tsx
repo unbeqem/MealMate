@@ -51,6 +51,7 @@ export default function SignIn() {
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [sent, setSent] = useState(false);
+  const [showCode, setShowCode] = useState(false);
   const [busy, setBusy] = useState<null | 'mail' | 'code' | 'google' | 'guest'>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -124,14 +125,24 @@ export default function SignIn() {
                 {!sent ? (
                   <>
                     <Field label="E-Mail" placeholder="du@beispiel.de" autoCapitalize="none" autoComplete="email" keyboardType="email-address" inputMode="email" value={email} onChangeText={setEmail} onSubmitEditing={sendCode} error={error} />
-                    <Button label="Code per Mail senden" onPress={sendCode} loading={busy === 'mail'} />
+                    <Button label="Anmelde-Link senden" onPress={sendCode} loading={busy === 'mail'} />
                   </>
                 ) : (
                   <>
-                    <Txt variant="body">Wir haben dir einen Code an <Txt variant="bodyStrong">{email.trim()}</Txt> geschickt. Du kannst auch einfach auf den Link in der Mail tippen.</Txt>
-                    <Field label="Code aus der Mail" placeholder="123456" mono keyboardType="number-pad" inputMode="numeric" autoComplete="one-time-code" maxLength={8} value={code} onChangeText={setCode} onSubmitEditing={verify} error={error} />
-                    <Button label="Anmelden" onPress={verify} loading={busy === 'code'} disabled={code.trim().length < 6} />
-                    <Button label="Andere E-Mail verwenden" variant="ghost" compact onPress={() => { setSent(false); setCode(''); setError(null); }} />
+                    <Txt variant="body">
+                      Wir haben dir eine Mail an <Txt variant="bodyStrong">{email.trim()}</Txt> geschickt. Tipp auf den Link darin. Öffne ihn{' '}
+                      {Platform.OS === 'web' ? 'in diesem Browser' : 'auf diesem Gerät'}, dann bist du direkt angemeldet.
+                    </Txt>
+                    <Txt variant="small" color="inkMuted">Keine Mail da? Schau im Spam-Ordner nach. Neue Mails gehen erst nach ein paar Minuten raus.</Txt>
+                    {showCode ? (
+                      <>
+                        <Field label="Code aus der Mail" placeholder="123456" mono keyboardType="number-pad" inputMode="numeric" autoComplete="one-time-code" maxLength={8} value={code} onChangeText={setCode} onSubmitEditing={verify} error={error} />
+                        <Button label="Mit Code anmelden" onPress={verify} loading={busy === 'code'} disabled={code.trim().length < 6} />
+                      </>
+                    ) : (
+                      <Button label="Die Mail enthält einen Code" variant="ghost" compact onPress={() => setShowCode(true)} />
+                    )}
+                    <Button label="Andere E-Mail verwenden" variant="ghost" compact onPress={() => { setSent(false); setCode(''); setShowCode(false); setError(null); }} />
                   </>
                 )}
                 <View style={styles.or}>
