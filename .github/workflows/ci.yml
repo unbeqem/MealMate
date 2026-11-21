@@ -21,3 +21,5 @@ jobs:
         run: npm run typecheck
       - name: seed.sql ist aktuell
         run: npm run seed:sql && git diff --exit-code supabase/seed.sql
+      - name: Edge-Function-Kopie der Core-Logik ist aktuell
+        run: npm run functions:sync && git diff --exit-code supabase/functions/_shared/core

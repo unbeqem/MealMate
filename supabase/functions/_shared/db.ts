@@ -1,6 +1,6 @@
 import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@^2.50.0';
-import type { Ingredient, Preferences, Recipe } from '../../../packages/core/src/index.ts';
-import { DEFAULT_PREFERENCES } from '../../../packages/core/src/index.ts';
+import type { Ingredient, Preferences, Recipe } from './core/index.ts';
+import { DEFAULT_PREFERENCES } from './core/index.ts';
 
 export const cors = {
   'Access-Control-Allow-Origin': '*',
@@ -12,16 +12,31 @@ export function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), { status, headers: { ...cors, 'Content-Type': 'application/json' } });
 }
 
+/**
+ * Keys: Supabase injects SUPABASE_ANON_KEY / SUPABASE_SERVICE_ROLE_KEY. Projects that only use the
+ * new key system can set MM_PUBLISHABLE_KEY / MM_SECRET_KEY as secrets instead (see Setup-Supabase).
+ */
+function publishableKey(): string {
+  const k = Deno.env.get('MM_PUBLISHABLE_KEY') ?? Deno.env.get('SUPABASE_ANON_KEY');
+  if (!k) throw new Error('Kein Publishable Key: Secret MM_PUBLISHABLE_KEY setzen.');
+  return k;
+}
+function secretKey(): string {
+  const k = Deno.env.get('MM_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+  if (!k) throw new Error('Kein Secret Key: Secret MM_SECRET_KEY setzen.');
+  return k;
+}
+
 /** Client acting as the calling user (RLS applies). */
 export function userClient(req: Request): SupabaseClient {
-  return createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!, {
+  return createClient(Deno.env.get('SUPABASE_URL')!, publishableKey(), {
     global: { headers: { Authorization: req.headers.get('Authorization') ?? '' } },
   });
 }
 
 /** Service client (bypasses RLS) – only for reference data and logging. */
 export function serviceClient(): SupabaseClient {
-  return createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+  return createClient(Deno.env.get('SUPABASE_URL')!, secretKey());
 }
 
 export async function loadIngredients(db: SupabaseClient): Promise<Ingredient[]> {

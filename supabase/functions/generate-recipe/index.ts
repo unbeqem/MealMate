@@ -1,7 +1,7 @@
 // POST { prompt: string, servings?: number }
 // Generates a recipe with the configured LLM, maps it onto the ingredient table,
 // checks allergens/diet HARD against the database, saves it for the user.
-import { checkRecipe, indexIngredients, matchIngredient, toBase, type Recipe } from '../../../packages/core/src/index.ts';
+import { checkRecipe, indexIngredients, matchIngredient, toBase, type Recipe } from '../_shared/core/index.ts';
 import { cors, json, loadIngredients, loadPreferences, serviceClient, userClient } from '../_shared/db.ts';
 import { createRecipeModel, RefusedError } from '../_shared/llm.ts';
 

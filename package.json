@@ -2,12 +2,20 @@
   "name": "mealmate",
   "private": true,
   "version": "0.1.0",
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev": "npm run web -w mobile",
     "test": "npm test -w @mealmate/core",
     "typecheck": "npm run typecheck -w @mealmate/core && npm run typecheck -w mobile",
-    "seed:sql": "npm run seed:sql -w @mealmate/core"
+    "seed:sql": "npm run seed:sql -w @mealmate/core",
+    "functions:sync": "node packages/core/scripts/sync-functions.mjs",
+    "functions:deploy": "npm run functions:sync && npx supabase functions deploy generate-recipe build-shopping-list --project-ref ethuwpvfwmephvbuyjli"
   },
-  "overrides": { "react": "19.3.0", "react-dom": "19.3.0" }
+  "overrides": {
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  }
 }

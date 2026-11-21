@@ -1,7 +1,7 @@
 // POST { weekStart: "YYYY-MM-DD" }
 // Server-side twin of the client calculation (same packages/core code, ADR-002):
 // builds the list for the household's week, merges with the stored list, saves it.
-import { buildShoppingList, indexIngredients, type PlanEntry, type ShoppingItem, type ShoppingList } from '../../../packages/core/src/index.ts';
+import { buildShoppingList, indexIngredients, type PlanEntry, type ShoppingItem, type ShoppingList } from '../_shared/core/index.ts';
 import { cors, json, loadIngredients, loadPreferences, loadRecipes, serviceClient, userClient } from '../_shared/db.ts';
 
 Deno.serve(async (req) => {
