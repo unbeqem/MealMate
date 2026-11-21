@@ -84,7 +84,7 @@ function Flow() {
 
   return (
     <View style={{ flex: 1, backgroundColor: p.frame }}>
-      <ScrollView ref={scroller} contentContainerStyle={[styles.page, { paddingTop: insets.top + space.xl, paddingBottom: insets.bottom + space.xl }]} keyboardShouldPersistTaps="handled">
+      <ScrollView ref={scroller} contentContainerStyle={[styles.page, { paddingTop: insets.top + space.xl, paddingBottom: space.xl }]} keyboardShouldPersistTaps="handled">
         <View style={{ gap: space.sm }}>
           <Text style={[type.label, { color: p.frameInkMuted }]} accessibilityLiveRegion="polite">
             Schritt {step + 1} von {STEPS.length}
@@ -166,6 +166,8 @@ function Flow() {
           {step === 3 && <WeekPreview entries={preview ?? []} onShuffle={() => setPreview(recipesFor(prefs))} />}
         </Paper>
 
+      </ScrollView>
+      <View style={[styles.navBar, { paddingBottom: insets.bottom + space.md, backgroundColor: p.frame, borderTopColor: 'rgba(255,255,255,0.25)' }]}>
         <View style={[styles.nav, wide && { justifyContent: 'flex-end' }]}>
           {step > 0 ? <Button label="Zurück" variant="frameGhost" onPress={() => setStep((s) => s - 1)} style={wide ? undefined : { flex: 1 }} /> : null}
           {step < STEPS.length - 1 ? (
@@ -174,7 +176,7 @@ function Flow() {
             <Button label="Übernehmen" variant="onFrame" onPress={finish} loading={finishing} accessibilityHint="Speichert die Woche und öffnet den Planer" style={wide ? undefined : { flex: 2 }} />
           )}
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 }
@@ -207,5 +209,6 @@ const styles = StyleSheet.create({
   progressSeg: { flex: 1, height: 4, borderRadius: radius.pill },
   wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: space.sm },
   line: { flexDirection: 'row', alignItems: 'center', gap: space.md, minHeight: 40 },
-  nav: { flexDirection: 'row', gap: space.md },
+  nav: { flexDirection: 'row', gap: space.md, width: '100%', maxWidth: 720, alignSelf: 'center', paddingHorizontal: space.lg },
+  navBar: { paddingTop: space.md, borderTopWidth: 1 },
 });

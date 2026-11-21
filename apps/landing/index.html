@@ -53,11 +53,11 @@
         <hr>
         <div class="r-line"><span>Blattspinat<small>Mo 200 g · Mi 250 g</small></span><span>1 × 450 g</span></div>
         <div class="r-line"><span>Schlagsahne<small>Bedarf 150 ml</small></span><span>1 × 200 ml</span></div>
-        <div class="r-line rest" tabindex="0" data-to="Fr · Tomatensuppe"><span>REST Sahne 50 ml<small>→ Fr Tomatensuppe</small></span><span>verplant</span></div>
+        <div class="r-line rest" tabindex="0" data-target="rt-sahne"><span>REST Sahne 50 ml<small>→ Fr Tomatensuppe</small></span><span>verplant</span></div>
         <div class="r-line"><span>Feta<small>Bedarf 200 g</small></span><span>1 × 200 g</span></div>
         <div class="r-line"><span>Gnocchi<small>Bedarf 500 g</small></span><span>1 × 500 g</span></div>
         <div class="r-line"><span>Eier<small>Bedarf 4 Stk</small></span><span>1 × 6 Stk</span></div>
-        <div class="r-line rest" tabindex="0" data-to="Sa · Shakshuka"><span>REST Eier 2 Stk<small>→ Sa Shakshuka</small></span><span>verplant</span></div>
+        <div class="r-line rest" tabindex="0" data-target="rt-eier"><span>REST Eier 2 Stk<small>→ Sa Shakshuka</small></span><span>verplant</span></div>
         <hr>
         <div class="r-line total"><span>Weggeworfen (geplant)</span><span>0 g</span></div>
         <div class="barcode" aria-hidden="true"></div>
@@ -66,6 +66,7 @@
       <figcaption class="sr-only">Jede Zeile ist eine echte Packung. Was übrig bleibt, ist markiert und schon einem Rezept zugeordnet.</figcaption>
     </figure>
 
+    <svg class="link-layer" aria-hidden="true"><defs><marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#fff"/></marker></defs><path id="link-path" d="" marker-end="url(#arrowhead)"/></svg>
     <div class="phone" aria-hidden="true">
       <div class="phone-screen">
         <p class="ph-title">Einkauf</p>
@@ -75,7 +76,11 @@
         <p class="ph-aisle">Kühlregal</p>
         <div class="ph-item"><i></i><span>Schlagsahne<small>1 × 200 ml</small></span></div>
         <div class="ph-item"><i></i><span>Feta<small>1 × 200 g</small></span></div>
-        <div class="ph-tip"><b>50 ml Sahne übrig.</b> Passt in die Tomatensuppe am Freitag.</div>
+        <div class="ph-plan">
+          <p class="ph-aisle">Reste verplant</p>
+          <div class="ph-day" id="rt-sahne"><b>Fr</b><span>Tomatensuppe<small>+ 50 ml Sahne</small></span></div>
+          <div class="ph-day" id="rt-eier"><b>Sa</b><span>Shakshuka<small>+ 2 Eier</small></span></div>
+        </div>
         <div class="ph-tabs"><span>Planen</span><span>Rezepte</span><span class="on">Einkauf</span><span>Profil</span></div>
       </div>
     </div>
@@ -111,7 +116,7 @@
   <!-- HOW: a real sequence -->
   <section class="how" id="ablauf" aria-labelledby="how-title">
     <h2 id="how-title">Einmal planen, einmal einkaufen, nichts wegwerfen.</h2>
-    <ol class="steps">
+    <ol class="steps receipt strip">
       <li>
         <h3>Woche füllen</h3>
         <p>Ein Tipp, und MealMate plant deine Woche. Dabei zählen deine Allergien, deine Kochzeit und was du magst. Abends kochst du für den nächsten Mittag gleich mit.</p>
@@ -130,19 +135,19 @@
   <section class="faq" id="fragen" aria-labelledby="faq-title">
     <h2 id="faq-title">Fragen</h2>
     <details>
-      <summary>Für wen ist MealMate gedacht?</summary>
+      <summary><span>Für wen ist MealMate gedacht?</span><svg class="faq-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path class="v" d="M12 5v14"/></svg></summary>
       <p>Für alle, die für ein oder zwei Personen kochen. Da bleibt von Supermarkt-Packungen am meisten übrig. Familien kommen später dazu.</p>
     </details>
     <details>
-      <summary>Was ist mit Allergien?</summary>
+      <summary><span>Was ist mit Allergien?</span><svg class="faq-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path class="v" d="M12 5v14"/></svg></summary>
       <p>Allergien und Unverträglichkeiten sind harte Filter. Rezepte mit diesen Zutaten tauchen nie auf, auch nicht bei Vorschlägen der KI. Das prüft MealMate gegen die eigene Zutatendatenbank, nicht nur über die KI.</p>
     </details>
     <details>
-      <summary>Auf welchen Geräten läuft es?</summary>
+      <summary><span>Auf welchen Geräten läuft es?</span><svg class="faq-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path class="v" d="M12 5v14"/></svg></summary>
       <p>Auf Android und im Browser. Plan und Einkaufsliste sind auf allen Geräten gleich, die Liste funktioniert auch offline im Supermarkt.</p>
     </details>
     <details>
-      <summary>Was kostet es?</summary>
+      <summary><span>Was kostet es?</span><svg class="faq-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path class="v" d="M12 5v14"/></svg></summary>
       <p>Planer, Einkaufsliste und Rezepte sind kostenlos. Ob und welche Extras später etwas kosten, sagen wir dir vor dem Start.</p>
     </details>
   </section>

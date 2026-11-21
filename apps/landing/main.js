@@ -16,6 +16,39 @@ if (receipt && !reduced) {
   );
 }
 
+/* ── signature: REST line → arrow to the meal it feeds ── */
+const hero = document.querySelector('.hero');
+const layer = document.querySelector('.link-layer');
+const linkPath = document.getElementById('link-path');
+function link(line) {
+  const target = document.getElementById(line.dataset.target);
+  if (!target || !target.offsetParent) return;
+  const h = hero.getBoundingClientRect();
+  const a = line.getBoundingClientRect();
+  const b = target.getBoundingClientRect();
+  const x1 = a.right - h.left + 6;
+  const y1 = a.top + a.height / 2 - h.top;
+  const x2 = b.left - h.left - 4;
+  const y2 = b.top + b.height / 2 - h.top;
+  const dx = Math.max(40, (x2 - x1) * 0.5);
+  linkPath.setAttribute('d', `M${x1} ${y1} C${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`);
+  layer.style.setProperty('--len', String(Math.ceil(linkPath.getTotalLength())));
+  layer.classList.remove('on');
+  void layer.getBoundingClientRect();
+  layer.classList.add('on');
+  target.classList.add('lit');
+}
+function unlink() {
+  layer.classList.remove('on');
+  document.querySelectorAll('.ph-day.lit').forEach((el) => el.classList.remove('lit'));
+}
+document.querySelectorAll('.r-line.rest').forEach((line) => {
+  line.addEventListener('mouseenter', () => link(line));
+  line.addEventListener('focus', () => link(line));
+  line.addEventListener('mouseleave', unlink);
+  line.addEventListener('blur', unlink);
+});
+
 /* ── waitlist ── */
 const form = document.querySelector('.waitlist');
 const input = document.getElementById('email');

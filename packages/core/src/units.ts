@@ -91,7 +91,10 @@ export function formatAmount(ing: Pick<Ingredient, 'baseUnit' | 'unitWeights'>, 
   return `${formatNumber(n)} ${n > 1 ? (PLURAL[unit] ?? unit) : unit}`;
 }
 
-/** Compact receipt quantity: "3 × 450 g", "2 × 10 Zehen", single pieces as "2 Stk". */
+/** Compact receipt quantity: "3 × 450 g", "2 Stk", mixed as "1 × 3 Stk · 2 Stk lose". */
 export function formatPicks(ing: Pick<Ingredient, 'baseUnit' | 'unitWeights'>, picks: { count: number; amount: number }[]): string {
-  return picks.map((p) => (p.amount === 1 ? formatAmount(ing, p.count) : `${p.count} × ${formatAmount(ing, p.amount)}`)).join(' + ');
+  const packs = picks.filter((p) => p.amount !== 1).map((p) => `${p.count} × ${formatAmount(ing, p.amount)}`);
+  const loose = picks.filter((p) => p.amount === 1).map((p) => formatAmount(ing, p.count));
+  if (!packs.length) return loose.join(' · ');
+  return [...packs, ...loose.map((l) => `${l} lose`)].join(' · ');
 }

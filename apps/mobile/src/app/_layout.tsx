@@ -69,8 +69,6 @@ export default function RootLayout() {
               <Stack.Screen name="sign-in" />
               <Stack.Screen name="onboarding" />
               <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="recipe/[id]" options={{ animation: 'slide_from_right' }} />
-              <Stack.Screen name="generate" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
             </Stack>
           </SnackbarProvider>
         </SessionProvider>

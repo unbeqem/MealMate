@@ -22,10 +22,12 @@ function NavBar({ state, navigateToTab }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const { repo } = useSession();
 
-  const items = state.routes.map((route, index) => {
+  const current = state.routes[state.index]?.name ?? '';
+  const activeName = current === 'recipe/[id]' || current === 'generate' ? 'recipes' : current;
+  const items = state.routes.map((route) => {
     const meta = ICONS[route.name];
     if (!meta) return null;
-    const focused = state.index === index;
+    const focused = route.name === activeName;
     const Icon = meta.icon;
     return (
       <Pressable
@@ -34,7 +36,7 @@ function NavBar({ state, navigateToTab }: BottomTabBarProps) {
         accessibilityState={{ selected: focused }}
         accessibilityLabel={meta.label}
         onPress={() => {
-          if (!focused) navigateToTab(route.key);
+          if (route.name !== current) navigateToTab(route.key);
         }}
         style={(s: PState) => [
           wide ? styles.sideItem : styles.tabItem,
@@ -77,20 +79,29 @@ export default function TabsLayout() {
   return <OnboardedTabs wide={wide} />;
 }
 
-function OnboardedTabs({ wide }: { wide: boolean }) {
+function OnboardingGuard() {
   const prefs = usePrefs();
-  if (prefs.isLoading) return <Loading />;
   if (prefs.data && !prefs.data.onboarded) return <Redirect href="/onboarding" />;
+  return null;
+}
+
+function OnboardedTabs({ wide }: { wide: boolean }) {
   return (
+    <>
+    <OnboardingGuard />
     <Tabs
       tabBar={(props) => <NavBar {...props} />}
+      backBehavior="history"
       screenOptions={{ headerShown: false, tabBarPosition: wide ? 'left' : 'bottom', animation: 'fade' }}
     >
       <Tabs.Screen name="plan" />
       <Tabs.Screen name="recipes" />
       <Tabs.Screen name="shopping" />
       <Tabs.Screen name="profile" />
+      <Tabs.Screen name="recipe/[id]" />
+      <Tabs.Screen name="generate" />
     </Tabs>
+    </>
   );
 }
 

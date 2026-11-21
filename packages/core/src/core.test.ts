@@ -65,7 +65,7 @@ describe('units', () => {
     expect(formatAmount(ing('knoblauch'), 15)).toBe('15 Zehen');
     expect(formatAmount(ing('petersilie'), 0.5)).toBe('0,5 Bund');
     expect(formatPicks(ing('blattspinat'), [{ count: 3, amount: 450 }])).toBe('3 × 450 g');
-    expect(formatPicks(ing('paprika'), [{ count: 1, amount: 3 }, { count: 2, amount: 1 }])).toBe('1 × 3 Stk + 2 Stk');
+    expect(formatPicks(ing('paprika'), [{ count: 1, amount: 3 }, { count: 2, amount: 1 }])).toBe('1 × 3 Stk · 2 Stk lose');
   });
   it('scales display amounts kitchen-friendly', () => {
     expect(scaleDisplay(250, 'g', 1.5)).toBe(375);

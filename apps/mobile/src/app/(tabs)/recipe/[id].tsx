@@ -82,10 +82,15 @@ function RecipeDetail() {
                 const amt = scaleDisplay(ri.displayAmount, ri.displayUnit, factor);
                 return (
                   <View key={ri.ingredientId} style={styles.ingRow} accessible accessibilityLabel={`${formatNumber(amt)} ${unitLabel(ri.displayUnit, amt)} ${ing?.name ?? ri.ingredientId}${ri.optional ? ', optional' : ''}`}>
-                    <Text style={[type.mono, { color: p.ink, flex: 1 }]}>
-                      {ing?.name ?? ri.ingredientId}
-                      {ri.optional ? <Text style={{ color: p.inkMuted }}> (optional)</Text> : null}
-                    </Text>
+                    <View style={{ flex: 1 }}>
+                      <Text style={[type.mono, { color: p.ink }]}>
+                        {ing?.name ?? ri.ingredientId}
+                        {ri.optional ? <Text style={{ color: p.inkMuted }}> (optional)</Text> : null}
+                      </Text>
+                      {ing && !ing.isStaple && ing.packages[0] ? (
+                        <Text style={[type.mono, { color: p.inkMuted, fontSize: 11 }]}>aus {ing.packages.map((x) => x.label).join(' / ')}</Text>
+                      ) : null}
+                    </View>
                     <Text style={[type.monoStrong, { color: p.ink }]}>{formatNumber(amt)} {unitLabel(ri.displayUnit, amt)}</Text>
                   </View>
                 );

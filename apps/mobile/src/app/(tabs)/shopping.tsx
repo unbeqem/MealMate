@@ -187,7 +187,7 @@ function Row({
           accessibilityLabel={i.source === 'manual' ? i.label : `${i.label}: Menge anpassen`}
           disabled={i.source === 'manual'}
           onPress={onEdit}
-          style={{ flex: 1, minHeight: 48, justifyContent: 'center' }}
+          style={{ flex: 1, minWidth: 0, minHeight: 48, justifyContent: 'center' }}
         >
           <Text style={[type.bodyStrong, { color: i.checked ? p.inkMuted : p.ink, textDecorationLine: i.checked ? 'line-through' : 'none' }]}>{i.label}</Text>
           {i.source === 'auto' ? (
@@ -201,7 +201,7 @@ function Row({
         {i.source === 'manual' ? (
           <IconButton icon={Trash2} label={`${i.label} entfernen`} onPress={onDelete} color={p.inkMuted} size={18} />
         ) : (
-          <Text style={[type.monoStrong, { color: i.checked ? p.inkMuted : p.ink, textAlign: 'right', flexShrink: 0, maxWidth: 140 }]}>{amount}</Text>
+          <Text numberOfLines={1} style={[type.monoStrong, { color: i.checked ? p.inkMuted : p.ink, textAlign: 'right', flexShrink: 0 }]}>{amount}</Text>
         )}
       </View>
       {relevant && best ? (

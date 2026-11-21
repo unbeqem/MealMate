@@ -72,7 +72,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     return { status: 'signedOut', repo: null, email: null, scope: 'none', startGuest, signOut };
   }, [loading, session, guest, startGuest, signOut]);
 
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+  // navigators mount only once the session is known, so deep links keep their route
+  return <Ctx.Provider value={value}>{loading ? <Loading /> : children}</Ctx.Provider>;
 }
 
 export function useSession(): SessionValue {

@@ -135,15 +135,17 @@ h1 {
 .r-line.rest { background: linear-gradient(90deg, var(--hi) 0 100%) no-repeat 0 0 / var(--swipe, 100%) 100%; color: var(--on-hi); outline-offset: 1px; cursor: default; }
 .r-line.rest small { color: var(--on-hi); }
 .r-line.rest:hover, .r-line.rest:focus-visible { box-shadow: 0 0 0 2px var(--on-hi); }
-/* signature: hovering or focusing a REST line points to the meal it belongs to */
-.r-line.rest::after {
-  content: "→ " attr(data-to); position: absolute; right: 0.5rem; top: -0.35rem;
-  translate: 0 calc(-100% + 6px); opacity: 0; z-index: 2; pointer-events: none; white-space: nowrap;
-  background: var(--indigo); color: #fff; font: 700 0.85rem var(--display); padding: 0.45rem 0.7rem; border-radius: 8px;
-  transition: opacity 150ms var(--ease-out), translate 200ms var(--ease-out);
+/* signature: hovering or focusing a REST line draws an arrow to the meal it feeds */
+.hero { position: relative; }
+.link-layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 3; }
+.link-layer #link-path { fill: none; stroke: #fff; stroke-width: 2.5; stroke-linecap: round; opacity: 0; }
+.link-layer.on #link-path { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .link-layer.on #link-path { stroke-dasharray: var(--len); stroke-dashoffset: var(--len); animation: draw 280ms var(--ease-out) forwards; }
 }
-.r-line.rest:hover::after, .r-line.rest:focus-visible::after { opacity: 1; translate: 0 -100%; }
-
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.ph-day.lit { background: var(--hi); color: var(--on-hi); }
+.ph-day.lit small { color: var(--on-hi); }
 .barcode { height: 46px; margin-top: 1.2rem; background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 4px, var(--ink) 4px 7px, transparent 7px 9px, var(--ink) 9px 10px, transparent 10px 13px); }
 .r-note { text-align: right; font-size: 0.72rem; color: var(--ink-muted); margin: 0.5rem 0 0; }
 
@@ -168,8 +170,10 @@ h1 {
 .ph-item i { width: 20px; height: 20px; border: 2px solid #b9b8b0; border-radius: 6px; flex: none; }
 .ph-item.done i { background: var(--done); border-color: var(--done); }
 .ph-item.done span { color: #6c6b66; text-decoration: line-through; }
-.ph-tip { position: absolute; left: 0.7rem; right: 0.7rem; bottom: 70px; background: var(--indigo); color: #fff; border-radius: 12px; padding: 0.7rem; font-size: 0.85rem; line-height: 1.35; }
-.ph-tip b { color: var(--hi); }
+.ph-plan { position: absolute; left: 0.7rem; right: 0.7rem; bottom: 66px; }
+.ph-day { display: flex; gap: 0.7rem; align-items: center; padding: 0.45rem 0.5rem; border-radius: 8px; font-weight: 700; font-size: 0.88rem; transition: background 150ms var(--ease-out); }
+.ph-day b { font: 700 0.8rem var(--mono); color: var(--violet); width: 1.6rem; }
+.ph-day small { display: block; font: 400 0.7rem var(--mono); color: #6c6b66; }
 .ph-tabs { position: absolute; left: 0; right: 0; bottom: 0; height: 56px; border-top: 1px solid #eee; display: flex; justify-content: space-around; align-items: center; font-size: 0.7rem; font-weight: 700; color: #6c6b66; }
 .ph-tabs .on { color: var(--violet); }
 
@@ -209,11 +213,12 @@ h2 {
 /* how */
 .how { padding: clamp(3.5rem, 8vw, 6.5rem) max(clamp(1rem, 4vw, 3rem), calc((100vw - 1320px) / 2 + 3rem)); color: #fff; }
 .how h2 { max-width: 20ch; }
-.steps { list-style: none; counter-reset: s; padding: 0; margin: 2.5rem 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1rem, 3vw, 2.5rem); }
-.steps li { counter-increment: s; border-top: 2px dashed rgba(255, 255, 255, 0.45); padding-top: 1.25rem; }
-.steps li::before { content: counter(s); font: 700 0.95rem var(--mono); color: var(--hi); }
+.steps.strip { transform: rotate(-0.6deg); padding: 2rem clamp(1.25rem, 3vw, 2.5rem) 2.4rem; font-family: var(--display); }
+.steps { list-style: none; counter-reset: s; margin: 2.5rem 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1rem, 3vw, 2.5rem); }
+.steps li { counter-increment: s; border-top: 2px dashed var(--rule); padding-top: 1.25rem; }
+.steps li::before { content: counter(s); font: 700 0.95rem var(--mono); color: var(--ink-muted); }
 .steps h3 { font: 800 1.45rem/1.15 var(--display); margin: 0.5rem 0 0.6rem; }
-.steps p { margin: 0; color: var(--violet-ink); max-width: 38ch; }
+.steps p { margin: 0; color: var(--ink-muted); max-width: 38ch; }
 
 /* faq */
 .faq { background: var(--ground); color: var(--ink); padding: clamp(3.5rem, 8vw, 6rem) max(clamp(1rem, 4vw, 3rem), calc((100vw - 880px) / 2)); }
@@ -221,14 +226,15 @@ h2 {
 .faq details:last-of-type { border-bottom: 2px dashed var(--rule); }
 .faq summary { cursor: pointer; font-weight: 700; font-size: 1.15rem; min-height: 56px; display: flex; align-items: center; list-style: none; }
 .faq summary::-webkit-details-marker { display: none; }
-.faq summary::after { content: "+"; margin-left: auto; font: 600 1.3rem var(--mono); color: var(--violet); }
-.faq details[open] summary::after { content: "–"; }
+.faq-icon { width: 22px; height: 22px; margin-left: auto; flex: none; fill: none; stroke: var(--violet); stroke-width: 2.25; stroke-linecap: round; }
+.faq-icon .v { transform-box: fill-box; transform-origin: center; transition: transform 200ms var(--ease-out); }
+.faq details[open] .faq-icon .v { transform: scaleY(0); }
 .faq details p { margin: 0 0 1rem; max-width: 62ch; color: var(--ink-muted); }
 
 /* close */
 .close { background: var(--indigo); color: #fff; text-align: center; padding: clamp(4rem, 9vw, 7rem) 1rem; }
 .close h2 { margin: 0 auto 2rem; max-width: 16ch; }
-.close-cta { display: inline-flex; align-items: center; min-height: 56px; padding: 0 1.75rem; border-radius: 12px; background: var(--hi); color: var(--on-hi); font-weight: 800; font-size: 1.1rem; text-decoration: none; transition: transform 120ms var(--ease-out); }
+.close-cta { display: inline-flex; align-items: center; min-height: 56px; padding: 0 1.75rem; border-radius: 12px; background: #fff; color: var(--indigo); font-weight: 800; font-size: 1.1rem; text-decoration: none; transition: transform 120ms var(--ease-out); }
 .close-cta:hover { transform: translateY(-2px); }
 
 .foot { background: var(--indigo); color: var(--violet-ink); display: flex; gap: 1.5rem; align-items: center; padding: 1.5rem max(1rem, calc((100vw - 1320px) / 2 + 3rem)); border-top: 1px solid rgba(255, 255, 255, 0.15); }
