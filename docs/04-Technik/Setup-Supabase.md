@@ -13,28 +13,75 @@ Zugangsdaten stehen in deiner privaten Notiz `supabase` im Vault-Root (nicht im 
 > [!NOTE]
 > **Schon erledigt, nichts zu tun:** Datenbank-Tabellen, Sicherheitsregeln (RLS), 107 Zutaten und 39 Rezepte sind eingespielt. Die App kennt URL und Publishable Key über `apps/mobile/.env`.
 
-Reihenfolge: **Teil A** (Login per Mail-Code, ca. 5 Min) → **Teil B** (Google-Login, ca. 15 Min, optional) → **Teil C** (KI-Rezepte, ca. 10 Min). Jeder Teil endet mit einem Test.
+Reihenfolge: **Teil A** (Login per E-Mail, ca. 5 Min für Stufe 1) → **Teil B** (Google-Login, ca. 15 Min, optional) → **Teil C** (KI-Rezepte, ca. 10 Min). Jeder Teil endet mit einem Test.
 
 Die Menüpunkte im Supabase-Dashboard heißen auf Englisch. Falls ein Name leicht anders lautet, nimm die Suche oben im Dashboard (`Ctrl + K`) und tipp den fettgedruckten Begriff ein.
 
 ---
 
-## Teil A – Login per E-Mail-Code
+## Teil A – Login per E-Mail
 
-Die App schickt beim Anmelden eine Mail und fragt dann nach einem **Code**. Standardmäßig verschickt Supabase aber nur einen Link. Deshalb muss der Code in die Mail-Vorlagen.
+Die App schickt beim Anmelden eine Mail. Darin steht ein **Link** (geht immer) und, wenn die Mail-Vorlage angepasst ist, ein **Code**.
+
+> [!IMPORTANT]
+> Ohne eigenen Mailserver (Custom SMTP) **sperrt Supabase die Mail-Vorlagen**. Die Felder lassen sich nicht bearbeiten. Deshalb gibt es drei Stufen:
+>
+> | Stufe | Wann | Was du bekommst |
+> |---|---|---|
+> | **1 – Nur Link** (A1, A3, A4) | jetzt, ohne Domain | Anmeldung per Link aus der Standard-Mail, wenige Mails pro Stunde |
+> | **2 – Brevo** (A5) | wenn du den Code willst oder mehr Mails brauchst | eigener Mailversand ohne Domain, Vorlagen bearbeitbar, ca. 300 Mails/Tag |
+> | **3 – Domain + Resend** (A6) | vor dem Start mit echten Nutzern | eigene Absender-Domain, beste Zustellbarkeit |
 
 ### A1. E-Mail-Login prüfen
 1. Dashboard öffnen → links **Authentication** (Personen-Symbol).
 2. Im Authentication-Menü **Sign In / Providers** (ältere Oberfläche: **Providers**) anklicken.
 3. **Email** muss aktiv sein (Schalter grün). Darin:
    - **Confirm email**: an lassen.
-   - **Email OTP Length**: `6` (die App erwartet 6 bis 8 Ziffern).
+   - **Email OTP Length**: `6`, falls einstellbar.
 4. Unten **Save**.
 
-### A2. Code in die Mail-Vorlagen einfügen
+### A3. Erlaubte Rücksprung-Adressen
+(Wichtig, damit der Link aus der Mail zurück in die App führt.)
+1. Im Authentication-Menü **URL Configuration**.
+2. **Site URL**: vorerst `http://localhost:8081` → **Save**. (Später ersetzt du das durch die echte Web-Adresse der App.)
+3. Unter **Redirect URLs** auf **Add URL** und diese drei einzeln hinzufügen:
+   - `http://localhost:8081/auth-callback`
+   - `mealmate://auth-callback`
+   - `exp://**` (für Tests mit Expo Go auf dem Handy)
+4. **Save URLs**.
+
+### A4. Test (Stufe 1, nur Link)
+1. In PowerShell:
+   ```powershell
+   cd C:\Obsidian\mealmatepp
+   npm run dev
+   ```
+2. Browser: <http://localhost:8081> → deine E-Mail eingeben → **Code per Mail senden**.
+3. Mail öffnen → auf den Link tippen, **im selben Browser**, in dem die App offen ist (sonst schlägt die Anmeldung fehl). Das Code-Feld in der App brauchst du dann nicht.
+4. Du landest im Onboarding. Kontrolle im Dashboard: **Authentication → Users** zeigt deine Adresse. **Table Editor → profiles** hat eine neue Zeile.
+
+> [!WARNING]
+> Ohne eigenen Mailserver verschickt Supabase nur **wenige Mails pro Stunde**. Zum Testen reicht das. Kommt keine Mail an: Spam-Ordner prüfen, eine Stunde warten oder Stufe 2 einrichten.
+
+### A5. Stufe 2 – Brevo als Mailserver (ohne Domain)
+1. Konto anlegen auf <https://www.brevo.com> (kostenloser Plan).
+2. In Brevo: **Senders, Domains & Dedicated IPs → Senders → Add a sender**. Name `MealMate`, deine E-Mail-Adresse. Die Bestätigungsmail öffnen und bestätigen.
+3. In Brevo: **SMTP & API → Reiter SMTP**. Dort stehen **SMTP Server**, **Port** und **Login**. Auf **Generate a new SMTP key** klicken, Namen `Supabase` vergeben, den Key **kopieren** (wird nur einmal angezeigt).
+4. In Supabase: **Authentication → Emails → SMTP Settings** → **Enable Custom SMTP** einschalten:
+   - **Sender email address**: die bestätigte Adresse aus Schritt 2
+   - **Sender name**: `MealMate`
+   - **Host**: `smtp-relay.brevo.com`
+   - **Port number**: `587`
+   - **Username**: der **Login** aus Schritt 3
+   - **Password**: der SMTP-Key aus Schritt 3
+   - **Save changes**
+5. Jetzt sind die Vorlagen bearbeitbar. Weiter mit **A2**.
+6. Hinweis: Mails von einer Gmail-, GMX- oder Web.de-Adresse über Brevo landen manchmal im Spam. Für Tests ok, für echte Nutzer Stufe 3.
+
+### A2. Code in die Mail-Vorlagen einfügen (erst nach A5 oder A6 möglich)
 1. Im Authentication-Menü **Emails** → Reiter **Templates** (ältere Oberfläche: **Email Templates**).
 2. Vorlage **Confirm signup** öffnen (diese Mail bekommen **neue** Nutzer).
-   - **Subject heading** ersetzen durch: `Dein MealMate-Code`
+   - **Subject**: `Dein MealMate-Code`
    - Im Feld **Message body** den ganzen Inhalt ersetzen durch:
      ```html
      <h2>Dein Code für MealMate</h2>
@@ -44,28 +91,22 @@ Die App schickt beim Anmelden eine Mail und fragt dann nach einem **Code**. Stan
      ```
    - **Save changes**.
 3. Vorlage **Magic Link** öffnen (diese Mail bekommen **bestehende** Nutzer) und genau dasselbe eintragen. **Save changes**.
+4. Test: wie A4, aber diesmal den **Code** aus der Mail in der App eingeben → **Anmelden**.
 
-### A3. Erlaubte Rücksprung-Adressen
-1. Im Authentication-Menü **URL Configuration**.
-2. **Site URL**: vorerst `http://localhost:8081` → **Save**. (Später ersetzt du das durch die echte Web-Adresse der App.)
-3. Unter **Redirect URLs** auf **Add URL** und diese drei einzeln hinzufügen:
-   - `http://localhost:8081/auth-callback`
-   - `mealmate://auth-callback`
-   - `exp://**` (für Tests mit Expo Go auf dem Handy)
-4. **Save URLs**.
-
-### A4. Test
-1. In PowerShell:
-   ```powershell
-   cd C:\Obsidian\mealmate\app
-   npm run dev
-   ```
-2. Browser: <http://localhost:8081> → deine E-Mail eingeben → **Code per Mail senden**.
-3. Mail öffnen → Code in der App eingeben → **Anmelden**. Du landest im Onboarding.
-4. Kontrolle im Dashboard: **Authentication → Users** zeigt deine Adresse. **Table Editor → profiles** hat eine neue Zeile.
-
-> [!WARNING]
-> Supabase verschickt ohne eigenen Mailserver nur **wenige Mails pro Stunde** (für Tests reicht das). Vor dem Teststart mit echten Nutzern unter **Authentication → Emails → SMTP Settings** einen eigenen Anbieter eintragen (z. B. Resend, Brevo, Postmark).
+### A6. Stufe 3 – eigene Domain + Resend (vor echten Nutzern)
+1. Domain kaufen, z. B. `mealmate-app.de` (ca. 5–15 €/Jahr, z. B. bei IONOS, Strato, INWX oder Cloudflare). Dieselbe Domain nutzt du auch für die Landingpage.
+2. Konto auf <https://resend.com> → **Domains → Add Domain** → am besten eine Subdomain wie `mail.mealmate-app.de`, Region **EU (Frankfurt)**.
+3. Resend zeigt 3–4 **DNS-Einträge** (SPF, DKIM, ggf. MX). Beim Domain-Anbieter im Bereich **DNS** genau so anlegen → in Resend **Verify** (kann Minuten bis Stunden dauern).
+4. Resend: **API Keys → Create API Key**, Berechtigung **Sending access** → kopieren.
+5. Supabase: **Authentication → Emails → SMTP Settings** (Brevo-Werte ersetzen):
+   - **Sender email address**: z. B. `login@mail.mealmate-app.de`
+   - **Sender name**: `MealMate`
+   - **Host**: `smtp.resend.com`
+   - **Port number**: `465`
+   - **Username**: `resend`
+   - **Password**: der Resend-API-Key
+   - **Save changes**
+6. Test wie A2 Schritt 4.
 
 ---
 
@@ -121,7 +162,7 @@ Die KI läuft auf dem Server, damit dein API-Key nie in der App steckt. Dafür l
 ### C2. Supabase-CLI anmelden
 In PowerShell:
 ```powershell
-cd C:\Obsidian\mealmate\app
+cd C:Obsidianmealmatepp
 npx supabase login
 ```
 Es öffnet sich der Browser → **Authorize**. Im Terminal erscheint `You are now logged in`. (Falls kein Browser aufgeht: den angezeigten Link öffnen und den Code im Terminal eingeben.)
@@ -167,7 +208,7 @@ Kontrolle im Dashboard: links **Edge Functions** → beide Funktionen sind aufge
 
 ## Später: Schema oder Seed ändern
 
-| Was | Befehl (im Ordner `C:\Obsidian\mealmate\app`) |
+| Was | Befehl (im Ordner `C:Obsidianmealmatepp`) |
 |---|---|
 | Zutaten/Rezepte ändern | Datei in `packages/core/src/seed/` bearbeiten → `npm run seed:sql` → `npx supabase db push --include-seed` |
 | Tabelle ändern | neue Datei in `supabase/migrations/` → `npx supabase db push` |
@@ -176,14 +217,15 @@ Kontrolle im Dashboard: links **Edge Functions** → beide Funktionen sind aufge
 ## Checkliste
 
 - [ ] A1 E-Mail-Provider geprüft
-- [ ] A2 Vorlagen „Confirm signup“ und „Magic Link“ mit `{{ .Token }}`
 - [ ] A3 Site URL + 3 Redirect URLs
-- [ ] A4 Test Login per Code
+- [ ] A4 Test Login per Link (Stufe 1)
+- [ ] A5 Brevo als SMTP (Stufe 2, optional)
+- [ ] A2 Vorlagen mit `{{ .Token }}` (nach A5/A6)
+- [ ] A6 Domain + Resend (Stufe 3, vor echten Nutzern)
 - [ ] B1–B4 Google eingerichtet (optional)
 - [ ] B5 Test Google-Login
 - [ ] C1 Claude-Key erstellt, Guthaben vorhanden
 - [ ] C2–C5 CLI-Login, Link, Secret, Deploy
 - [ ] C6 Test KI-Rezept
-- [ ] Vor echten Nutzern: eigener SMTP-Anbieter (Warnung in A4)
 
 Related: [Datenbankschema](Datenbankschema.md) · [ADR-003 Demo-Modus](../02-Entscheidungen/ADR-003-Demo-Modus.md) · [ADR-005 LLM-Provider](../02-Entscheidungen/ADR-005-LLM-Provider.md)
