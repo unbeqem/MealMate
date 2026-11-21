@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dosenwand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Figtree:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--fridge:#EAF1EF;--ink:#16302B;--lime:#C6F432;--tomato:#FF5B3A;--violet:#7B6CFF;--yolk:#FFC93C;--pp:rgba(255,255,255,.72)}
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;background:var(--fridge);color:var(--ink);font-family:"Figtree",sans-serif}
+nav{display:flex;align-items:center;gap:36px;padding:26px 64px;font-size:16px;font-weight:600}
+.logo{font:900 22px "Unbounded";display:flex;gap:10px;align-items:center}
+.logo i{width:34px;height:24px;border-radius:7px;background:var(--lime);box-shadow:inset 0 -6px 0 rgba(0,0,0,.12)}
+nav a{color:var(--ink);text-decoration:none;opacity:.75}.sp{flex:1}
+nav .b{opacity:1;background:var(--ink);color:#fff;padding:11px 20px;border-radius:999px}
+.grid{display:grid;grid-template-columns:560px 1fr;gap:56px;padding:22px 64px}
+h1{font:900 76px/.98 "Unbounded";letter-spacing:-.035em;margin-top:30px}
+.lead{font-size:22px;line-height:1.45;max-width:32ch;margin-top:24px}
+form{display:flex;gap:10px;margin-top:32px;background:#fff;padding:8px;border-radius:20px;box-shadow:0 0 0 2px #D3DDDA}
+input{flex:1;border:0;font:400 18px "Figtree";padding:0 14px;background:none;color:var(--ink)}
+button{height:56px;padding:0 24px;border-radius:14px;border:0;background:var(--tomato);color:#fff;font:700 16px "Unbounded";cursor:pointer}
+.note{font-size:14px;opacity:.6;margin-top:12px}
+/* the container */
+.stage{position:relative}
+.box{position:relative;margin-top:28px;background:var(--pp);border-radius:34px;padding:22px;box-shadow:inset 0 0 0 3px rgba(22,48,43,.12),0 30px 60px rgba(22,48,43,.12)}
+.lid{position:absolute;left:30px;right:30px;top:-22px;height:30px;border-radius:16px 16px 8px 8px;background:var(--lime);box-shadow:inset 0 -8px 0 rgba(0,0,0,.1)}
+.lid::before,.lid::after{content:"";position:absolute;top:22px;width:56px;height:20px;border-radius:0 0 10px 10px;background:#a9d61a}
+.lid::before{left:40px}.lid::after{right:40px}
+.box h2{font:700 18px "Unbounded";display:flex;justify-content:space-between;margin:14px 4px 16px}
+.box h2 span{font:600 16px "Figtree";opacity:.6}
+.comps{display:grid;grid-template-columns:200fr 250fr;gap:12px;height:220px}
+.comp{border-radius:22px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:inset 0 0 0 3px rgba(22,48,43,.1)}
+.comp b{font:900 44px "Unbounded";letter-spacing:-.03em}
+.comp p{font-size:17px;font-weight:800}.comp p small{display:block;font-weight:400;opacity:.7;font-size:15px}
+.c1{background:var(--lime)}.c2{background:#fff;outline:3px dashed var(--violet);outline-offset:-10px}
+.hop{position:absolute;right:210px;top:30px;font:700 15px "Figtree";background:var(--violet);color:#fff;padding:8px 14px;border-radius:999px}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:22px}
+.day{background:#fff;border-radius:18px;padding:10px;height:150px;box-shadow:inset 0 0 0 2px #D3DDDA;display:flex;flex-direction:column;gap:6px}
+.day small{font-weight:800;font-size:13px}
+.slot{flex:1;border-radius:10px;background:#F2F5F4}
+.slot.g{background:var(--lime)}.slot.v{background:var(--violet)}.slot.y{background:var(--yolk)}.slot.t{background:var(--tomato)}
+.day.today{box-shadow:inset 0 0 0 3px var(--ink)}
+.sample{position:absolute;right:64px;bottom:16px;font-size:12px;opacity:.5}
+</style></head><body>
+<nav><span class="logo"><i></i>MealMate</span><a href="#">So funktioniert’s</a><a href="#">Packungslogik</a><span class="sp"></span><a class="b" href="#">Warteliste</a></nav>
+<div class="grid">
+<section>
+<h1>Jede Packung. Bis zum letzten Fach.</h1>
+<p class="lead">MealMate teilt, was du kaufst, auf deine Woche auf, damit kein Rest im Kühlschrank vergessen wird.</p>
+<form onsubmit="return false"><input type="email" placeholder="deine@email.de" aria-label="E-Mail"><button>Warteliste</button></form>
+<p class="note">Start Anfang 2027 für Android und Web.</p>
+</section>
+<div class="stage">
+<div class="box"><div class="lid"></div>
+<h2>Blattspinat <span>1 Beutel · 450 g</span></h2>
+<div class="comps">
+<div class="comp c1"><b>200 g</b><p>Montag<small>Spinat-Feta-Pasta</small></p></div>
+<div class="comp c2"><b>250 g</b><p>Mittwoch<small>Gnocchi mit Rahmspinat</small></p></div>
+</div>
+<span class="hop">Rest automatisch eingeplant</span>
+</div>
+<div class="week">
+<div class="day today"><small>Mo</small><div class="slot y"></div><div class="slot"></div><div class="slot g"></div></div>
+<div class="day"><small>Di</small><div class="slot y"></div><div class="slot g"></div><div class="slot t"></div></div>
+<div class="day"><small>Mi</small><div class="slot y"></div><div class="slot"></div><div class="slot g"></div></div>
+<div class="day"><small>Do</small><div class="slot"></div><div class="slot g"></div><div class="slot v"></div></div>
+<div class="day"><small>Fr</small><div class="slot y"></div><div class="slot"></div><div class="slot t"></div></div>
+<div class="day"><small>Sa</small><div class="slot"></div><div class="slot t"></div><div class="slot v"></div></div>
+<div class="day"><small>So</small><div class="slot y"></div><div class="slot"></div><div class="slot"></div></div>
+</div>
+</div>
+</div>
+<p class="sample">Beispieldaten</p>
+</body></html>

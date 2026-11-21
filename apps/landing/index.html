@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MealMate – Kauf nur, was du isst</title>
+<meta name="description" content="MealMate plant deine Woche in echten Packungsgrößen und verplant jeden Rest gleich mit. Trag dich auf die Warteliste ein.">
+<meta name="theme-color" content="#6B4CF0">
+<meta property="og:title" content="MealMate – Kauf nur, was du isst">
+<meta property="og:description" content="Der Wochenplaner, der in Packungen denkt: Was du kaufst, wird auch gegessen.">
+<meta property="og:locale" content="de_DE">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Martian+Mono:wdth,wght@75..112.5,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="config.js"></script>
+</head>
+<body>
+<a class="skip" href="#warteliste">Zur Warteliste springen</a>
+
+<header class="nav">
+  <a class="brand" href="#top" aria-label="MealMate Startseite">MealMate</a>
+  <nav aria-label="Hauptnavigation">
+    <a href="#demo">Ausprobieren</a>
+    <a href="#ablauf">So funktioniert’s</a>
+    <a href="#fragen">Fragen</a>
+  </nav>
+  <a class="nav-cta" href="#warteliste">Auf die Warteliste</a>
+</header>
+
+<main id="top">
+  <!-- FIRST VIEWPORT: headline + working form | the receipt prints | the list in the aisle -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <h1 id="hero-title">Kauf nur, was du&nbsp;isst.</h1>
+      <p class="lead">MealMate rechnet deine Woche in echte Packungsgrößen um und plant jeden Rest gleich mit ein. Der Spinatbeutel wird leer, die Sahne auch.</p>
+      <form class="waitlist" id="warteliste" novalidate>
+        <label for="email">Deine E-Mail für den Teststart</label>
+        <div class="field">
+          <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="du@beispiel.de" required>
+          <button type="submit">Auf die Warteliste</button>
+        </div>
+        <p class="form-msg" role="status" aria-live="polite"></p>
+        <p class="fine">Eine Mail, wenn die Testphase startet. Keine Werbung, jederzeit abmeldbar. <a href="datenschutz.html">Datenschutz</a></p>
+      </form>
+    </div>
+
+    <figure class="receipt-stage" aria-label="Beispiel: Einkaufsbon für eine Woche mit zwei Personen">
+      <div class="receipt" id="hero-receipt">
+        <p class="r-head">MEALMATE</p>
+        <p class="r-sub">Woche 48 · 2 Personen</p>
+        <hr>
+        <div class="r-line"><span>Blattspinat<small>Mo 200 g · Mi 250 g</small></span><span>1 × 450 g</span></div>
+        <div class="r-line"><span>Schlagsahne<small>Bedarf 150 ml</small></span><span>1 × 200 ml</span></div>
+        <div class="r-line rest" tabindex="0" data-to="Fr · Tomatensuppe"><span>REST Sahne 50 ml<small>→ Fr Tomatensuppe</small></span><span>verplant</span></div>
+        <div class="r-line"><span>Feta<small>Bedarf 200 g</small></span><span>1 × 200 g</span></div>
+        <div class="r-line"><span>Gnocchi<small>Bedarf 500 g</small></span><span>1 × 500 g</span></div>
+        <div class="r-line"><span>Eier<small>Bedarf 4 Stk</small></span><span>1 × 6 Stk</span></div>
+        <div class="r-line rest" tabindex="0" data-to="Sa · Shakshuka"><span>REST Eier 2 Stk<small>→ Sa Shakshuka</small></span><span>verplant</span></div>
+        <hr>
+        <div class="r-line total"><span>Weggeworfen (geplant)</span><span>0 g</span></div>
+        <div class="barcode" aria-hidden="true"></div>
+        <p class="r-note">Beispieldaten</p>
+      </div>
+      <figcaption class="sr-only">Jede Zeile ist eine echte Packung. Was übrig bleibt, ist markiert und schon einem Rezept zugeordnet.</figcaption>
+    </figure>
+
+    <div class="phone" aria-hidden="true">
+      <div class="phone-screen">
+        <p class="ph-title">Einkauf</p>
+        <p class="ph-aisle">Obst &amp; Gemüse</p>
+        <div class="ph-item done"><i></i><span>Blattspinat<small>1 × 450 g</small></span></div>
+        <div class="ph-item"><i></i><span>Tomaten<small>1 × 500 g</small></span></div>
+        <p class="ph-aisle">Kühlregal</p>
+        <div class="ph-item"><i></i><span>Schlagsahne<small>1 × 200 ml</small></span></div>
+        <div class="ph-item"><i></i><span>Feta<small>1 × 200 g</small></span></div>
+        <div class="ph-tip"><b>50 ml Sahne übrig.</b> Passt in die Tomatensuppe am Freitag.</div>
+        <div class="ph-tabs"><span>Planen</span><span>Rezepte</span><span class="on">Einkauf</span><span>Profil</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO: the mechanism, dramatized -->
+  <section class="demo" id="demo" aria-labelledby="demo-title">
+    <div class="demo-copy">
+      <h2 id="demo-title">Rezepte rechnen in Gramm. Supermärkte in&nbsp;Beuteln.</h2>
+      <p>Wähl aus, was du diese Woche kochst. MealMate rundet auf echte Packungen auf und zeigt sofort, was übrig bleibt und wohin es passt.</p>
+      <fieldset class="picks">
+        <legend>Diese Woche koche ich</legend>
+        <label><input type="checkbox" value="pasta" checked> Spinat-Feta-Pasta <small>200 g Spinat</small></label>
+        <label><input type="checkbox" value="gnocchi"> Gnocchi mit Rahmspinat <small>250 g Spinat</small></label>
+        <label><input type="checkbox" value="dal"> Linsen-Dal mit Spinat <small>100 g Spinat</small></label>
+        <label><input type="checkbox" value="curry"> Kichererbsen-Curry <small>100 g Spinat</small></label>
+      </fieldset>
+    </div>
+    <div class="demo-out" aria-live="polite">
+      <div class="receipt small">
+        <p class="r-head">BLATTSPINAT</p>
+        <p class="r-sub">Beutel à 450 g</p>
+        <hr>
+        <div class="bag" aria-hidden="true"><div class="bag-fill" id="bag-fill"></div></div>
+        <div class="r-line"><span>Bedarf</span><span id="d-need">200 g</span></div>
+        <div class="r-line"><span>Kaufen</span><span id="d-buy">1 × 450 g</span></div>
+        <div class="r-line" id="d-rest-line"><span id="d-rest-label">REST 250 g<small id="d-rest-hint">→ passt in: Gnocchi mit Rahmspinat</small></span><span id="d-rest">250 g</span></div>
+      </div>
+      <p class="demo-verdict" id="d-verdict">Noch 250 g übrig. Tipp: Nimm die Gnocchi dazu, dann ist der Beutel leer.</p>
+    </div>
+  </section>
+
+  <!-- HOW: a real sequence -->
+  <section class="how" id="ablauf" aria-labelledby="how-title">
+    <h2 id="how-title">Einmal planen, einmal einkaufen, nichts wegwerfen.</h2>
+    <ol class="steps">
+      <li>
+        <h3>Woche füllen</h3>
+        <p>Ein Tipp, und MealMate plant deine Woche. Dabei zählen deine Allergien, deine Kochzeit und was du magst. Abends kochst du für den nächsten Mittag gleich mit.</p>
+      </li>
+      <li>
+        <h3>Der Bon rechnet</h3>
+        <p>Alle Zutaten zusammengefasst, auf echte Packungsgrößen aufgerundet, nach Supermarkt-Abteilung sortiert. Abhaken geht auch ohne Netz.</p>
+      </li>
+      <li>
+        <h3>Reste haben einen Plan</h3>
+        <p>Bleiben 250 g Spinat übrig, schlägt MealMate ein Rezept vor, das genau die verbraucht. Ein Tipp, und es steht im Plan.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="faq" id="fragen" aria-labelledby="faq-title">
+    <h2 id="faq-title">Fragen</h2>
+    <details>
+      <summary>Für wen ist MealMate gedacht?</summary>
+      <p>Für alle, die für ein oder zwei Personen kochen. Da bleibt von Supermarkt-Packungen am meisten übrig. Familien kommen später dazu.</p>
+    </details>
+    <details>
+      <summary>Was ist mit Allergien?</summary>
+      <p>Allergien und Unverträglichkeiten sind harte Filter. Rezepte mit diesen Zutaten tauchen nie auf, auch nicht bei Vorschlägen der KI. Das prüft MealMate gegen die eigene Zutatendatenbank, nicht nur über die KI.</p>
+    </details>
+    <details>
+      <summary>Auf welchen Geräten läuft es?</summary>
+      <p>Auf Android und im Browser. Plan und Einkaufsliste sind auf allen Geräten gleich, die Liste funktioniert auch offline im Supermarkt.</p>
+    </details>
+    <details>
+      <summary>Was kostet es?</summary>
+      <p>Planer, Einkaufsliste und Rezepte sind kostenlos. Ob und welche Extras später etwas kosten, sagen wir dir vor dem Start.</p>
+    </details>
+  </section>
+
+  <section class="close" aria-labelledby="close-title">
+    <h2 id="close-title">Der nächste Spinatbeutel wird leer.</h2>
+    <a class="close-cta" href="#warteliste">Auf die Warteliste</a>
+  </section>
+</main>
+
+<footer class="foot">
+  <span class="brand small">MealMate</span>
+  <a href="datenschutz.html">Datenschutz</a>
+  <a href="impressum.html">Impressum</a>
+</footer>
+
+<script src="main.js" defer></script>
+</body>
+</html>

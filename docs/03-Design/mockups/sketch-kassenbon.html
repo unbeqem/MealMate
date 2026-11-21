@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kassenbon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Martian+Mono:wdth,wght@75..112.5,400..700&display=swap" rel="stylesheet">
+<style>
+:root{--ground:#7C5CFF;--deep:#2B1A78;--paper:#FBFBF8;--ink:#1A1A1A;--grey:#8E8E8E;--mint:#5CE1B0;--hi:#FFE45C}
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;background:var(--ground);color:#fff;font-family:"Archivo",sans-serif}
+nav{display:flex;align-items:center;gap:36px;padding:28px 64px;font-size:16px}
+.logo{font:900 26px "Archivo";font-variation-settings:"wdth" 112;letter-spacing:-.02em}
+nav a{color:#fff;text-decoration:none;opacity:.8}.sp{flex:1}
+nav .b{opacity:1;background:#fff;color:var(--deep);padding:10px 18px;border-radius:10px;font-weight:800}
+.wrap{display:grid;grid-template-columns:1fr 440px 300px;gap:44px;padding:20px 64px 0;align-items:start}
+h1{font:900 112px/.88 "Archivo";font-variation-settings:"wdth" 70;letter-spacing:-.03em;margin-top:24px;max-width:9ch}
+.lead{font-size:23px;line-height:1.42;max-width:30ch;margin-top:26px;color:#EDE8FF}
+form{display:flex;flex-direction:column;gap:10px;margin-top:32px;max-width:420px}
+input{height:58px;border-radius:12px;border:0;padding:0 18px;font:400 18px "Archivo";background:#fff;color:var(--ink)}
+button{height:58px;border-radius:12px;border:0;background:var(--deep);color:#fff;font:800 19px "Archivo";cursor:pointer}
+.note{font-size:14px;color:#D9D0FF}
+/* receipt */
+.bon{position:relative;background:var(--paper);color:var(--ink);font:400 15px/1.55 "Martian Mono";font-variation-settings:"wdth" 82;padding:28px 26px 34px;margin-top:-28px;box-shadow:0 30px 60px rgba(43,26,120,.4);transform:rotate(1.2deg)}
+.bon::after{content:"";position:absolute;left:0;right:0;bottom:-14px;height:14px;background:linear-gradient(-45deg,transparent 7px,var(--paper) 0) 0 0/14px 14px,linear-gradient(45deg,transparent 7px,var(--paper) 0) 0 0/14px 14px}
+.bon h3{text-align:center;font:700 17px "Martian Mono";letter-spacing:.08em}
+.bon .c{text-align:center;color:var(--grey);font-size:13px}
+.hr{border-top:2px dashed #CFCFC8;margin:14px 0}
+.row{display:flex;justify-content:space-between;gap:10px}
+.row small{color:var(--grey);display:block;font-size:12.5px}
+.rest{background:var(--hi);margin:8px -10px;padding:8px 10px;border-radius:4px}
+.sum{font-weight:700;font-size:17px}
+.bar{height:44px;margin-top:16px;background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 7px,transparent 7px 9px,var(--ink) 9px 10px,transparent 10px 13px)}
+/* phone */
+.phone{width:300px;height:640px;border-radius:38px;background:#fff;color:var(--ink);padding:16px 14px;box-shadow:0 0 0 9px var(--deep),0 30px 60px rgba(0,0,0,.3);margin-top:60px;overflow:hidden;position:relative}
+.phone h4{font:900 26px "Archivo";font-variation-settings:"wdth" 80;margin:8px 4px 12px}
+.it{display:flex;gap:10px;align-items:center;padding:11px 4px;border-bottom:1px solid #EEE}
+.ck{width:24px;height:24px;border-radius:7px;border:2px solid #C9C9C2;flex:none}
+.ck.on{background:var(--ground);border-color:var(--ground)}
+.it p{font-size:15px;font-weight:700;flex:1}.it p small{display:block;font-weight:400;color:var(--grey);font-size:12.5px;font-family:"Martian Mono"}
+.it.done p{color:var(--grey);text-decoration:line-through}
+.sec{font:700 12.5px "Martian Mono";color:var(--grey);margin:14px 4px 2px}
+.tip{position:absolute;left:12px;right:12px;bottom:84px;background:var(--deep);color:#fff;border-radius:14px;padding:12px;font-size:14px;line-height:1.35}
+.tip b{color:var(--hi)}
+.tabs{position:absolute;left:0;right:0;bottom:0;height:66px;border-top:1px solid #EEE;display:flex;justify-content:space-around;align-items:center;font-size:11.5px;font-weight:700;color:var(--grey)}
+.tabs .on{color:var(--ground)}
+.sample{position:absolute;right:64px;bottom:16px;font-size:12px;opacity:.7}
+</style></head><body>
+<nav><span class="logo">MealMate</span><a href="#">So funktioniert’s</a><a href="#">Packungslogik</a><span class="sp"></span><a class="b" href="#">Warteliste</a></nav>
+<div class="wrap">
+<section>
+<h1>Kauf nur, was du isst.</h1>
+<p class="lead">MealMate rechnet deine Woche in echte Packungsgrößen um und plant jeden Rest gleich mit ein.</p>
+<form onsubmit="return false"><input type="email" placeholder="deine@email.de" aria-label="E-Mail"><button>Auf die Warteliste</button><span class="note">Start Anfang 2027 für Android und Web.</span></form>
+</section>
+<div class="bon" aria-label="Beispiel-Einkaufsbon">
+<h3>MEALMATE</h3><p class="c">Woche 48 · 2 Personen</p>
+<div class="hr"></div>
+<div class="row"><span>Blattspinat<small>Bedarf 450 g</small></span><span>1 × 450 g</span></div>
+<div class="row"><span>Schlagsahne<small>Bedarf 150 ml</small></span><span>1 × 200 ml</span></div>
+<div class="row rest"><span>REST Sahne 50 ml<small style="color:#5a5a50">→ Fr. Tomatensuppe</small></span><span>verplant</span></div>
+<div class="row"><span>Feta<small>Bedarf 200 g</small></span><span>1 × 200 g</span></div>
+<div class="row"><span>Gnocchi<small>Bedarf 500 g</small></span><span>1 × 500 g</span></div>
+<div class="row"><span>Eier<small>Bedarf 4 Stk</small></span><span>1 × 6 Stk</span></div>
+<div class="row rest"><span>REST Eier 2 Stk<small style="color:#5a5a50">→ Sa. Shakshuka</small></span><span>verplant</span></div>
+<div class="hr"></div>
+<div class="row sum"><span>Weggeworfen</span><span>0 g</span></div>
+<div class="bar"></div>
+</div>
+<div class="phone">
+<h4>Einkauf</h4>
+<p class="sec">Obst &amp; Gemüse</p>
+<div class="it done"><span class="ck on"></span><p>Blattspinat<small>1 × 450 g</small></p></div>
+<div class="it"><span class="ck"></span><p>Tomaten<small>1 × 500 g</small></p></div>
+<p class="sec">Kühlregal</p>
+<div class="it"><span class="ck"></span><p>Schlagsahne<small>1 × 200 ml</small></p></div>
+<div class="it"><span class="ck"></span><p>Feta<small>1 × 200 g</small></p></div>
+<div class="tip"><b>50 ml Sahne übrig.</b> Passt in die Tomatensuppe am Freitag. Einplanen?</div>
+<div class="tabs"><span>Planen</span><span>Rezepte</span><span class="on">Einkauf</span><span>Profil</span></div>
+</div>
+</div>
+<p class="sample">Beispieldaten</p>
+</body></html>

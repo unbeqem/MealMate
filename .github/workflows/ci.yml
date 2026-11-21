@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Core-Logik testen
+        run: npm test
+      - name: Typecheck (core + app)
+        run: npm run typecheck
+      - name: seed.sql ist aktuell
+        run: npm run seed:sql && git diff --exit-code supabase/seed.sql

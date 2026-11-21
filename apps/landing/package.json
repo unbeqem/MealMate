@@ -1,0 +1,11 @@
+{
+  "name": "landing",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "config": "node scripts/build.mjs --config-only",
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs --config-only && npx --yes serve -l 4173 ."
+  }
+}
