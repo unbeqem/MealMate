@@ -28,10 +28,10 @@ Android: `cd apps/mobile && npx expo run:android` (Dev-Build) oder `npx eas-cli@
 
 ## Backend
 
-Einrichtung, Auth-Einstellungen, Edge Functions und Secrets: [docs/04-Technik/Setup-Supabase.md](docs/04-Technik/Setup-Supabase.md).
+Schritt-für-Schritt-Anleitung (Dashboard-Klickpfade, Google, Claude-Key, Deploy): [docs/04-Technik/Setup-Supabase.md](docs/04-Technik/Setup-Supabase.md).
 
 ```bash
 npm run seed:sql                      # seed.sql aus packages/core neu erzeugen
 npx supabase db push --include-seed   # Schema + Seed einspielen
-npx supabase functions deploy generate-recipe build-shopping-list
+npm run functions:deploy              # kopiert die Core-Logik und deployt beide Functions
 ```
