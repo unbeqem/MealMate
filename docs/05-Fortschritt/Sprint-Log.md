@@ -16,7 +16,7 @@ tags: [fortschritt, log]
 - Supabase: Schema + RLS + Seed **live im Projekt**; Edge Functions `generate-recipe` (Claude, harte Allergie-Prüfung) und `build-shopping-list` geschrieben.
 - App (Expo SDK 58, Android + Web): Anmeldung (E-Mail-Code, Google, Gastmodus), Onboarding in 4 Schritten, Wochenplaner (Tabs/Sidebar, Auto-Fill, Reste für morgen Mittag, Tauschen, Portionen), Rezeptliste und -detail (Live-Portionen), KI-Erstellung, Einkauf als Bon (Abteilungen, abhaken, Rest-Zeilen mit „Einplanen“, Mengenkorrektur, eigene Einträge, offline per Query-Persistenz), Profil.
 - Landingpage mit funktionierender Warteliste (Supabase `waitlist`), interaktiver Spinat-Demo, FAQ, Entwürfen für Datenschutz und Impressum.
-- Browser-Prüfung mit Playwright (mobil + Desktop), Impeccable-Detector, Finish-Review.
+- Browser-Prüfung mit Playwright (mobil + Desktop), Impeccable-Detector, unabhängiges Finish-Review: zwei Fix-Runden, Verdikt **ship**. DESIGN.md geschrieben.
 
 **Offen (braucht dich)**
 - Supabase-Dashboard: E-Mail-Template mit `{{ .Token }}`, Redirect-URLs, Google-Provider ([Setup](../04-Technik/Setup-Supabase.md)).
@@ -24,5 +24,6 @@ tags: [fortschritt, log]
 - Impressum und Datenschutz mit echten Angaben füllen und prüfen lassen.
 - Android-Build auf Gerät/Emulator testen (`npx expo run:android` oder EAS).
 - Mehr Rezepte: Ziel aus dem Konzept 100+ (jetzt 39).
+- Node wurde per nvm auf 22.23.5 umgestellt (Expo 58 braucht ≥ 20.19.4).
 
 Related: [Implementierungsplan](../01-Planung/2026-11-21-M1-Implementierungsplan.md)

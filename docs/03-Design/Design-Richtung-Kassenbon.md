@@ -48,3 +48,7 @@ Dunkelmodus: eigene Rollen (Nachtviolett `#120E24`, Papier `#1E1A33`), kein Inve
 Handy: Tabs unten (Planen · Rezepte · Einkauf · Profil), Touch-Ziele ≥ 48 dp, System-Zurück funktioniert (Predictive Back an). Ab 900 px: Sidebar links, Wochenansicht als Raster aller Tage.
 
 Related: [M1-Spezifikation](../01-Planung/2026-11-21-M1-Spezifikation.md) · [ADR-004 Styling](../02-Entscheidungen/ADR-004-Styling.md)
+
+## Design-System
+
+Das verbindliche System (Tokens, Typo-Rollen, Regeln, Komponenten) steht in `DESIGN.md` im Repo-Root, maschinenlesbar in `.impeccable/design.json`. Abgeleitet aus dem fertigen Build nach dem Finish-Review (Verdikt: ship).

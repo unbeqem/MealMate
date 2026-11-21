@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-21T00:00:00Z",
+  "title": "Design System: MealMate",
+  "extensions": {
+    "colorMeta": {
+      "frame-violet": { "role": "primary", "displayName": "Frame Violet", "canonical": "#6B4CF0", "tonalRamp": ["#18103C", "#27166E", "#3318A5", "#3B15E0", "#684BE7", "#9987E8", "#C7BEEE", "#EEECF9"] },
+      "action-indigo": { "role": "primary", "displayName": "Action Indigo", "canonical": "#2B1A78", "tonalRamp": ["#1B1537", "#2D2164", "#3C2994", "#492DC8", "#735DD5", "#A093DC", "#CBC4E8", "#EFEDF7"] },
+      "accent-violet": { "role": "primary", "displayName": "Accent Violet", "canonical": "#6A48F5", "tonalRamp": ["#180F3E", "#261471", "#3114A9", "#390FE6", "#6746EC", "#9884EB", "#C7BDF0", "#EEEBF9"] },
+      "highlighter": { "role": "secondary", "displayName": "Highlighter Yellow", "canonical": "#FFE45C", "tonalRamp": ["#40380C", "#76650E", "#B2960B", "#F3CB02", "#F6D73C", "#F1DE7E", "#F3E9BA", "#FAF7EB"] },
+      "done-green": { "role": "tertiary", "displayName": "Receipt Green", "canonical": "#1F9E73", "tonalRamp": ["#15382C", "#1F654E", "#269670", "#2ACB94", "#5BD7AD", "#91DEC4", "#C3E9DC", "#EDF7F4"] },
+      "danger": { "role": "tertiary", "displayName": "Storno Red", "canonical": "#B42332", "tonalRamp": ["#381518", "#651F26", "#972632", "#CB293A", "#D85A67", "#DE9199", "#E9C3C7", "#F7EDEE"] },
+      "ground": { "role": "neutral", "displayName": "Violet Mist", "canonical": "#EEEBFA", "tonalRamp": ["#1D1736", "#302361", "#402C90", "#4F32C3", "#7861D1", "#A395DA", "#CCC5E7", "#F0EEF7"] },
+      "paper": { "role": "neutral", "displayName": "Thermal Paper", "canonical": "#FBFBF8", "tonalRamp": ["#2D2D1F", "#505034", "#757548", "#9B9B5A", "#B2B280", "#C7C7A8", "#DEDECE", "#F4F4F0"] },
+      "paper-sunk": { "role": "neutral", "displayName": "Sunken Paper", "canonical": "#F1F0EA", "tonalRamp": ["#2B2A21", "#4D4A38", "#6F6A4E", "#928C62", "#ACA686", "#C3C0AC", "#DCDAD1", "#F4F3F1"] },
+      "ink": { "role": "neutral", "displayName": "Receipt Ink", "canonical": "#1A1A1A", "tonalRamp": ["#262626", "#424242", "#5E5E5E", "#7A7A7A", "#999999", "#B8B8B8", "#D6D6D6", "#F2F2F2"] },
+      "ink-muted": { "role": "neutral", "displayName": "Faded Ink", "canonical": "#5B5A55", "tonalRamp": ["#272725", "#444341", "#61605C", "#7E7D76", "#9C9B96", "#BAB9B6", "#D7D7D5", "#F3F2F2"] },
+      "rule": { "role": "neutral", "displayName": "Cut Rule", "canonical": "#D6D4CB", "tonalRamp": ["#292823", "#48463C", "#686554", "#89836C", "#A4A08E", "#BEBCB1", "#DAD8D3", "#F3F3F1"] },
+      "dark-ground": { "role": "neutral", "displayName": "Night Ground", "canonical": "#120E24" },
+      "dark-frame": { "role": "primary", "displayName": "Night Frame", "canonical": "#2A1F63" },
+      "dark-paper": { "role": "neutral", "displayName": "Night Paper", "canonical": "#1E1A33" },
+      "dark-ink": { "role": "neutral", "displayName": "Night Ink", "canonical": "#F3F1FF" },
+      "dark-action": { "role": "primary", "displayName": "Night Action", "canonical": "#A895FF" },
+      "dark-done": { "role": "tertiary", "displayName": "Receipt Mint", "canonical": "#5CE1B0" }
+    },
+    "typographyMeta": {
+      "hero": { "displayName": "Hero", "purpose": "Landing h1 only; variable Archivo wdth 68, weight 900." },
+      "display": { "displayName": "Display", "purpose": "Screen hero titles on the violet frame (Archivo Narrow on native)." },
+      "headline": { "displayName": "Headline", "purpose": "Sheet titles and the wordmark." },
+      "title": { "displayName": "Title", "purpose": "Day names and card titles on paper." },
+      "body": { "displayName": "Body", "purpose": "Running text." },
+      "body-strong": { "displayName": "Body Strong", "purpose": "Item names and button labels." },
+      "label": { "displayName": "Label", "purpose": "Field labels, chips, header subtitles, tab labels." },
+      "small": { "displayName": "Small", "purpose": "Hints and helper text." },
+      "mono": { "displayName": "Receipt Mono", "purpose": "Quantity sublines and REST targets." },
+      "mono-strong": { "displayName": "Receipt Mono Strong", "purpose": "Package amounts, REST amounts, receipt heads, steppers." }
+    },
+    "shadows": [
+      { "name": "slip", "value": "0 6px 14px rgba(43,26,120,0.16)", "purpose": "Every app receipt slip lying on the ground (Android elevation 3)." },
+      { "name": "slip-dark", "value": "0 6px 14px rgba(0,0,0,0.45)", "purpose": "Slip shadow in the dark theme." },
+      { "name": "floating-slip", "value": "0 18px 40px -12px rgba(0,0,0,0.38), 0 4px 10px rgba(0,0,0,0.14)", "purpose": "Landing receipt and phone floating over violet." },
+      { "name": "scrim", "value": "rgba(18,14,36,0.55)", "purpose": "Backdrop behind sheets." }
+    ],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "All entrances: feed, swipe, sheet open, arrow draw." },
+      { "name": "press", "value": "120ms", "purpose": "Press scale 0.98 and CTA lift." },
+      { "name": "enter", "value": "260ms", "purpose": "Sheet open, snackbar in, per-line print feed." },
+      { "name": "exit", "value": "140ms ease-in", "purpose": "Sheet close, snackbar out; close faster than open." },
+      { "name": "stagger", "value": "40ms (max 8 lines)", "purpose": "Print-feed delay between receipt lines." },
+      { "name": "swipe", "value": "220ms, 120ms delay", "purpose": "Highlighter stroke left to right behind a REST line." },
+      { "name": "arrow-draw", "value": "280ms", "purpose": "Landing: REST line to meal arrow on hover/focus." },
+      { "name": "hero-feed", "value": "900ms steps(12)", "purpose": "Landing hero receipt printing in." },
+      { "name": "reduced-motion", "value": "static", "purpose": "All of the above resolve to the final state immediately." }
+    ],
+    "breakpoints": [
+      { "name": "landing-stack", "value": "760px" },
+      { "name": "wide", "value": "900px" },
+      { "name": "landing-no-phone", "value": "1100px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one indigo action per view.",
+      "html": "<button class=\"ds-btn-primary\">Woche automatisch füllen</button>",
+      "css": ".ds-btn-primary { min-height: 48px; padding: 0 24px; border-radius: 10px; border: 2px solid #2B1A78; background: #2B1A78; color: #fff; font: 700 16px/23px Archivo, sans-serif; cursor: pointer; transition: background 150ms, border-color 150ms, transform 120ms cubic-bezier(0.16,1,0.3,1); } .ds-btn-primary:hover { background: #6A48F5; border-color: #6A48F5; } .ds-btn-primary:focus-visible { outline: 2px solid #6A48F5; outline-offset: 2px; } .ds-btn-primary:active { transform: scale(0.98); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Ink-outlined alternative action on paper.",
+      "html": "<button class=\"ds-btn-secondary\">Abbrechen</button>",
+      "css": ".ds-btn-secondary { min-height: 48px; padding: 0 24px; border-radius: 10px; border: 2px solid #1A1A1A; background: transparent; color: #1A1A1A; font: 700 16px/23px Archivo, sans-serif; cursor: pointer; transition: background 150ms, transform 120ms; } .ds-btn-secondary:hover { background: #F1F0EA; } .ds-btn-secondary:focus-visible { outline: 2px solid #6A48F5; outline-offset: 2px; } .ds-btn-secondary:active { transform: scale(0.98); }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Pill checkbox for diets, dislikes, filters.",
+      "html": "<div style=\"display:flex;gap:8px\"><button class=\"ds-chip\" aria-pressed=\"false\">Vegetarisch</button><button class=\"ds-chip\" aria-pressed=\"true\">Laktosefrei</button></div>",
+      "css": ".ds-chip { min-height: 40px; padding: 0 12px; border-radius: 999px; border: 1.5px solid #D6D4CB; background: transparent; color: #1A1A1A; font: 500 14px/19px Archivo, sans-serif; cursor: pointer; } .ds-chip:hover { background: #F1F0EA; } .ds-chip[aria-pressed=\"true\"] { border-color: #6A48F5; background: #E7E1FF; color: #6A48F5; } .ds-chip:focus-visible { outline: 2px solid #6A48F5; outline-offset: 2px; }"
+    },
+    {
+      "name": "Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Labelled text field on paper.",
+      "html": "<label class=\"ds-field\"><span>Rezeptname</span><input placeholder=\"z. B. Shakshuka\"></label>",
+      "css": ".ds-field { display: grid; gap: 4px; font: 500 14px/19px Archivo, sans-serif; color: #1A1A1A; } .ds-field input { min-height: 52px; padding: 0 16px; border: 2px solid #D6D4CB; border-radius: 10px; background: #FBFBF8; color: #1A1A1A; font: 400 16px/23px Archivo, sans-serif; outline: none; } .ds-field input::placeholder { color: #5B5A55; } .ds-field input:focus { border-color: #6A48F5; }"
+    },
+    {
+      "name": "Tab Bar",
+      "kind": "nav",
+      "refersTo": "tab-bar",
+      "description": "Phone bottom navigation on paper with an accent pill for the active tab.",
+      "html": "<nav class=\"ds-tabs\"><a>Planen</a><a>Rezepte</a><a class=\"on\" aria-current=\"page\">Einkauf</a><a>Profil</a></nav>",
+      "css": ".ds-tabs { display: flex; background: #FBFBF8; border-top: 1px solid #D6D4CB; padding-top: 4px; } .ds-tabs a { flex: 1; min-height: 56px; display: grid; place-items: center; font: 500 12px/19px Archivo, sans-serif; color: #5B5A55; cursor: pointer; } .ds-tabs a::before { content: \"\"; width: 56px; height: 30px; border-radius: 999px; display: block; } .ds-tabs a.on { color: #6A48F5; } .ds-tabs a.on::before { background: #E7E1FF; } .ds-tabs a:hover { color: #1A1A1A; } .ds-tabs a:focus-visible { outline: 2px solid #6A48F5; }"
+    },
+    {
+      "name": "Frame Header",
+      "kind": "custom",
+      "refersTo": "frame-header",
+      "description": "The violet band that owns the top of every app screen.",
+      "html": "<header class=\"ds-frame\"><h1>Der Bon</h1><p>KW 47 · 0 von 23 im Korb</p></header>",
+      "css": ".ds-frame { background: #6B4CF0; color: #fff; padding: 8px 16px 24px; } .ds-frame h1 { margin: 0; font: 700 36px/38px 'Archivo Narrow', Archivo, sans-serif; font-stretch: condensed; letter-spacing: -0.6px; } .ds-frame p { margin: 2px 0 0; font: 500 14px/19px Archivo, sans-serif; color: #EFEAFF; }"
+    },
+    {
+      "name": "Receipt Slip",
+      "kind": "card",
+      "refersTo": "receipt-paper",
+      "description": "Thermal-paper container with zig-zag tear, dashed cut rule and mono amounts.",
+      "html": "<div class=\"ds-receipt\"><p class=\"head\">MEALMATE</p><hr><div class=\"line\"><span>Blattspinat<small>Bedarf 1 kg</small></span><b>3 × 450 g</b></div><div class=\"line\"><span>Brokkoli<small>Bedarf 900 g</small></span><b>2 × 500 g</b></div></div>",
+      "css": ".ds-receipt { position: relative; background: #FBFBF8; color: #1A1A1A; padding: 16px; border-radius: 6px 6px 0 0; box-shadow: 0 6px 14px rgba(43,26,120,0.16); margin-bottom: 7px; font: 700 16px/23px Archivo, sans-serif; } .ds-receipt::after { content: \"\"; position: absolute; left: 0; right: 0; bottom: -7px; height: 7px; background: linear-gradient(-45deg, transparent 5px, #FBFBF8 0) 0 0 / 12px 7px repeat-x, linear-gradient(45deg, transparent 5px, #FBFBF8 0) 0 0 / 12px 7px repeat-x; } .ds-receipt .head { margin: 0; text-align: center; font: 600 14px/20px 'Martian Mono', monospace; letter-spacing: 2px; } .ds-receipt hr { border: 0; border-top: 1.5px dashed #D6D4CB; margin: 12px 0; } .ds-receipt .line { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; } .ds-receipt small { display: block; font: 400 13px/19px 'Martian Mono', monospace; color: #5B5A55; } .ds-receipt b { font: 600 14px/20px 'Martian Mono', monospace; white-space: nowrap; }"
+    },
+    {
+      "name": "REST Line",
+      "kind": "custom",
+      "refersTo": "rest-line",
+      "description": "A leftover with a plan: highlighter swipe, mono amount, target meal, Einplanen action.",
+      "html": "<div class=\"ds-rest\"><span><b>REST 350 g</b><small>→ Gnocchi mit Rahmspinat</small></span><button>Einplanen</button></div>",
+      "css": ".ds-rest { display: flex; align-items: center; gap: 12px; padding: 4px 8px; border-radius: 3px; color: #2A2400; background: linear-gradient(90deg, #FFE45C 0 100%) no-repeat 0 0 / 100% 100%; animation: ds-swipe 220ms 120ms cubic-bezier(0.16,1,0.3,1) both; } .ds-rest span { flex: 1; } .ds-rest b { display: block; font: 600 14px/20px 'Martian Mono', monospace; } .ds-rest small { font: 400 13px/19px 'Martian Mono', monospace; } .ds-rest button { min-height: 40px; padding: 0 12px; border-radius: 6px; border: 1.5px solid #2A2400; background: transparent; color: #2A2400; font: 500 14px/19px Archivo, sans-serif; cursor: pointer; } .ds-rest button:hover { background: rgba(0,0,0,0.08); } .ds-rest button:focus-visible { outline: 2px solid #6A48F5; outline-offset: 2px; } @keyframes ds-swipe { from { background-size: 0% 100%; } } @media (prefers-reduced-motion: reduce) { .ds-rest { animation: none; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Der Kassenbon",
+    "overview": "MealMate prints the week before you shop. A saturated violet frame owns the top of every screen (and whole sections of the landing page), and the content arrives on thermal-paper slips: off-white paper with zig-zag tear edges, dashed cut rules, monospaced quantities, a barcode at the foot. The receipt is not decoration; it is the proof of the mechanism. Every line is a real package, and every leftover is a highlighted line that already points to the meal that will use it up.\n\nThe system runs at two volumes. The landing page (Persuade) is loud: violet fills the viewport, a condensed black headline, a tilted receipt printing in line by line, an arrow drawing from a REST line to its meal. The app (Operate) is the same world with more restraint: violet header band, receipts lying flat (the sign-in sample bon is the one tilted exception), dense lists sized for one-handed use in the aisle with 48dp targets throughout.\n\nColour carries meaning, never mood alone. Yellow means \"leftover, and it has a plan\". Green means \"done or bought\". Indigo means \"the thing to press\". Everything else is violet frame, paper and ink.",
+    "keyCharacteristics": [
+      "Violet frame band + thermal-paper receipts on a violet-tinted ground.",
+      "Zig-zag tear edges, dashed cut rules and a centred letter-spaced `MEALMATE` receipt head are the world's native devices.",
+      "Martian Mono for anything that is a receipt line: quantities, package counts, REST lines, aisle labels.",
+      "Highlighter yellow is rationed to leftover lines and the targets they light.",
+      "Motion is mechanical: a printer feed and a highlighter stroke, both static under reduced motion."
+    ],
+    "rules": [
+      { "name": "The Highlighter Rule", "body": "Yellow marks a leftover that has a plan, and the thing it points at. Nothing else on paper is yellow: no badges, no promos, no warnings. If a line is yellow, the user should be able to read \"REST\" on it.", "section": "colors" },
+      { "name": "The Frame Owns the Top Rule", "body": "Violet is a region, not an accent. It fills the header band or the section; it does not appear as violet text on paper (that is Accent Violet's job).", "section": "colors" },
+      { "name": "The Not By Colour Alone Rule", "body": "Every coloured state also carries a word or mark: REST lines say \"REST\", checked items get a check glyph and strike-through, errors carry a message.", "section": "colors" },
+      { "name": "The Receipt Line Rule", "body": "If it is a quantity, a package, a leftover or a line that would be printed on a till slip, it is set in Martian Mono. Names of food and recipes stay in Archivo.", "section": "typography" },
+      { "name": "The Condensed Voice Rule", "body": "Display sizes are always the condensed cut with tight negative tracking; never set a headline in regular-width Archivo.", "section": "typography" },
+      { "name": "The Only Paper Floats Rule", "body": "Shadows belong to receipts and the landing phone. Buttons, chips, fields and rows are flat; they show state with fill, border and a 0.98 press scale.", "section": "elevation" }
+    ],
+    "dos": [
+      "**Do** put every screen's title in the violet Frame Header and its content on Thermal Paper slips.",
+      "**Do** set quantities, package counts and REST lines in Martian Mono, and divide receipt sections with dashed Cut Rules.",
+      "**Do** reserve Highlighter Yellow for leftover lines that have a plan and for the targets they light.",
+      "**Do** keep touch targets at 48dp or more (40px only for compact buttons and chips inside dense rows).",
+      "**Do** make every motion skippable: print feed, highlighter swipe and arrow draw all resolve to the final static state under reduced motion.",
+      "**Do** close faster than you open (260ms in, 140ms out)."
+    ],
+    "donts": [
+      "**Don't** use yellow for anything that is not a leftover: no promo badges, warnings or \"new\" tags.",
+      "**Don't** place violet text or violet accents on paper as a substitute for Accent Violet; the frame violet is a region colour.",
+      "**Don't** add shadows to buttons, chips or rows; only paper floats.",
+      "**Don't** draw solid divider lines inside a receipt; cut rules are dashed.",
+      "**Don't** tilt working receipts in the app; tilt belongs to showcase slips (landing, sign-in sample).",
+      "**Don't** show food photography or invented savings figures as proof; the receipt's arithmetic is the proof, and sample data is labelled \"Beispieldaten\"."
+    ]
+  }
+}

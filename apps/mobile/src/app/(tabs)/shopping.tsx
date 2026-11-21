@@ -182,27 +182,29 @@ function Row({
             {i.checked ? <Check size={16} color={p.paper} strokeWidth={3} /> : null}
           </View>
         </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={i.source === 'manual' ? i.label : `${i.label}: Menge anpassen`}
-          disabled={i.source === 'manual'}
-          onPress={onEdit}
-          style={{ flex: 1, minWidth: 0, minHeight: 48, justifyContent: 'center' }}
-        >
-          <Text style={[type.bodyStrong, { color: i.checked ? p.inkMuted : p.ink, textDecorationLine: i.checked ? 'line-through' : 'none' }]}>{i.label}</Text>
-          {i.source === 'auto' ? (
-            <Text style={[type.mono, { color: p.inkMuted, fontSize: 11 }]}>
-              {i.orphaned ? 'nicht mehr im Plan' : `Bedarf ${fmtAmt(i.requiredBase)}${i.manualOverride != null ? ' · angepasst' : ''}`}
-            </Text>
+        <View style={styles.nameAmount}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={i.source === 'manual' ? i.label : `${i.label}: Menge anpassen`}
+            disabled={i.source === 'manual'}
+            onPress={onEdit}
+            style={{ flexGrow: 1, flexShrink: 1, flexBasis: '55%', minHeight: 48, justifyContent: 'center' }}
+          >
+            <Text style={[type.bodyStrong, { color: i.checked ? p.inkMuted : p.ink, textDecorationLine: i.checked ? 'line-through' : 'none' }]}>{i.label}</Text>
+            {i.source === 'auto' ? (
+              <Text style={[type.mono, { color: p.inkMuted, fontSize: 11 }]}>
+                {i.orphaned ? 'nicht mehr im Plan' : `Bedarf ${fmtAmt(i.requiredBase)}${i.manualOverride != null ? ' · angepasst' : ''}`}
+              </Text>
+            ) : (
+              <Text style={[type.mono, { color: p.inkMuted, fontSize: 11 }]}>eigener Eintrag</Text>
+            )}
+          </Pressable>
+          {i.source === 'manual' ? (
+            <IconButton icon={Trash2} label={`${i.label} entfernen`} onPress={onDelete} color={p.inkMuted} size={18} />
           ) : (
-            <Text style={[type.mono, { color: p.inkMuted, fontSize: 11 }]}>eigener Eintrag</Text>
+            <Text style={[type.monoStrong, { color: i.checked ? p.inkMuted : p.ink, textAlign: 'right', flexShrink: 0, marginLeft: 'auto', paddingBottom: 4 }]}>{amount}</Text>
           )}
-        </Pressable>
-        {i.source === 'manual' ? (
-          <IconButton icon={Trash2} label={`${i.label} entfernen`} onPress={onDelete} color={p.inkMuted} size={18} />
-        ) : (
-          <Text numberOfLines={1} style={[type.monoStrong, { color: i.checked ? p.inkMuted : p.ink, textAlign: 'right', flexShrink: 0 }]}>{amount}</Text>
-        )}
+        </View>
       </View>
       {relevant && best ? (
         <Highlight style={{ marginLeft: 48 - space.sm, marginTop: 2, marginBottom: space.xs }}>
@@ -270,6 +272,7 @@ const styles = StyleSheet.create({
   body: { width: '100%', maxWidth: 1120, alignSelf: 'center', paddingHorizontal: space.lg, gap: space.lg },
   aisle: { marginBottom: space.xs },
   row: { flexDirection: 'row', alignItems: 'center', gap: space.xs },
+  nameAmount: { flex: 1, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: space.sm },
   checkHit: { width: 44, height: 48, alignItems: 'flex-start', justifyContent: 'center' },
   check: { width: 26, height: 26, borderRadius: 7, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
   restRow: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
