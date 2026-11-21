@@ -53,7 +53,7 @@ Die App schickt beim Anmelden eine Mail. Darin steht ein **Link** (geht immer) u
 ### A4. Test (Stufe 1, nur Link)
 1. In PowerShell:
    ```powershell
-   cd C:\Obsidian\mealmatepp
+   cd C:\Obsidian\mealmate\app
    npm run dev
    ```
 2. Browser: <http://localhost:8081> → deine E-Mail eingeben → **Code per Mail senden**.
@@ -162,7 +162,7 @@ Die KI läuft auf dem Server, damit dein API-Key nie in der App steckt. Dafür l
 ### C2. Supabase-CLI anmelden
 In PowerShell:
 ```powershell
-cd C:Obsidianmealmatepp
+cd C:\Obsidian\mealmate\app
 npx supabase login
 ```
 Es öffnet sich der Browser → **Authorize**. Im Terminal erscheint `You are now logged in`. (Falls kein Browser aufgeht: den angezeigten Link öffnen und den Code im Terminal eingeben.)
@@ -208,7 +208,7 @@ Kontrolle im Dashboard: links **Edge Functions** → beide Funktionen sind aufge
 
 ## Später: Schema oder Seed ändern
 
-| Was | Befehl (im Ordner `C:Obsidianmealmatepp`) |
+| Was | Befehl (im Ordner `C:\Obsidian\mealmate\app`) |
 |---|---|
 | Zutaten/Rezepte ändern | Datei in `packages/core/src/seed/` bearbeiten → `npm run seed:sql` → `npx supabase db push --include-seed` |
 | Tabelle ändern | neue Datei in `supabase/migrations/` → `npx supabase db push` |
